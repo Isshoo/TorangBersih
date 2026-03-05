@@ -3,6 +3,7 @@ import { LuArrowRight } from "react-icons/lu";
 import { AiOutlineEye } from "react-icons/ai";
 import { BiLike } from "react-icons/bi";
 import { LuMessageSquare } from "react-icons/lu";
+import { Link } from "react-router-dom";
 
 const ArtikelItem = ({ image, title, views, likes, comments }) => {
   return (
@@ -40,10 +41,10 @@ const ArtikelItem = ({ image, title, views, likes, comments }) => {
         </div>
 
         {/* Link Selengkapnya */}
-        <button className="flex flex-1 items-end gap-1 text-xs font-semibold text-(--accent) transition-all duration-300 hover:gap-2">
+        <Link to="/artikel" className="flex flex-1 items-end gap-1 text-xs font-semibold text-(--accent) transition-all duration-300 hover:gap-2">
           Selengkapnya
           <LuArrowRight className="text-xs" />
-        </button>
+        </Link>
       </div>
     </div>
   );
