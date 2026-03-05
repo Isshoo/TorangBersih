@@ -26,8 +26,10 @@ import PetaPage from "./pages/public/PetaPage";
 import KolaboratorPage from "./pages/public/KolaboratorPage";
 import AsetPage from "./pages/public/AsetPage";
 import BarangBekasPage from "./pages/public/BarangBekasPage";
+import BarangBekasDetailPage from "./components/features/public/barangbekas/BarangBekasDetailPages";
 import LaporanPage from "./pages/public/LaporanPage";
 import ArtikelPage from "./pages/public/ArtikelPage";
+import ArticleDetailPage from "./components/features/public/artikel/DetailArticle";
 
 /* user pages */
 import UserDashboardPage from "./pages/user/UserDashboardPage";
@@ -69,8 +71,10 @@ function App() {
         <Route path="kolaborator" element={<KolaboratorPage />} />
         <Route path="aset" element={<AsetPage />} />
         <Route path="barang-bekas" element={<BarangBekasPage />} />
+         <Route path="/barang-bekas/:id" element={<BarangBekasDetailPage />} />
         <Route path="laporan" element={<LaporanPage />} />
         <Route path="artikel" element={<ArtikelPage />} />
+        <Route path="/artikel/:id" element={<ArticleDetailPage />} />
 
         <Route element={<ProtectedRoute />}>
           {/* Untuk halaman publik yang perlu login user */}
