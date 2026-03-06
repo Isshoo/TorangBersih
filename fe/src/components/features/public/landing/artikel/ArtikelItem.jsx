@@ -41,7 +41,10 @@ const ArtikelItem = ({ image, title, views, likes, comments }) => {
         </div>
 
         {/* Link Selengkapnya */}
-        <Link to="/artikel" className="flex flex-1 items-end gap-1 text-xs font-semibold text-(--accent) transition-all duration-300 hover:gap-2">
+        <Link
+          to="/artikel"
+          className="flex flex-1 items-end gap-1 text-xs font-semibold text-(--accent) transition-all duration-300 hover:gap-2"
+        >
           Selengkapnya
           <LuArrowRight className="text-xs" />
         </Link>

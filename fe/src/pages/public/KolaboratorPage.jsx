@@ -4,19 +4,14 @@ import DaftarKolaborator from "../../components/features/public/kolaborator/Daft
 
 function KolaboratorPage() {
   return (
-    
     <div className="relative w-full overflow-hidden bg-[#FAFAFA]">
-      
- 
       <div className="relative z-0">
         <Hero />
       </div>
 
-    
-      <div className="relative z-20 ">
+      <div className="relative z-20">
         <DaftarKolaborator />
       </div>
-      
     </div>
   );
 }

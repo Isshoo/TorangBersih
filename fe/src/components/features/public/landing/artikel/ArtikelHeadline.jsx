@@ -41,7 +41,10 @@ const ArtikelHeadline = ({
       <p className="leading-6 text-(--gray)">{description}</p>
 
       {/* Link Selengkapnya */}
-      <Link to="/artikel" className="flex items-center gap-1 text-sm font-semibold text-(--accent) transition-all duration-300 hover:gap-2">
+      <Link
+        to="/artikel"
+        className="flex items-center gap-1 text-sm font-semibold text-(--accent) transition-all duration-300 hover:gap-2"
+      >
         Selengkapnya
         <LuArrowRight className="text-base" />
       </Link>

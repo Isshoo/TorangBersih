@@ -71,7 +71,7 @@ function App() {
         <Route path="kolaborator" element={<KolaboratorPage />} />
         <Route path="aset" element={<AsetPage />} />
         <Route path="barang-bekas" element={<BarangBekasPage />} />
-         <Route path="/barang-bekas/:id" element={<BarangBekasDetailPage />} />
+        <Route path="/barang-bekas/:id" element={<BarangBekasDetailPage />} />
         <Route path="laporan" element={<LaporanPage />} />
         <Route path="artikel" element={<ArtikelPage />} />
         <Route path="/artikel/:id" element={<ArticleDetailPage />} />
