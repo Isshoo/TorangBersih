@@ -92,7 +92,7 @@ const ArtikelPage = () => {
       : articlesFromDB.filter((a) => a.kategori === activeTab);
 
   return (
-    <div className="min-h-screen bg-white pb-20 text-gray-900">
+    <div className="bg-white pt-20 text-gray-900">
       <div className="mx-auto max-w-7xl px-4 py-10 sm:px-6 lg:px-8">
         <div className="grid grid-cols-1 items-start gap-12 lg:grid-cols-12">
           <div className="lg:col-span-8">

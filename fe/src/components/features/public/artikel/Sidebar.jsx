@@ -8,7 +8,7 @@ const Sidebar = ({
   openModal,
 }) => {
   return (
-    <aside className="sticky top-44 hidden h-fit border-l border-gray-100 pl-8 lg:block">
+    <aside className="hidden h-fit border-l border-gray-100 pl-8 lg:block">
       {/* container already sticky; inner div no longer needs positioning */}
       <div className="w-full">
         {/* SEKSI KOMENTAR */}

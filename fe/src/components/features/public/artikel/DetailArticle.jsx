@@ -49,7 +49,7 @@ const ArticleDetailPage = () => {
   ];
 
   return (
-    <div className="relative min-h-screen bg-white pt-20 pb-20 text-gray-900">
+    <div className="relative bg-white pt-20 pb-20 text-gray-900">
       {/* 1. Modal diletakkan di level atas agar overlay-nya sempurna */}
       <LoginModal
         isOpen={showLoginModal}
@@ -59,8 +59,8 @@ const ArticleDetailPage = () => {
       <div className="mx-auto max-w-7xl px-4 py-10 sm:px-6 lg:px-8">
         <div className="grid grid-cols-1 gap-8 lg:grid-cols-12 lg:gap-12">
           {/* KOLOM KIRI (Profil Publikasi) */}
-          <div className="hidden pt-2 lg:col-span-2 lg:block">
-            <div className="sticky top-26">
+          <div className="hidden lg:col-span-2 lg:block">
+            <div className="sticky top-30">
               <div className="mb-4 flex h-10 w-10 items-center justify-center rounded-md bg-blue-600 font-bold text-white">
                 TB
               </div>
@@ -190,7 +190,7 @@ const ArticleDetailPage = () => {
             </article>
           </main>
 
-          <div className="sticky top-1 h-fit lg:col-span-3">
+          <div className="sticky top-30 h-fit lg:col-span-3">
             <SidebarArticle
               isLoggedIn={isLoggedIn}
               openModal={() => setShowLoginModal(true)}

@@ -6,7 +6,7 @@ import Tujuan from "../../components/features/public/landing/tujuan/Tujuan";
 
 function LandingPage() {
   return (
-    <div className="relative w-full">
+    <div className="relative w-full overflow-hidden">
       {/* image vector background */}
       <img
         src="/images/landing-bg.png"

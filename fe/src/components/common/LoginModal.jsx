@@ -5,7 +5,7 @@ const LoginModal = ({ isOpen, onClose }) => {
   if (!isOpen) return null;
 
   return (
-    <div className="p-4k fixed inset-10 z-50 flex w-full items-center justify-center">
+    <div className="fixed inset-10 z-50 flex w-full items-center justify-center p-4">
       <div className="w-full max-w-sm transform rounded-2xl bg-white p-8 text-center shadow-2xl transition-all">
         <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-blue-100 text-blue-600">
           <svg
