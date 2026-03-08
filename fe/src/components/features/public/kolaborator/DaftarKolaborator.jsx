@@ -93,7 +93,7 @@ function Kolaborator({ nama, kategori, lokasi, penanggungJawab }) {
         </div>
         <div className="col-span-3 flex items-center justify-around pl-6 text-[14px] font-medium text-gray-800">
           <span>{penanggungJawab}</span>
-          <Link to="/kolaborator/id" >
+          <Link to="/kolaborator/id">
             <svg
               width="30"
               height="30"

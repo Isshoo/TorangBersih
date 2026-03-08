@@ -159,9 +159,6 @@ const DetailLaporan = () => {
           </div>
         </div>
 
-        {/* ==========================================
-            2. MULTI-PHOTO GALLERY (AIRBNB STYLE GRID)
-            ========================================== */}
         <div className="group relative mb-12 flex h-[300px] w-full gap-2 overflow-hidden rounded-3xl sm:h-[400px] md:h-[480px]">
           {/* Foto Utama (Kiri, 50% width) */}
           <div className="relative h-full w-full overflow-hidden bg-gray-100 md:w-1/2">
@@ -172,7 +169,6 @@ const DetailLaporan = () => {
             />
           </div>
 
-          {/* Foto Tambahan (Kanan, 50% width, Grid 2x2) */}
           <div className="hidden h-full w-1/2 grid-cols-2 grid-rows-2 gap-2 md:grid">
             {laporan.foto_bukti_urls.slice(1, 4).map((url, idx) => (
               <div
@@ -185,7 +181,6 @@ const DetailLaporan = () => {
                   className="size-full cursor-pointer object-cover transition-transform duration-700 hover:scale-105"
                 />
 
-                {/* Overlay "Lihat Semua" di foto terakhir jika foto > 3 */}
                 {idx === 2 && laporan.foto_bukti_urls.length > 3 && (
                   <div className="absolute inset-0 flex cursor-pointer items-center justify-center bg-black/40 text-white backdrop-blur-[2px] transition-colors hover:bg-black/50">
                     <span className="font-bold">
@@ -216,11 +211,7 @@ const DetailLaporan = () => {
           </button>
         </div>
 
-        {/* ==========================================
-            3. MAIN CONTENT (7:5 SPLIT)
-            ========================================== */}
         <div className="grid grid-cols-1 items-start gap-12 lg:grid-cols-12 lg:gap-16">
-          {/* ---- KOLOM KIRI (KRONOLOGI & DETAIL TEKNIS) ---- */}
           <div className="flex flex-col gap-10 pb-10 lg:col-span-7">
             {/* Profil Pelapor */}
             <div className="flex items-center gap-4 border-b border-gray-100 pb-8">
@@ -249,7 +240,6 @@ const DetailLaporan = () => {
               </p>
             </div>
 
-            {/* BENTO BOX (Detail Karakteristik Sampah) */}
             <div>
               <h2 className="mb-4 text-xl font-extrabold text-gray-900">
                 Karakteristik Timbulan
@@ -319,14 +309,12 @@ const DetailLaporan = () => {
             </div>
           </div>
 
-          {/* ---- KOLOM KANAN (STICKY TIMELINE & ACTION) ---- */}
           <div className="relative z-10 lg:col-span-5">
             <div className="sticky top-28 rounded-3xl bg-white p-6 shadow-xl ring-1 shadow-gray-200/40 ring-gray-900/5 sm:p-8">
               <h3 className="mb-6 text-xl font-extrabold text-gray-900">
                 Pelacakan Laporan
               </h3>
 
-              {/* TIMELINE (Minimalist Vercel Style) */}
               <div className="relative ml-2 space-y-8 border-l-[3px] border-gray-100 pb-4">
                 {/* Status Saat Ini (Active) */}
                 <div className="relative pl-6">
