@@ -16,6 +16,6 @@ mail = Mail()
 cors = CORS()
 limiter = Limiter(
     key_func=get_remote_address,
-    default_limits=["1000/day", "100/hour", "10/minute"],
+    default_limits=["10000/day", "1000/hour", "100/minute"],
     default_limits_exempt_when=lambda: flask_request.method == "OPTIONS"
 )

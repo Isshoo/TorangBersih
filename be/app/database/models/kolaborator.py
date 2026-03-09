@@ -14,8 +14,8 @@ class Kolaborator(db.Model):
     nama_organisasi = db.Column(db.String(100), nullable=False)
     jenis_kolaborator_id = db.Column(db.String(36), db.ForeignKey('ref_jenis_kolaborator.id'), nullable=False, index=True)
     deskripsi = db.Column(db.Text)
-    logo_url = db.Column(db.String(500))
-    email = db.Column(db.String(100))
+    logo_url = db.Column(db.String(500), nullable=True)
+    email = db.Column(db.String(100), nullable=True)
 
     # Lokasi
     kabupaten_kota = db.Column(db.String(100))
@@ -25,8 +25,8 @@ class Kolaborator(db.Model):
 
     # Kontak
     penanggung_jawab = db.Column(db.String(100))
-    kontak = db.Column(db.String(20))
-    sosmed = db.Column(db.String(500))
+    kontak = db.Column(db.String(20), nullable=True)
+    sosmed = db.Column(db.String(500), nullable=True)
 
     status_verifikasi = db.Column(db.Boolean, default=False, nullable=False)
 
