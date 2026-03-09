@@ -74,10 +74,17 @@ class SocialAuthService:
             if not existing.is_active:
                 raise UnauthorizedError("Akun telah dinonaktifkan.")
 
+            if existing.auth_provider == 'local' and existing.provider_id != provider_id:
+                raise ConflictError(
+                    "Email ini sudah terdaftar menggunakan email dan password. "
+                    "Silakan masuk dengan email dan password kamu."
+                )
+
             # Link provider jika belum
             if not existing.provider_id:
                 existing.provider_id = provider_id
                 existing.auth_provider = 'google'
+                existing.is_verified = True
 
             existing.last_login_at = datetime.now(timezone.utc)
             if user_info['avatar_url'] and not existing.avatar_url:
@@ -89,7 +96,14 @@ class SocialAuthService:
         # ── REGISTER ──
         if intent == 'register':
             if existing:
-                raise ConflictError("Email ini sudah terdaftar. Silakan login.")
+                print(existing.auth_provider)
+                if existing.auth_provider == 'local':
+                    raise ConflictError(
+                        "Email ini sudah terdaftar menggunakan email dan password. "
+                        "Silakan masuk dengan email dan password kamu."
+                    )
+                else:
+                    raise ConflictError("Email ini sudah terdaftar. Silakan masuk.")
 
             username = SocialAuthService._generate_unique_username(
                 user_info['full_name'] or email.split('@')[0]

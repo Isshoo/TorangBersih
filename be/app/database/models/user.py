@@ -18,8 +18,8 @@ class User(db.Model):
     id = db.Column(db.String(36), primary_key=True, default=lambda: str(uuid.uuid4()))
     email = db.Column(db.String(255), unique=True, nullable=False, index=True)
     username = db.Column(db.String(50), unique=True, nullable=False, index=True)
-    password_hash = db.Column(db.String(255), nullable=True)   # nullable=True untuk Google user
-    full_name = db.Column(db.String(100), nullable=True)        # nullable=True
+    password_hash = db.Column(db.String(255), nullable=True)
+    full_name = db.Column(db.String(100), nullable=True)
     avatar_url = db.Column(db.String(500))
     role = db.Column(Enum(UserRole), default=UserRole.USER, nullable=False)
     is_verified = db.Column(db.Boolean, default=False, nullable=False)
@@ -36,6 +36,16 @@ class User(db.Model):
     created_at = db.Column(db.DateTime(timezone=True), default=lambda: datetime.now(timezone.utc), nullable=False)
     updated_at = db.Column(db.DateTime(timezone=True), default=lambda: datetime.now(timezone.utc), onupdate=lambda: datetime.now(timezone.utc), nullable=False)
     last_login_at = db.Column(db.DateTime(timezone=True))
+    
+    # Relationships
+    kolaborator = db.relationship('Kolaborator', backref='user', lazy='dynamic')
+    aset = db.relationship('Aset', backref='user', lazy='dynamic')
+    laporan_sampah = db.relationship('LaporanSampahIlegal', backref='pelapor', lazy='dynamic', foreign_keys='LaporanSampahIlegal.id_warga')
+    tindak_lanjut = db.relationship('TindakLanjutLaporan', backref='penindak', lazy='dynamic', foreign_keys='TindakLanjutLaporan.id_user_penindak')
+    marketplace_items = db.relationship('MarketplaceDaurUlang', backref='penjual', lazy='dynamic')
+    artikel = db.relationship('Artikel', backref='penulis', lazy='dynamic')
+    artikel_likes = db.relationship('ArtikelLike', backref='user', lazy='dynamic')
+    artikel_komentar = db.relationship('ArtikelKomentar', backref='user', lazy='dynamic')
     
     def __repr__(self):
         return f'<User {self.username}>'

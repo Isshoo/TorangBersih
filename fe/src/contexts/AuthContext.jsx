@@ -1,6 +1,6 @@
 import { createContext, useContext, useState, useEffect } from "react";
-import { authAPI } from "../services/api/axios";
-import { getToken, setToken, setUser, clearAuth } from "../utils/helpers";
+import { authAPI } from "../services/api/routes/auth.route";
+import { getToken, setToken, setUser, clearAuth } from "../utils/storage";
 
 const AuthContext = createContext(null);
 
@@ -59,7 +59,7 @@ export const AuthProvider = ({ children }) => {
     } catch (err) {
       return {
         success: false,
-        message: err.response?.data?.message || "Login gagal",
+        message: err.response?.data?.message || "Gagal masuk",
       };
     }
   };
@@ -77,11 +77,6 @@ export const AuthProvider = ({ children }) => {
   };
 
   const logout = async () => {
-    // try {
-    //   await authAPI.logout();
-    // } catch {
-    //   // ignore error
-    // }
     clearAuth();
     setUserState(null);
   };

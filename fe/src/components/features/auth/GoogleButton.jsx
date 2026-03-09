@@ -1,6 +1,6 @@
 import { useGoogleLogin } from "@react-oauth/google";
 import { useAuth } from "../../../contexts/AuthContext";
-import { authAPI } from "../../../services/api/axios";
+import { authAPI } from "../../../services/api/routes/auth.route";
 import GoogleIcon from "./GoogleIcon";
 
 export function GoogleLoginButton({ onSuccess, onError, disabled = false }) {
@@ -15,22 +15,21 @@ export function GoogleLoginButton({ onSuccess, onError, disabled = false }) {
         onSuccess?.({ user });
       } catch (err) {
         onError?.({
-          message: err.response?.data?.message || "Login Google gagal",
+          message: err.response?.data?.message || "Gagal masuk dengan Google",
           status: err.response?.status,
         });
       }
     },
-    onError: () => onError?.({ message: "Login Google dibatalkan" }),
+    onError: () => onError?.({ message: "Masuk dengan Google dibatalkan" }),
   });
 
   return (
     <button
       onClick={() => googleLogin()}
       disabled={disabled}
-      className="w-full flex items-center justify-center gap-3 border border-gray-300 py-2.5 rounded-lg hover:bg-gray-50 disabled:opacity-50 transition font-medium"
+      className="flex cursor-pointer items-center justify-center gap-3 rounded-full border border-black bg-(--primary) p-1 font-medium transition hover:bg-(--primary-dark) disabled:opacity-50"
     >
       <GoogleIcon />
-      Lanjutkan dengan Google
     </button>
   );
 }
@@ -62,10 +61,9 @@ export function GoogleRegisterButton({ onSuccess, onError, disabled = false }) {
     <button
       onClick={() => googleRegister()}
       disabled={disabled}
-      className="w-full flex items-center justify-center gap-3 border border-gray-300 py-2.5 rounded-lg hover:bg-gray-50 disabled:opacity-50 transition font-medium"
+      className="flex cursor-pointer items-center justify-center gap-3 rounded-full border border-black bg-(--primary) p-1 font-medium transition hover:bg-(--primary-dark) disabled:opacity-50"
     >
       <GoogleIcon />
-      Daftar dengan Google
     </button>
   );
 }

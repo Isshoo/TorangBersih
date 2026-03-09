@@ -16,6 +16,7 @@ def get_env(key, default=None, cast=str):
 
 
 class Config:
+    PORT = get_env('PORT', 5000, int)
     # Flask
     SECRET_KEY = get_env('SECRET_KEY', 'dev-secret-key-change-in-production')
     

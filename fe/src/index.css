@@ -1,1 +1,105 @@
 @import "tailwindcss";
+
+/* ===== Brand Color Palette ===== */
+:root {
+  /* Primary — indigo/dark blue */
+  --primary: #1e1f78;
+  --primary-dark: #1a1b65;
+
+  /* Accent — blue */
+  --accent: #5697ff;
+  --accent-dark: #034f99;
+
+  /* Accent — cyan */
+  --cyan: #12bae3;
+
+  /* Neutrals — dark */
+  --dark: #0f0f0f;
+  --dark-soft: #16161c;
+  --dark-text: #2c2c2c;
+
+  /* Neutrals — gray */
+  --gray: #696969;
+  --gray-muted: #7c7c7c;
+  --gray-light: #888888;
+  --gray-placeholder: #a7a7a7;
+  --gray-shine: #f3f3fc;
+}
+
+/* Dark mode: aktif saat <html> punya class "dark" */
+@custom-variant dark (&:where(.dark, .dark *));
+
+/* Smooth transition saat ganti tema */
+@layer base {
+  html {
+    font-family: "Raleway", sans-serif;
+    @apply transition-colors duration-200;
+  }
+}
+
+/* Dropdown animation */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+button {
+  cursor: pointer;
+}
+
+@keyframes customSpin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.custom-spin {
+  animation: customSpin 20s linear infinite;
+}
+
+.custom-pause {
+  animation-play-state: paused;
+}
+
+@keyframes smoothDrift {
+  0% {
+    transform: translate(0px, 0px);
+  }
+  50% {
+    transform: translate(-40px, -30px);
+  }
+  100% {
+    transform: translate(0px, 0px);
+  }
+}
+
+.custom-drift {
+  animation: smoothDrift 15s ease-in-out infinite;
+}
+
+.custom-pause {
+  animation-play-state: paused;
+}
+
+.leaflet-popup-content-wrapper {
+  background-color: transparent !important;
+  box-shadow: none !important;
+  padding: 0 !important;
+  border-radius: 0 !important;
+}
+.leaflet-popup-content {
+  margin: 0 !important;
+  width: auto !important;
+}
+.leaflet-popup-tip-container {
+  display: none !important;
+}
