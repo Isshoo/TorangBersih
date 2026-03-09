@@ -1,0 +1,15 @@
+meta {
+  name: My Aset
+  type: http
+  seq: 6
+}
+
+get {
+  url: {{base_url}}/aset/my-aset
+  body: none
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{user_access_token}}
+}

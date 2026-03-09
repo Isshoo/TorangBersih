@@ -28,3 +28,8 @@ def update(item_id):
 @marketplace_bp.route('/<item_id>', methods=['DELETE'])
 def delete(item_id):
     return marketplace_controller.delete(item_id)
+
+
+@marketplace_bp.route('/my-marketplace', methods=['GET'])
+def my_marketplace():
+    return marketplace_controller.my_marketplace()

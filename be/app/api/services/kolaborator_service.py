@@ -90,3 +90,34 @@ class KolaboratorService:
 
         db.session.delete(item)
         db.session.commit()
+
+    @staticmethod
+    def get_my_kolaborator(user_id, page=1, per_page=20, search=None, jenis_kolaborator_id=None,
+                kabupaten_kota=None, sort_by='created_at', sort_order='desc'):
+        query = Kolaborator.query.filter_by(id_user=user_id)
+
+        if search:
+            query = query.filter(
+                or_(
+                    Kolaborator.nama_organisasi.ilike(f'%{search}%'),
+                    Kolaborator.deskripsi.ilike(f'%{search}%'),
+                )
+            )
+
+        if jenis_kolaborator_id:
+            query = query.filter_by(jenis_kolaborator_id=jenis_kolaborator_id)
+
+        if kabupaten_kota:
+            query = query.filter(Kolaborator.kabupaten_kota.ilike(f'%{kabupaten_kota}%'))
+
+        # Sorting
+        sort_column = getattr(Kolaborator, sort_by, Kolaborator.created_at)
+        if sort_order == 'asc':
+            query = query.order_by(sort_column.asc())
+        else:
+            query = query.order_by(sort_column.desc())
+
+        total = query.count()
+        items = query.offset((page - 1) * per_page).limit(per_page).all()
+
+        return items, total

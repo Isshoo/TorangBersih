@@ -103,3 +103,35 @@ class MarketplaceService:
 
         db.session.delete(item)
         db.session.commit()
+
+    @staticmethod
+    def get_my_marketplace(user_id, page=1, per_page=20, search=None, kategori_barang_id=None,
+                kondisi=None, status_ketersediaan=None, sort_by='created_at', sort_order='desc'):
+        query = MarketplaceDaurUlang.query.filter_by(id_penjual=user_id)
+
+        if search:
+            query = query.filter(
+                or_(
+                    MarketplaceDaurUlang.nama_barang.ilike(f'%{search}%'),
+                    MarketplaceDaurUlang.deskripsi_barang.ilike(f'%{search}%'),
+                )
+            )
+
+        if kategori_barang_id:
+            query = query.filter_by(kategori_barang_id=kategori_barang_id)
+
+        if kondisi:
+            query = query.filter_by(kondisi=KondisiBarang(kondisi))
+
+        if status_ketersediaan:
+            query = query.filter_by(status_ketersediaan=StatusKetersediaan(status_ketersediaan))
+
+        sort_column = getattr(MarketplaceDaurUlang, sort_by, MarketplaceDaurUlang.created_at)
+        if sort_order == 'asc':
+            query = query.order_by(sort_column.asc())
+        else:
+            query = query.order_by(sort_column.desc())
+
+        total = query.count()
+        items = query.offset((page - 1) * per_page).limit(per_page).all()
+        return items, total

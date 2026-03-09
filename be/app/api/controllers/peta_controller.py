@@ -1,0 +1,28 @@
+"""Peta controller - Map markers endpoint"""
+from flask import request
+from marshmallow import ValidationError
+
+from app.api.services.peta_service import PetaService
+from app.schemas.peta_schema import PetaQuerySchema
+from app.utils.response import success_response, error_response
+
+
+def get_markers():
+    try:
+        params = PetaQuerySchema().load(request.args)
+    except ValidationError as err:
+        return error_response(
+            message="Validasi gagal",
+            errors=[{"field": k, "message": v[0]} for k, v in err.messages.items()],
+            status_code=422
+        )
+    types = params.get('types')
+    if types:
+        types = types.split(',')
+    else:
+        types = None
+    markers = PetaService.get_markers(types)
+    return success_response(
+        data=markers,
+        message=f"{len(markers)} marker berhasil diambil"
+    )

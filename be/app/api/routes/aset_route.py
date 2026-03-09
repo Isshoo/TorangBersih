@@ -28,3 +28,8 @@ def update(item_id):
 @aset_bp.route('/<item_id>', methods=['DELETE'])
 def delete(item_id):
     return aset_controller.delete(item_id)
+
+
+@aset_bp.route('/my-aset', methods=['GET'])
+def my_aset():
+    return aset_controller.my_aset()

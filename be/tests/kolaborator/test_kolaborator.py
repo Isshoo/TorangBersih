@@ -111,3 +111,40 @@ class TestDeleteKolaborator:
         )
 
         assert response.status_code == 200
+
+
+class TestMyKolaborator:
+    """Tests for my-kolaborator endpoint."""
+
+    def test_my_kolaborator_success(self, client, auth_headers, test_kolaborator):
+        """Test user can get their own kolaborator list."""
+        response = client.get('/api/kolaborator/my-kolaborator', headers=auth_headers)
+
+        assert response.status_code == 200
+        data = response.get_json()
+        assert data['success'] is True
+        assert len(data['data']) >= 1
+        # All items should belong to the authenticated user
+        for item in data['data']:
+            assert item['id_user'] is not None
+
+    def test_my_kolaborator_with_search(self, client, auth_headers, test_kolaborator):
+        """Test searching own kolaborator."""
+        response = client.get('/api/kolaborator/my-kolaborator?search=Test', headers=auth_headers)
+
+        assert response.status_code == 200
+        data = response.get_json()
+        assert data['success'] is True
+
+    def test_my_kolaborator_no_auth(self, client):
+        """Test my-kolaborator requires authentication."""
+        response = client.get('/api/kolaborator/my-kolaborator')
+        assert response.status_code == 401
+
+    def test_my_kolaborator_pagination(self, client, auth_headers, test_kolaborator):
+        """Test pagination on my-kolaborator."""
+        response = client.get('/api/kolaborator/my-kolaborator?page=1&per_page=5', headers=auth_headers)
+
+        assert response.status_code == 200
+        data = response.get_json()
+        assert 'meta' in data

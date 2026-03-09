@@ -5,7 +5,7 @@ from marshmallow import ValidationError
 from app.api.services.laporan_service import LaporanService, TindakLanjutService
 from app.schemas.laporan_schema import (
     LaporanCreateSchema, LaporanUpdateStatusSchema,
-    LaporanQuerySchema, TindakLanjutCreateSchema
+    LaporanQuerySchema, TindakLanjutCreateSchema, MyLaporanQuerySchema
 )
 from app.middlewares.auth_middleware import jwt_required_custom, admin_required
 from app.utils.response import success_response, error_response, paginated_response
@@ -99,3 +99,25 @@ def create_tindak_lanjut(laporan_id):
 
     item = TindakLanjutService.create(request.current_user, laporan_id, data)
     return success_response(data=item.to_dict(), message="Tindak lanjut berhasil ditambahkan", status_code=201)
+
+
+@jwt_required_custom
+def my_laporan():
+    try:
+        params = MyLaporanQuerySchema().load(request.args)
+    except ValidationError as err:
+        return error_response(
+            message="Validasi gagal",
+            errors=[{"field": k, "message": v[0]} for k, v in err.messages.items()],
+            status_code=422
+        )
+
+    items, total = LaporanService.get_my_laporan(request.current_user.id, **params)
+
+    return paginated_response(
+        data=[item.to_dict() for item in items],
+        total=total,
+        page=params.get('page', 1),
+        per_page=params.get('per_page', 20),
+        message="Daftar laporan saya berhasil diambil"
+    )

@@ -28,3 +28,8 @@ def update(item_id):
 @kolaborator_bp.route('/<item_id>', methods=['DELETE'])
 def delete(item_id):
     return kolaborator_controller.delete(item_id)
+
+
+@kolaborator_bp.route('/my-kolaborator', methods=['GET'])
+def my_kolaborator():
+    return kolaborator_controller.my_kolaborator()

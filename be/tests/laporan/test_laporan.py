@@ -134,3 +134,37 @@ class TestDeleteLaporan:
         )
 
         assert response.status_code == 200
+
+
+class TestMyLaporan:
+    """Tests for my-laporan endpoint."""
+
+    def test_my_laporan_success(self, client, auth_headers, test_laporan):
+        """Test user can get their own laporan list."""
+        response = client.get('/api/laporan/my-laporan', headers=auth_headers)
+
+        assert response.status_code == 200
+        data = response.get_json()
+        assert data['success'] is True
+        assert len(data['data']) >= 1
+
+    def test_my_laporan_filter_status(self, client, auth_headers, test_laporan):
+        """Test filtering own laporan by status."""
+        response = client.get('/api/laporan/my-laporan?status_laporan=menunggu', headers=auth_headers)
+
+        assert response.status_code == 200
+        data = response.get_json()
+        assert data['success'] is True
+
+    def test_my_laporan_no_auth(self, client):
+        """Test my-laporan requires authentication."""
+        response = client.get('/api/laporan/my-laporan')
+        assert response.status_code == 401
+
+    def test_my_laporan_pagination(self, client, auth_headers, test_laporan):
+        """Test pagination on my-laporan."""
+        response = client.get('/api/laporan/my-laporan?page=1&per_page=5', headers=auth_headers)
+
+        assert response.status_code == 200
+        data = response.get_json()
+        assert 'meta' in data

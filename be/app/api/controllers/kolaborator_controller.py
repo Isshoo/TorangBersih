@@ -82,3 +82,34 @@ def update(item_id):
 def delete(item_id):
     KolaboratorService.delete(item_id, request.current_user)
     return success_response(message="Kolaborator berhasil dihapus")
+
+
+@jwt_required_custom
+def my_kolaborator():
+    try:
+        params = KolaboratorQuerySchema().load(request.args)
+    except ValidationError as err:
+        return error_response(
+            message="Validasi gagal",
+            errors=[{"field": k, "message": v[0]} for k, v in err.messages.items()],
+            status_code=422
+        )
+
+    items, total = KolaboratorService.get_my_kolaborator(
+        request.current_user.id,
+        page=params.get('page', 1),
+        per_page=params.get('per_page', 20),
+        search=params.get('search'),
+        jenis_kolaborator_id=params.get('jenis_kolaborator_id'),
+        kabupaten_kota=params.get('kabupaten_kota'),
+        sort_by=params.get('sort_by', 'created_at'),
+        sort_order=params.get('sort_order', 'desc'),
+    )
+
+    return paginated_response(
+        data=[item.to_dict() for item in items],
+        total=total,
+        page=params.get('page', 1),
+        per_page=params.get('per_page', 20),
+        message="Daftar kolaborator saya berhasil diambil"
+    )

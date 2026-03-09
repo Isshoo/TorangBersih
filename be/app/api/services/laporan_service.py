@@ -86,6 +86,32 @@ class LaporanService:
         db.session.delete(item)
         db.session.commit()
 
+    @staticmethod
+    def get_my_laporan(user_id, page=1, per_page=20, search=None, status_laporan=None,
+                jenis_sampah_id=None, sort_by='tanggal_lapor', sort_order='desc'):
+        query = LaporanSampahIlegal.query.filter_by(id_warga=user_id)
+
+        if search:
+            query = query.filter(
+                LaporanSampahIlegal.alamat_lokasi.ilike(f'%{search}%')
+            )
+
+        if status_laporan:
+            query = query.filter_by(status_laporan=StatusLaporan(status_laporan))
+
+        if jenis_sampah_id:
+            query = query.filter_by(jenis_sampah_id=jenis_sampah_id)
+
+        sort_column = getattr(LaporanSampahIlegal, sort_by, LaporanSampahIlegal.tanggal_lapor)
+        if sort_order == 'asc':
+            query = query.order_by(sort_column.asc())
+        else:
+            query = query.order_by(sort_column.desc())
+
+        total = query.count()
+        items = query.offset((page - 1) * per_page).limit(per_page).all()
+        return items, total
+
 
 class TindakLanjutService:
 

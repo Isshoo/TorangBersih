@@ -1,0 +1,15 @@
+meta {
+  name: Admin Stats
+  type: http
+  seq: 1
+}
+
+get {
+  url: {{base_url}}/dashboard/admin
+  body: none
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{admin_access_token}}
+}

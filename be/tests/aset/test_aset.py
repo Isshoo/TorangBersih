@@ -98,3 +98,37 @@ class TestDeleteAset:
         )
 
         assert response.status_code == 200
+
+
+class TestMyAset:
+    """Tests for my-aset endpoint."""
+
+    def test_my_aset_success(self, client, auth_headers, test_aset):
+        """Test user can get their own aset list."""
+        response = client.get('/api/aset/my-aset', headers=auth_headers)
+
+        assert response.status_code == 200
+        data = response.get_json()
+        assert data['success'] is True
+        assert len(data['data']) >= 1
+
+    def test_my_aset_with_search(self, client, auth_headers, test_aset):
+        """Test searching own aset."""
+        response = client.get('/api/aset/my-aset?search=Test', headers=auth_headers)
+
+        assert response.status_code == 200
+        data = response.get_json()
+        assert data['success'] is True
+
+    def test_my_aset_no_auth(self, client):
+        """Test my-aset requires authentication."""
+        response = client.get('/api/aset/my-aset')
+        assert response.status_code == 401
+
+    def test_my_aset_pagination(self, client, auth_headers, test_aset):
+        """Test pagination on my-aset."""
+        response = client.get('/api/aset/my-aset?page=1&per_page=5', headers=auth_headers)
+
+        assert response.status_code == 200
+        data = response.get_json()
+        assert 'meta' in data

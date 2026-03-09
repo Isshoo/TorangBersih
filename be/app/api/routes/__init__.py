@@ -7,6 +7,8 @@ from app.api.routes.kolaborator_route import kolaborator_bp
 from app.api.routes.aset_route import aset_bp
 from app.api.routes.laporan_route import laporan_bp
 from app.api.routes.marketplace_route import marketplace_bp
+from app.api.routes.dashboard_route import dashboard_bp
+from app.api.routes.peta_route import peta_bp
 
 
 def register_routes(app: Flask) -> None:
@@ -18,3 +20,5 @@ def register_routes(app: Flask) -> None:
     app.register_blueprint(aset_bp)
     app.register_blueprint(laporan_bp)
     app.register_blueprint(marketplace_bp)
+    app.register_blueprint(dashboard_bp)
+    app.register_blueprint(peta_bp)

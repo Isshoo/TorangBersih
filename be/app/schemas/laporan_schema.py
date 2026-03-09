@@ -30,6 +30,15 @@ class LaporanQuerySchema(Schema):
     sort_by = fields.String(load_default='tanggal_lapor', validate=validate.OneOf(['tanggal_lapor', 'estimasi_berat_kg']))
     sort_order = fields.String(load_default='desc', validate=validate.OneOf(['asc', 'desc']))
 
+class MyLaporanQuerySchema(Schema):
+    page = fields.Integer(load_default=1, validate=validate.Range(min=1))
+    per_page = fields.Integer(load_default=20, validate=validate.Range(min=1, max=100))
+    search = fields.String(validate=validate.Length(max=100))
+    status_laporan = fields.String(validate=validate.OneOf(['menunggu', 'diterima', 'ditindak', 'selesai']))
+    jenis_sampah_id = fields.String()
+    sort_by = fields.String(load_default='tanggal_lapor', validate=validate.OneOf(['tanggal_lapor', 'estimasi_berat_kg']))
+    sort_order = fields.String(load_default='desc', validate=validate.OneOf(['asc', 'desc']))
+
 
 class TindakLanjutCreateSchema(Schema):
     tindak_lanjut_penanganan = fields.String(required=True, validate=validate.Length(min=1, max=200))

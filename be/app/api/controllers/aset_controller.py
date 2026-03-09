@@ -81,3 +81,35 @@ def update(item_id):
 def delete(item_id):
     AsetService.delete(item_id, request.current_user)
     return success_response(message="Aset berhasil dihapus")
+
+
+@jwt_required_custom
+def my_aset():
+    try:
+        params = AsetQuerySchema().load(request.args)
+    except ValidationError as err:
+        return error_response(
+            message="Validasi gagal",
+            errors=[{"field": k, "message": v[0]} for k, v in err.messages.items()],
+            status_code=422
+        )
+
+    items, total = AsetService.get_my_aset(
+        request.current_user.id,
+        page=params.get('page', 1),
+        per_page=params.get('per_page', 20),
+        search=params.get('search'),
+        kategori_aset_id=params.get('kategori_aset_id'),
+        kabupaten_kota=params.get('kabupaten_kota'),
+        status_aktif=params.get('status_aktif'),
+        sort_by=params.get('sort_by', 'created_at'),
+        sort_order=params.get('sort_order', 'desc'),
+    )
+
+    return paginated_response(
+        data=[item.to_dict() for item in items],
+        total=total,
+        page=params.get('page', 1),
+        per_page=params.get('per_page', 20),
+        message="Daftar aset saya berhasil diambil"
+    )

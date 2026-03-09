@@ -4,7 +4,7 @@ from marshmallow import ValidationError
 
 from app.api.services.marketplace_service import MarketplaceService
 from app.schemas.marketplace_schema import (
-    MarketplaceCreateSchema, MarketplaceUpdateSchema, MarketplaceQuerySchema
+    MarketplaceCreateSchema, MarketplaceUpdateSchema, MarketplaceQuerySchema, MyMarketplaceQuerySchema
 )
 from app.middlewares.auth_middleware import jwt_required_custom
 from app.utils.response import success_response, error_response, paginated_response
@@ -74,3 +74,25 @@ def update(item_id):
 def delete(item_id):
     MarketplaceService.delete(item_id, request.current_user)
     return success_response(message="Barang berhasil dihapus")
+
+
+@jwt_required_custom
+def my_marketplace():
+    try:
+        params = MyMarketplaceQuerySchema().load(request.args)
+    except ValidationError as err:
+        return error_response(
+            message="Validasi gagal",
+            errors=[{"field": k, "message": v[0]} for k, v in err.messages.items()],
+            status_code=422
+        )
+
+    items, total = MarketplaceService.get_my_marketplace(request.current_user.id, **params)
+
+    return paginated_response(
+        data=[item.to_dict() for item in items],
+        total=total,
+        page=params.get('page', 1),
+        per_page=params.get('per_page', 20),
+        message="Daftar barang saya berhasil diambil"
+    )

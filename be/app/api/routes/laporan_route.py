@@ -39,3 +39,8 @@ def get_tindak_lanjut(laporan_id):
 @laporan_bp.route('/<laporan_id>/tindak-lanjut', methods=['POST'])
 def create_tindak_lanjut(laporan_id):
     return laporan_controller.create_tindak_lanjut(laporan_id)
+
+
+@laporan_bp.route('/my-laporan', methods=['GET'])
+def my_laporan():
+    return laporan_controller.my_laporan()

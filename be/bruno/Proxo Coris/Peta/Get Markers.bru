@@ -1,0 +1,15 @@
+meta {
+  name: Get Markers
+  type: http
+  seq: 1
+}
+
+get {
+  url: {{base_url}}/peta/markers?types=Kolaborator,Aset,Laporan Sampah,Barang Daur Ulang
+  body: none
+  auth: none
+}
+
+params:query {
+  types: Kolaborator,Aset,Laporan Sampah,Barang Daur Ulang
+}

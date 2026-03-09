@@ -101,3 +101,37 @@ class TestDeleteMarketplace:
         )
 
         assert response.status_code == 200
+
+
+class TestMyMarketplace:
+    """Tests for my-marketplace endpoint."""
+
+    def test_my_marketplace_success(self, client, auth_headers, test_marketplace_item):
+        """Test user can get their own marketplace items."""
+        response = client.get('/api/marketplace/my-marketplace', headers=auth_headers)
+
+        assert response.status_code == 200
+        data = response.get_json()
+        assert data['success'] is True
+        assert len(data['data']) >= 1
+
+    def test_my_marketplace_filter_status(self, client, auth_headers, test_marketplace_item):
+        """Test filtering own marketplace by status."""
+        response = client.get('/api/marketplace/my-marketplace?status_ketersediaan=tersedia', headers=auth_headers)
+
+        assert response.status_code == 200
+        data = response.get_json()
+        assert data['success'] is True
+
+    def test_my_marketplace_no_auth(self, client):
+        """Test my-marketplace requires authentication."""
+        response = client.get('/api/marketplace/my-marketplace')
+        assert response.status_code == 401
+
+    def test_my_marketplace_pagination(self, client, auth_headers, test_marketplace_item):
+        """Test pagination on my-marketplace."""
+        response = client.get('/api/marketplace/my-marketplace?page=1&per_page=5', headers=auth_headers)
+
+        assert response.status_code == 200
+        data = response.get_json()
+        assert 'meta' in data
