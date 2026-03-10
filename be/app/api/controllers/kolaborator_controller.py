@@ -27,6 +27,7 @@ def get_all():
         search=params.get('search'),
         jenis_kolaborator_id=params.get('jenis_kolaborator_id'),
         kabupaten_kota=params.get('kabupaten_kota'),
+        status_verifikasi=params.get('status_verifikasi'),
         sort_by=params.get('sort_by', 'created_at'),
         sort_order=params.get('sort_order', 'desc'),
     )

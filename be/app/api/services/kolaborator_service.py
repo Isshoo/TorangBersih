@@ -10,7 +10,7 @@ class KolaboratorService:
 
     @staticmethod
     def get_all(page=1, per_page=20, search=None, jenis_kolaborator_id=None,
-                kabupaten_kota=None, sort_by='created_at', sort_order='desc'):
+                kabupaten_kota=None, status_verifikasi=None, sort_by='created_at', sort_order='desc'):
         query = Kolaborator.query
 
         if search:
@@ -26,6 +26,9 @@ class KolaboratorService:
 
         if kabupaten_kota:
             query = query.filter(Kolaborator.kabupaten_kota.ilike(f'%{kabupaten_kota}%'))
+
+        if status_verifikasi:
+            query = query.filter(Kolaborator.status_verifikasi == StatusVerifikasiKolaborator(status_verifikasi))
 
         # Sorting
         sort_column = getattr(Kolaborator, sort_by, Kolaborator.created_at)

@@ -1,102 +1,238 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
+import { kolaboratorAPI } from "../../../../services/api/routes/kolaborator.route";
+import { referensiAPI } from "../../../../services/api/routes/referensi.route";
 
 function DaftarKolaborator() {
-  const [kolaborator, setKolaborator] = useState([
-    {
-      nama: "BSID Kolaborator",
-      kategori: "Komunitas",
-      lokasi: "Jalan Bukit Dago Utara II",
-      penanggungJawab: "Admin BSID",
-    },
-    {
-      nama: "BSID Kolaborator",
-      kategori: "Komunitas",
-      lokasi: "Jalan Mekarsari, Bekasi Raya",
-      penanggungJawab: "Admin BSID",
-    },
-  ]);
-  console.log(setKolaborator);
+  const [items, setItems] = useState([]);
+  const [meta, setMeta] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+  const [jenisOptions, setJenisOptions] = useState([]);
+
+  const [query, setQuery] = useState({
+    page: 1,
+    per_page: 10,
+    search: "",
+    jenis_kolaborator_id: "",
+    status_verifikasi: "terverifikasi",
+    sort_by: "created_at",
+    sort_order: "desc",
+  });
+
+  const fetchItems = async () => {
+    setLoading(true);
+    setError(null);
+    try {
+      const params = Object.fromEntries(
+        // eslint-disable-next-line no-unused-vars
+        Object.entries(query).filter(([_, v]) => v !== ""),
+      );
+      const res = await kolaboratorAPI.getAll(params);
+      setItems(res.data.data);
+      setMeta(res.data.meta?.pagination);
+    } catch (err) {
+      setError(
+        err.response?.data?.message || "Gagal memuat daftar kolaborator",
+      );
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const fetchJenis = async () => {
+    try {
+      const res = await referensiAPI.getAll("jenis-kolaborator");
+      setJenisOptions(res.data.data || []);
+    } catch {
+      /* ignore */
+    }
+  };
+
+  useEffect(() => {
+    fetchJenis();
+  }, []);
+
+  useEffect(() => {
+    fetchItems();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [query.page, query.jenis_kolaborator_id, query.sort_order]);
+
+  const handleSearch = (e) => {
+    e.preventDefault();
+    setQuery((q) => ({ ...q, page: 1 }));
+    fetchItems();
+  };
+
   return (
     <div className="z-9999 w-full bg-white px-4 py-8 pt-24 md:px-6">
       <div className="mx-auto w-full max-w-6xl space-y-8">
-        <div className={`flex justify-between`}>
+        {/* Header & Filter */}
+        <div className="flex flex-col justify-between gap-4 md:flex-row md:items-center">
           <p className="text-3xl font-semibold">Daftar Kolaborator</p>
-          <button
-            onClick={() => {}}
-            className="flex items-center gap-2 rounded-full border border-(--primary) px-10 py-1.5 font-medium text-(--primary) transition-colors hover:bg-indigo-50"
-          >
-            Kategori
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              className="h-6 w-6"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-              stroke-width="2"
-            >
-              <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                d="M19 9l-7 7-7-7"
+          <div className="flex flex-col gap-3 sm:flex-row">
+            <form onSubmit={handleSearch} className="flex">
+              <input
+                type="text"
+                placeholder="Cari organisasi..."
+                value={query.search}
+                onChange={(e) =>
+                  setQuery((q) => ({ ...q, search: e.target.value }))
+                }
+                className="w-full rounded-l-full border border-gray-300 py-2 pr-4 pl-5 text-sm focus:border-(--primary) focus:ring-1 focus:ring-(--primary) focus:outline-none sm:w-64"
               />
-            </svg>
-          </button>
+              <button
+                type="submit"
+                className="rounded-r-full bg-(--primary) px-4 py-2 text-sm font-medium text-white transition hover:bg-indigo-700"
+              >
+                Cari
+              </button>
+            </form>
+
+            <div className="relative">
+              <select
+                value={query.jenis_kolaborator_id}
+                onChange={(e) =>
+                  setQuery((q) => ({
+                    ...q,
+                    jenis_kolaborator_id: e.target.value,
+                    page: 1,
+                  }))
+                }
+                className="w-full appearance-none rounded-full border border-(--primary) bg-white py-2 pr-10 pl-5 font-medium text-(--primary) transition-colors hover:bg-indigo-50 focus:ring-1 focus:ring-(--primary) focus:outline-none"
+              >
+                <option value="">Semua Kategori</option>
+                {jenisOptions.map((j) => (
+                  <option key={j.id} value={j.id}>
+                    {j.nama}
+                  </option>
+                ))}
+              </select>
+              <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-4">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  className="h-4 w-4 text-(--primary)"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    d="M19 9l-7 7-7-7"
+                  />
+                </svg>
+              </div>
+            </div>
+          </div>
         </div>
-        <div className="mb-4 grid grid-cols-12 gap-4 border-b-[3px] border-slate-200 pb-3 text-lg font-bold text-black">
-          <div className="col-span-4 pl-8 text-center">Nama</div>
-          <div className="col-span-2 text-center">Kategori</div>
-          <div className="col-span-3 text-left">Lokasi</div>
-          <div className="col-span-3 pr-6 text-center">Penanggung Jawab</div>
+
+        {/* Table Header Wrapper for scrollable responsive table */}
+        <div className="overflow-x-auto">
+          <div className="min-w-[800px]">
+            <div className="mb-4 grid grid-cols-12 gap-4 border-b-[3px] border-slate-200 pb-3 text-lg font-bold text-black">
+              <div className="col-span-4 pl-8 text-center">Nama</div>
+              <div className="col-span-2 text-center">Kategori</div>
+              <div className="col-span-3 text-left">Lokasi</div>
+              <div className="col-span-3 pr-6 text-center">
+                Penanggung Jawab
+              </div>
+            </div>
+
+            <div className="space-y-4">
+              {loading ? (
+                <div className="flex justify-center p-10">
+                  <div className="h-8 w-8 animate-spin rounded-full border-4 border-(--primary) border-t-transparent" />
+                </div>
+              ) : error ? (
+                <div className="p-8 text-center text-red-500">{error}</div>
+              ) : items.length === 0 ? (
+                <div className="p-8 text-center font-medium text-gray-400">
+                  Belum ada kolaborator yang terverifikasi.
+                </div>
+              ) : (
+                items.map((item) => (
+                  <Kolaborator
+                    key={item.id}
+                    id={item.id}
+                    nama={item.nama_organisasi}
+                    kategori={item.jenis_kolaborator?.nama || "-"}
+                    lokasi={item.kabupaten_kota || "-"}
+                    penanggungJawab={item.penanggung_jawab || "-"}
+                  />
+                ))
+              )}
+            </div>
+          </div>
         </div>
-        {kolaborator.map(({ nama, kategori, lokasi, penanggungJawab }) => {
-          return (
-            <Kolaborator
-              key={nama}
-              nama={nama}
-              kategori={kategori}
-              lokasi={lokasi}
-              penanggungJawab={penanggungJawab}
-            />
-          );
-        })}
+
+        {/* Pagination Wrapper */}
+        {!loading && meta && meta.total_pages > 1 && (
+          <div className="flex items-center justify-between border-t border-gray-100 pt-6">
+            <span className="text-sm font-medium text-gray-500">
+              Menampilkan {items.length} dari {meta.total}
+            </span>
+            <div className="flex gap-2">
+              <button
+                disabled={!meta.has_prev}
+                onClick={() => setQuery((q) => ({ ...q, page: q.page - 1 }))}
+                className="rounded-lg border px-4 py-2 text-sm font-medium transition hover:bg-gray-50 disabled:opacity-40"
+              >
+                Kembali
+              </button>
+              <div className="flex items-center justify-center rounded-lg bg-(--primary) px-4 py-2 font-medium text-white shadow-sm">
+                Hal {meta.page}
+              </div>
+              <button
+                disabled={!meta.has_next}
+                onClick={() => setQuery((q) => ({ ...q, page: q.page + 1 }))}
+                className="rounded-lg border px-4 py-2 text-sm font-medium transition hover:bg-gray-50 disabled:opacity-40"
+              >
+                Selanjutnya
+              </button>
+            </div>
+          </div>
+        )}
       </div>
     </div>
   );
 }
 
-function Kolaborator({ nama, kategori, lokasi, penanggungJawab }) {
+function Kolaborator({ id, nama, kategori, lokasi, penanggungJawab }) {
   return (
-    <div className="flex h-[84px] overflow-hidden rounded-md border border-gray-200 bg-white shadow-sm">
+    <div className="flex min-h-[84px] overflow-hidden rounded-md border border-gray-200 bg-white py-2 shadow-sm transition hover:shadow-md">
       <div className="w-[42px] flex-shrink-0 bg-[#22247A]"></div>
       <div className="grid flex-1 grid-cols-12 items-center gap-4 pr-6 pl-5">
-        <div className="col-span-4 flex items-center gap-5">
-          <div className="flex h-[52px] w-[52px] flex-shrink-0 items-center justify-center rounded-full bg-[#1A3084] text-white">
+        <div className="col-span-4 flex items-center gap-4 sm:gap-5">
+          <div className="flex h-[40px] w-[40px] flex-shrink-0 items-center justify-center rounded-full bg-[#1A3084] text-white sm:h-[52px] sm:w-[52px]">
             <svg
               xmlns="http://www.w3.org/2000/svg"
               fill="currentColor"
-              className="h-7 w-7"
+              className="h-5 w-5 sm:h-7 sm:w-7"
               viewBox="0 0 24 24"
             >
               <path d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5c-1.66 0-3 1.34-3 3s1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5C6.34 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.45V19h6v-2.5c0-2.33-4.67-3.5-7-3.5z" />
             </svg>
           </div>
-          <span className="text-[15px] font-semibold text-[#20257B]">
+          <span className="text-[14px] font-semibold text-[#20257B] sm:text-[15px]">
             {nama}
           </span>
         </div>
-        <div className="col-span-2 text-center text-[14px] font-medium text-gray-800">
+        <div className="col-span-2 text-center text-[13px] font-medium text-gray-800 sm:text-[14px]">
           {kategori}
         </div>
-        <div className="col-span-3 text-left text-[14px] leading-tight font-medium text-gray-800">
+        <div className="col-span-3 text-left text-[13px] leading-tight font-medium text-gray-800 sm:text-[14px]">
           {lokasi}
         </div>
-        <div className="col-span-3 flex items-center justify-around pl-6 text-[14px] font-medium text-gray-800">
-          <span>{penanggungJawab}</span>
-          <Link to="/kolaborator/id">
+        <div className="col-span-3 flex items-center justify-between pl-2 text-[13px] font-medium text-gray-800 sm:justify-around sm:pl-6 sm:text-[14px]">
+          <span className="line-clamp-2 pr-2">{penanggungJawab}</span>
+          <Link
+            to={`/kolaborator/${id}`}
+            className="flex-shrink-0 transition-transform hover:scale-110"
+          >
             <svg
-              width="30"
-              height="30"
+              className="h-[24px] w-[24px] sm:h-[30px] sm:w-[30px]"
               viewBox="0 0 40 40"
               fill="none"
               xmlns="http://www.w3.org/2000/svg"
