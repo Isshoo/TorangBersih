@@ -3,8 +3,8 @@ from flask import request
 from marshmallow import ValidationError
 
 from app.api.services.aset_service import AsetService
-from app.schemas.aset_schema import AsetCreateSchema, AsetUpdateSchema, AsetQuerySchema
-from app.middlewares.auth_middleware import jwt_required_custom
+from app.schemas.aset_schema import AsetCreateSchema, AsetUpdateSchema, AsetQuerySchema, AsetVerifySchema
+from app.middlewares.auth_middleware import jwt_required_custom, admin_required
 from app.utils.response import success_response, error_response, paginated_response
 
 
@@ -81,6 +81,26 @@ def update(item_id):
 def delete(item_id):
     AsetService.delete(item_id, request.current_user)
     return success_response(message="Aset berhasil dihapus")
+
+
+@admin_required
+def verify(item_id):
+    try:
+        data = AsetVerifySchema().load(request.get_json() or {})
+    except ValidationError as err:
+        return error_response(
+            message="Validasi gagal",
+            errors=[{"field": k, "message": v[0]} for k, v in err.messages.items()],
+            status_code=422
+        )
+
+    item = AsetService.verify(
+        item_id,
+        admin_user=request.current_user,
+        status_str=data['status_verifikasi'],
+        catatan=data.get('catatan_verifikasi'),
+    )
+    return success_response(data=item.to_dict(), message="Status verifikasi aset berhasil diperbarui")
 
 
 @jwt_required_custom

@@ -2,7 +2,7 @@
 from sqlalchemy import or_
 
 from app.config.extensions import db
-from app.database.models import Kolaborator, RefJenisKolaborator
+from app.database.models import Kolaborator, RefJenisKolaborator, StatusVerifikasiKolaborator
 from app.utils.exceptions import NotFoundError, ForbiddenError, BadRequestError
 
 
@@ -92,21 +92,30 @@ class KolaboratorService:
         db.session.commit()
 
     @staticmethod
-    def verify(item_id):
+    def verify(item_id, admin_user, status_str, catatan=None):
+        from datetime import datetime, timezone as tz
+
         item = db.session.get(Kolaborator, item_id)
         if not item:
             raise NotFoundError("Kolaborator tidak ditemukan")
 
-        if item.status_verifikasi:
-            raise BadRequestError("Kolaborator sudah diverifikasi sebelumnya")
+        if item.status_verifikasi != StatusVerifikasiKolaborator.MENUNGGU:
+            raise BadRequestError("Kolaborator sudah diverifikasi/ditolak sebelumnya")
 
-        item.status_verifikasi = True
+        item.status_verifikasi = StatusVerifikasiKolaborator(status_str)
+        item.id_admin_verifikator = admin_user.id
+        item.catatan_verifikasi = catatan
+        item.waktu_verifikasi = datetime.now(tz.utc)
         db.session.commit()
 
         # Send email notification
         recipient_email = item.email if item.email else item.user.email
-        from app.lib.mailer import send_kolaborator_verified_email
-        send_kolaborator_verified_email(to=recipient_email, kolaborator=item)
+        from app.lib.mailer import send_kolaborator_verified_email, send_kolaborator_rejected_email
+
+        if item.status_verifikasi == StatusVerifikasiKolaborator.TERVERIFIKASI:
+            send_kolaborator_verified_email(to=recipient_email, kolaborator=item)
+        else:
+            send_kolaborator_rejected_email(to=recipient_email, kolaborator=item, catatan=catatan)
 
         return item
 

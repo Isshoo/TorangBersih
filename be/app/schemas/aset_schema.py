@@ -37,3 +37,11 @@ class AsetQuerySchema(Schema):
     status_aktif = fields.Boolean()
     sort_by = fields.String(load_default='created_at', validate=validate.OneOf(['created_at', 'nama_aset']))
     sort_order = fields.String(load_default='desc', validate=validate.OneOf(['asc', 'desc']))
+
+
+class AsetVerifySchema(Schema):
+    status_verifikasi = fields.String(
+        required=True,
+        validate=validate.OneOf(['terverifikasi', 'ditolak'])
+    )
+    catatan_verifikasi = fields.String(validate=validate.Length(max=1000))

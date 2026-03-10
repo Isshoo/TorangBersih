@@ -40,3 +40,11 @@ class KolaboratorQuerySchema(Schema):
     kabupaten_kota = fields.String()
     sort_by = fields.String(load_default='created_at', validate=validate.OneOf(['created_at', 'nama_organisasi']))
     sort_order = fields.String(load_default='desc', validate=validate.OneOf(['asc', 'desc']))
+
+
+class KolaboratorVerifySchema(Schema):
+    status_verifikasi = fields.String(
+        required=True,
+        validate=validate.OneOf(['terverifikasi', 'ditolak'])
+    )
+    catatan_verifikasi = fields.String(validate=validate.Length(max=1000))

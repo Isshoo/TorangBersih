@@ -37,7 +37,7 @@ class DashboardService:
 
         # Recent items
         recent_laporan = LaporanSampahIlegal.query.order_by(
-            LaporanSampahIlegal.tanggal_lapor.desc()
+            LaporanSampahIlegal.created_at.desc()
         ).limit(5).all()
 
         recent_kolaborator = Kolaborator.query.order_by(
@@ -84,7 +84,7 @@ class DashboardService:
         recent_laporan = LaporanSampahIlegal.query.filter_by(
             id_warga=user_id
         ).order_by(
-            LaporanSampahIlegal.tanggal_lapor.desc()
+            LaporanSampahIlegal.created_at.desc()
         ).limit(5).all()
 
         return {

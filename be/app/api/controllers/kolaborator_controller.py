@@ -4,7 +4,8 @@ from marshmallow import ValidationError
 
 from app.api.services.kolaborator_service import KolaboratorService
 from app.schemas.kolaborator_schema import (
-    KolaboratorCreateSchema, KolaboratorUpdateSchema, KolaboratorQuerySchema
+    KolaboratorCreateSchema, KolaboratorUpdateSchema, KolaboratorQuerySchema,
+    KolaboratorVerifySchema
 )
 from app.middlewares.auth_middleware import jwt_required_custom, optional_jwt, admin_required
 from app.utils.response import success_response, error_response, paginated_response
@@ -86,8 +87,22 @@ def delete(item_id):
 
 @admin_required
 def verify(item_id):
-    item = KolaboratorService.verify(item_id)
-    return success_response(data=item.to_dict(), message="Kolaborator berhasil diverifikasi")
+    try:
+        data = KolaboratorVerifySchema().load(request.get_json() or {})
+    except ValidationError as err:
+        return error_response(
+            message="Validasi gagal",
+            errors=[{"field": k, "message": v[0]} for k, v in err.messages.items()],
+            status_code=422
+        )
+
+    item = KolaboratorService.verify(
+        item_id,
+        admin_user=request.current_user,
+        status_str=data['status_verifikasi'],
+        catatan=data.get('catatan_verifikasi'),
+    )
+    return success_response(data=item.to_dict(), message="Status verifikasi kolaborator berhasil diperbarui")
 
 
 @jwt_required_custom
