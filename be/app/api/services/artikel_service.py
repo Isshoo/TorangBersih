@@ -14,8 +14,8 @@ class ArtikelService:
         if search:
             query = query.filter(
                 or_(
-                    Artikel.judul.ilike(f'%{search}%'),
-                    Artikel.isi.ilike(f'%{search}%'),
+                    Artikel.judul_artikel.ilike(f'%{search}%'),
+                    Artikel.konten_teks.ilike(f'%{search}%'),
                 )
             )
 
@@ -41,7 +41,7 @@ class ArtikelService:
 
     @staticmethod
     def create(user, data):
-        item = Artikel(id_user=user.id, **data)
+        item = Artikel(id_penulis=user.id, **data)
         db.session.add(item)
         db.session.commit()
         return item
@@ -53,7 +53,7 @@ class ArtikelService:
             raise NotFoundError("Artikel tidak ditemukan")
 
         # Only owner or admin can update
-        if item.id_user != user.id and not user.is_admin:
+        if item.id_penulis != user.id and not getattr(user, 'is_admin', False):
             raise ForbiddenError("Tidak memiliki akses untuk mengubah artikel ini")
 
         for key, value in data.items():
@@ -68,7 +68,7 @@ class ArtikelService:
         if not item:
             raise NotFoundError("Artikel tidak ditemukan")
 
-        if item.id_user != user.id and not user.is_admin:
+        if item.id_penulis != user.id and not getattr(user, 'is_admin', False):
             raise ForbiddenError("Tidak memiliki akses untuk menghapus artikel ini")
 
         db.session.delete(item)
@@ -76,13 +76,13 @@ class ArtikelService:
 
     @staticmethod
     def get_my_artikel(user_id, page=1, per_page=20, search=None, sort_by='created_at', sort_order='desc'):
-        query = Artikel.query.filter_by(id_user=user_id)
+        query = Artikel.query.filter_by(id_penulis=user_id)
 
         if search:
             query = query.filter(
                 or_(
-                    Artikel.judul.ilike(f'%{search}%'),
-                    Artikel.isi.ilike(f'%{search}%'),
+                    Artikel.judul_artikel.ilike(f'%{search}%'),
+                    Artikel.konten_teks.ilike(f'%{search}%'),
                 )
             )
 
