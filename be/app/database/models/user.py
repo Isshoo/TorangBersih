@@ -37,11 +37,6 @@ class User(db.Model):
     updated_at = db.Column(db.DateTime(timezone=True), default=lambda: datetime.now(timezone.utc), onupdate=lambda: datetime.now(timezone.utc), nullable=False)
     last_login_at = db.Column(db.DateTime(timezone=True))
     
-    # Relationships
-    artikel = db.relationship('Artikel', backref='penulis', lazy='dynamic')
-    artikel_likes = db.relationship('ArtikelLike', backref='user', lazy='dynamic')
-    artikel_komentar = db.relationship('ArtikelKomentar', backref='user', lazy='dynamic')
-    
     def __repr__(self):
         return f'<User {self.username}>'
     
