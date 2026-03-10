@@ -1,0 +1,21 @@
+meta {
+  name: Get All Artikel
+  type: http
+  seq: 1
+}
+
+get {
+  url: {{base_url}}/api/artikel?search=&sort_by=created_at&sort_order=desc
+  body: none
+  auth: none
+}
+
+query {
+  search: 
+  sort_by: created_at
+  sort_order: desc
+}
+
+headers {
+  Accept: application/json
+}
