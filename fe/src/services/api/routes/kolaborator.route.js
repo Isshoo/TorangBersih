@@ -19,4 +19,5 @@ export const kolaboratorAPI = {
   },
   update: (id, data) => api.put(`/kolaborator/${id}`, data),
   delete: (id) => api.delete(`/kolaborator/${id}`),
+  verify: (id, data) => api.patch(`/kolaborator/${id}/verify`, data),
 };
