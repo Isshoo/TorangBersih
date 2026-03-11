@@ -254,6 +254,7 @@ def seed_kolaborator(user_ids, ref_ids):
                 "Siswa aktif dalam kegiatan pilah sampah dan kompos setiap minggunya."
             ),
             logo_url="https://placehold.co/200x200?text=SMK1",
+            email="asd@example.com",
             kabupaten_kota="Kota Bitung",
             alamat_lengkap="Jl. Sam Ratulangi No. 20, Madidir",
             latitude=1.4455,
@@ -285,6 +286,7 @@ def seed_aset(user_ids, ref_ids):
             id_user=user_ids[1],
             nama_aset="Bank Sampah Sejahtera",
             kategori_aset_id=ka_ids[0],  # Bank Sampah
+            deskripsi_aset="Bank sampah yang mengelola sampah organik dan anorganik.",
             status_aktif=True,
             kabupaten_kota="Kabupaten Minahasa Utara",
             alamat_lengkap="Jl. Raya Manado-Bitung, Airmadidi",
@@ -306,6 +308,7 @@ def seed_aset(user_ids, ref_ids):
             id_user=user_ids[2],
             nama_aset="TPA Cipatik",
             kategori_aset_id=ka_ids[1],  # TPA
+            deskripsi_aset="TPA yang mengelola sampah organik dan anorganik.",
             status_aktif=True,
             kabupaten_kota="Kabupaten Minahasa",
             alamat_lengkap="Jl. Siswa Tondano, Tondano Barat",
@@ -326,6 +329,7 @@ def seed_aset(user_ids, ref_ids):
             id_user=user_ids[3],
             nama_aset="Rumah Kompos Green Village",
             kategori_aset_id=ka_ids[2],  # Composting
+            deskripsi_aset="Rumah kompos yang mengelola sampah organik dan anorganik.",
             status_aktif=True,
             kabupaten_kota="Kota Kotamobagu",
             alamat_lengkap="Jl. Ahmad Yani No. 5, Kotamobagu Barat",

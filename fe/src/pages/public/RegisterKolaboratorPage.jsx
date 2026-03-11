@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import Vektor from "../../../public/images/DaftarKolabolatorVektor.png";
 import toaster from "../../utils/toaster";
 import { kolaboratorAPI } from "../../services/api/routes/kolaborator.route";
 import { referensiAPI } from "../../services/api/routes/referensi.route";
@@ -159,7 +158,7 @@ const RegisterKolaborator = () => {
             ))}
           </div>
           <img
-            src={Vektor}
+            src="/images/DaftarKolabolatorVektor.png"
             alt="Ornamen"
             className="pointer-events-none absolute bottom-0 left-0 w-full object-cover opacity-80"
           />
@@ -211,7 +210,11 @@ const RegisterKolaborator = () => {
               {submitting && (
                 <div className="size-4 animate-spin rounded-full border-2 border-white/30 border-t-white" />
               )}
-              {currentStep === 3 ? "Daftar" : "Lanjut"}
+              {submitting
+                ? "Memproses..."
+                : currentStep === 3
+                  ? "Daftar"
+                  : "Lanjut"}
             </button>
           </div>
         </div>

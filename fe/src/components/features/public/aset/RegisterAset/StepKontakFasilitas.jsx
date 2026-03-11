@@ -1,37 +1,34 @@
 import React, { useState } from "react";
 
 const RULES = {
-  nama_pic: {
+  penanggung_jawab: {
     minLength: 3,
     maxLength: 80,
     pattern: /^[a-zA-ZÀ-ÖØ-öø-ÿ\s'.,-]+$/,
     patternMsg: "Nama hanya boleh berisi huruf.",
   },
-  no_whatsapp_pic: {
+  kontak: {
     pattern: /^(\+62|62|0)8[1-9][0-9]{6,11}$/,
     patternMsg: "Format tidak valid. Cth: 08123456789",
   },
-  email_pic: {
-    pattern: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
-    patternMsg: "Format email tidak valid. Cth: user@email.com",
-  }, // Tambahan aturan email
 };
 
 const validate = (name, value) => {
   if (!value?.trim()) return "Wajib diisi.";
   const r = RULES[name];
-  if (!r) return null;
-  if (r.minLength && value.trim().length < r.minLength)
-    return `Minimal ${r.minLength} karakter.`;
-  if (r.maxLength && value.trim().length > r.maxLength)
-    return `Maksimal ${r.maxLength} karakter.`;
 
-  if (name === "no_whatsapp_pic") {
+  if (name === "kontak") {
     const cleaned = value.replace(/[\s\-()]/g, "");
+    if (!/^[\d+]+$/.test(cleaned))
+      return "Nomor hanya boleh berisi angka dan tanda +.";
     if (r.pattern && !r.pattern.test(cleaned)) return r.patternMsg;
     return null;
   }
 
+  if (r.minLength && value.trim().length < r.minLength)
+    return `Minimal ${r.minLength} karakter.`;
+  if (r.maxLength && value.trim().length > r.maxLength)
+    return `Maksimal ${r.maxLength} karakter.`;
   if (r.pattern && !r.pattern.test(value.trim())) return r.patternMsg;
   return null;
 };
@@ -106,12 +103,13 @@ const StepKontakFasilitas = ({ formData, handleChange }) => {
 
   const handleLocal = (e) => {
     const { name, value } = e.target;
-    if (name === "nama_pic" && /[0-9]/.test(e.nativeEvent?.data)) return;
-    if (name === "no_whatsapp_pic") {
+    if (name === "penanggung_jawab" && /[0-9]/.test(e.nativeEvent?.data))
+      return;
+    if (name === "kontak") {
       const cleaned = value.replace(/[^\d+\s\-()]/g, "");
       handleChange({ target: { name, value: cleaned } });
       if (touched[name])
-        setErrors((p) => ({ ...p, [name]: validate(name, cleaned) }));
+        setErrors((prev) => ({ ...prev, [name]: validate(name, cleaned) }));
       return;
     }
     handleChange(e);
@@ -135,20 +133,22 @@ const StepKontakFasilitas = ({ formData, handleChange }) => {
         <div className="relative">
           <input
             type="text"
-            name="nama_pic"
-            value={formData.nama_pic}
+            name="penanggung_jawab"
+            value={formData.penanggung_jawab}
             onChange={handleLocal}
             onBlur={handleBlur}
             placeholder="Cth: Ricky Watuseke"
-            maxLength={80}
-            className={`${inputClass(touched.nama_pic, errors.nama_pic)} pr-8`}
+            maxLength={RULES.penanggung_jawab.maxLength}
+            className={`${inputClass(touched.penanggung_jawab, errors.penanggung_jawab)} pr-8`}
           />
-          {isValid("nama_pic") && <SuccessIcon />}
+          {isValid("penanggung_jawab") && <SuccessIcon />}
         </div>
-        <ErrorMsg msg={touched.nama_pic ? errors.nama_pic : null} />
-        {!errors.nama_pic && (
+        <ErrorMsg
+          msg={touched.penanggung_jawab ? errors.penanggung_jawab : null}
+        />
+        {!errors.penanggung_jawab && (
           <p className="mt-1 text-[11px] text-gray-400">
-            Hanya huruf, tanpa angka.
+            Hanya boleh berisi huruf, tanpa angka.
           </p>
         )}
       </div>
@@ -161,59 +161,32 @@ const StepKontakFasilitas = ({ formData, handleChange }) => {
         <div className="relative">
           <input
             type="tel"
-            name="no_whatsapp_pic"
-            value={formData.no_whatsapp_pic}
+            name="kontak"
+            value={formData.kontak}
             onChange={handleLocal}
             onBlur={handleBlur}
             onKeyDown={handleWaKeyDown}
             placeholder="Cth: 08123456789"
             maxLength={16}
             inputMode="numeric"
-            className={`${inputClass(touched.no_whatsapp_pic, errors.no_whatsapp_pic)} pr-8`}
+            className={`${inputClass(touched.kontak, errors.kontak)} pr-8`}
           />
-          {isValid("no_whatsapp_pic") && <SuccessIcon />}
+          {isValid("kontak") && <SuccessIcon />}
         </div>
-        <ErrorMsg
-          msg={touched.no_whatsapp_pic ? errors.no_whatsapp_pic : null}
-        />
-        {!errors.no_whatsapp_pic && (
+        <ErrorMsg msg={touched.kontak ? errors.kontak : null} />
+        {!errors.kontak && (
           <p className="mt-1 text-[11px] text-gray-400">
             Format: 08xxxxxxxxxx atau +628xxxxxxxxxx
           </p>
         )}
       </div>
 
-      {/* Email PIC */}
-      <div>
-        <label className="mb-2 block text-[13px] font-bold text-gray-800">
-          Email Penanggung Jawab
-        </label>
-        <div className="relative">
-          <input
-            type="email"
-            name="email_pic"
-            value={formData.email_pic || ""}
-            onChange={handleLocal}
-            onBlur={handleBlur}
-            placeholder="Cth: ricky@email.com"
-            className={`${inputClass(touched.email_pic, errors.email_pic)} pr-8`}
-          />
-          {isValid("email_pic") && <SuccessIcon />}
-        </div>
-        <ErrorMsg msg={touched.email_pic ? errors.email_pic : null} />
-        {!errors.email_pic && (
-          <p className="mt-1 text-[11px] text-gray-400">
-            Gunakan email aktif untuk verifikasi.
-          </p>
-        )}
-      </div>
-
       {/* Info box */}
-      <div className="rounded-lg border border-blue-100 bg-blue-50/60 px-4 py-3">
+      <div className="rounded-lg border border-emerald-100 bg-emerald-50/60 px-4 py-3">
         <p className="text-[12px] leading-relaxed text-gray-600">
-          <span className="font-bold text-[#1e1f78]">ℹ️ Informasi:</span> Kontak
-          ini akan digunakan untuk keperluan koordinasi dan verifikasi data aset
-          oleh admin TorangBersih.
+          <span className="font-bold text-emerald-700">ℹ️ Informasi:</span>{" "}
+          Kontak ini akan digunakan untuk keperluan koordinasi dan verifikasi
+          data aset oleh admin TorangBersih.
         </p>
       </div>
     </div>

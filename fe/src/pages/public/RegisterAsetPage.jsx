@@ -1,38 +1,48 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import toaster from "../../utils/toaster";
-import Vektor from "../../../public/images/DaftarKolabolatorVektor.png";
+import { asetAPI } from "../../services/api/routes/aset.route";
 
-import StepInfoAset from "../../components/features/public/aset/DaftarAset/StepInfoAset";
-import StepLokasiAset from "../../components/features/public/aset/DaftarAset/StepLokasiAset";
-import StepKontakFasilitas from "../../components/features/public/aset/DaftarAset/StepKontakFasilitas";
-import StepFotoAset from "../../components/features/public/aset/DaftarAset/StepFotoAset";
+import StepInfoAset from "../../components/features/public/aset/RegisterAset/StepInfoAset";
+import StepLokasiAset from "../../components/features/public/aset/RegisterAset/StepLokasiAset";
+import StepKontakFasilitas from "../../components/features/public/aset/RegisterAset/StepKontakFasilitas";
+import StepFotoAset from "../../components/features/public/aset/RegisterAset/StepFotoAset";
+import { referensiAPI } from "../../services/api/routes/referensi.route";
 
-const steps = [
-  { num: 1, title: "Info Aset" },
-  { num: 2, title: "Lokasi" },
-  { num: 3, title: "Kontak" },
-  { num: 4, title: "Foto" },
-];
-
-const DaftarAset = () => {
+const RegisterAsetPage = () => {
   const navigate = useNavigate();
   const [currentStep, setCurrentStep] = useState(1);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [kategoriAset, setKategoriAset] = useState([]);
+
+  // Logo file (to be uploaded separately as formdata blob)
+  const [fotoAsetFiles, setFotoAsetFiles] = useState([]);
 
   const [formData, setFormData] = useState({
     nama_aset: "",
-    kategori_aset: "",
-    status_aktif: true,
+    kategori_aset_id: "",
+    deskripsi_aset: "",
     kabupaten_kota: "",
-    kecamatan: "",
     alamat_lengkap: "",
-    gmaps_url: "",
-    latitude: null,
-    longitude: null,
-    nama_pic: "",
-    no_whatsapp_pic: "",
-    foto_aset_urls: [],
+    latitude: 1.4748,
+    longitude: 124.8421,
+    penanggung_jawab: "",
+    kontak: "",
   });
+
+  useEffect(() => {
+    const fetchKategoriAset = async () => {
+      try {
+        const res = await referensiAPI.getAll("kategori-aset");
+        setKategoriAset(res.data.data);
+      } catch (err) {
+        toaster.error(
+          `${err.response.data.message || "Gagal memuat opsi kategori aset"}`,
+        );
+      }
+    };
+    fetchKategoriAset();
+  }, []);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -43,22 +53,23 @@ const DaftarAset = () => {
     if (currentStep === 1) {
       if (!formData.nama_aset.trim())
         return toaster.warning("Isi nama aset terlebih dahulu.");
-      if (!formData.kategori_aset)
+      if (!formData.kategori_aset_id)
         return toaster.warning("Pilih kategori aset.");
+      if (!formData.deskripsi_aset.trim())
+        return toaster.warning("Isi deskripsi aset.");
     }
     if (currentStep === 2) {
       if (!formData.kabupaten_kota)
         return toaster.warning("Pilih Kota/Kabupaten.");
-      if (!formData.kecamatan) return toaster.warning("Pilih Kecamatan.");
       if (!formData.alamat_lengkap.trim())
         return toaster.warning("Isi alamat lengkap.");
-      if (!formData.gmaps_url.trim())
-        return toaster.warning("Sertakan link Google Maps.");
+      if (!formData.latitude || !formData.longitude)
+        return toaster.warning("Pilih lokasi pada peta.");
     }
     if (currentStep === 3) {
-      if (!formData.nama_pic.trim())
+      if (!formData.penanggung_jawab.trim())
         return toaster.warning("Isi nama penanggung jawab.");
-      if (!formData.no_whatsapp_pic.trim())
+      if (!formData.kontak.trim())
         return toaster.warning("Isi nomor WhatsApp.");
     }
     setCurrentStep((prev) => Math.min(prev + 1, 4));
@@ -66,36 +77,41 @@ const DaftarAset = () => {
 
   const handlePrev = () => setCurrentStep((prev) => Math.max(prev - 1, 1));
 
-  const handleSubmit = () => {
-    console.group("📦 DATA DAFTAR ASET");
-    console.group("🏷️ Step 1 — Info Aset");
-    console.log("nama_aset     :", formData.nama_aset);
-    console.log("kategori_aset :", formData.kategori_aset);
-    console.log("status_aktif  :", formData.status_aktif);
-    console.groupEnd();
-    console.group("📍 Step 2 — Lokasi");
-    console.log("kabupaten_kota:", formData.kabupaten_kota);
-    console.log("kecamatan     :", formData.kecamatan);
-    console.log("alamat_lengkap:", formData.alamat_lengkap);
-    console.log("gmaps_url     :", formData.gmaps_url);
-    console.log("latitude      :", formData.latitude);
-    console.log("longitude     :", formData.longitude);
-    console.groupEnd();
-    console.group("📞 Step 3 — Kontak");
-    console.log("nama_pic        :", formData.nama_pic);
-    console.log("no_whatsapp_pic :", formData.no_whatsapp_pic);
-    console.groupEnd();
-    console.group("📷 Step 4 — Foto");
-    console.log("foto_aset_urls:", formData.foto_aset_urls);
-    console.groupEnd();
-    console.log("─────────────────────────────");
-    console.log("📦 Full object:", formData);
-    console.log("📦 JSON       :", JSON.stringify(formData, null, 2));
-    console.groupEnd();
+  const handleSubmit = async (e) => {
+    if (e) e.preventDefault();
 
-    toaster.success("Aset berhasil didaftarkan! Menunggu verifikasi admin.");
-    navigate(-1);
+    if (!formData.penanggung_jawab || !formData.kontak) {
+      toaster.warning(
+        "Mohon lengkapi nama kontak dan No WA sebelum mendaftar.",
+      );
+      return;
+    }
+
+    try {
+      setIsSubmitting(true);
+
+      await asetAPI.create(formData, fotoAsetFiles);
+
+      toaster.success("Aset berhasil didaftarkan! Menunggu verifikasi admin.");
+      navigate("/user/aset");
+    } catch (err) {
+      const msg =
+        err.response?.data?.message || "Terjadi kesalahan saat pendaftaran";
+      toaster.error(msg);
+      if (err.response?.status === 422) {
+        console.error("Validation error:", err.response?.data?.errors);
+      }
+    } finally {
+      setIsSubmitting(false);
+    }
   };
+
+  const steps = [
+    { num: 1, title: "Info Aset" },
+    { num: 2, title: "Lokasi" },
+    { num: 3, title: "Kontak" },
+    { num: 4, title: "Foto" },
+  ];
 
   return (
     <div className="relative flex min-h-screen items-center justify-center bg-[#f4f6f9] p-4 font-sans sm:p-8">
@@ -121,14 +137,14 @@ const DaftarAset = () => {
 
       <div className="relative z-10 mt-10 flex h-[600px] w-full max-w-[1000px] flex-col overflow-hidden rounded-2xl bg-white shadow-lg md:mt-0 md:flex-row">
         {/* SIDEBAR */}
-        <div className="relative flex w-full shrink-0 flex-col overflow-hidden bg-[#1e1f78] p-10 text-white md:w-[35%]">
+        <div className="relative flex w-full shrink-0 flex-col overflow-hidden bg-emerald-700 p-10 text-white md:w-[35%]">
           <div className="relative z-10 mt-6 flex flex-col gap-10">
             {steps.map((step) => (
               <div key={step.num} className="flex items-center gap-4">
                 <div
                   className={`flex size-[42px] shrink-0 items-center justify-center rounded-full border border-white text-sm font-bold transition-all ${
                     currentStep === step.num
-                      ? "bg-white text-[#1e1f78]"
+                      ? "bg-white text-emerald-700"
                       : "bg-transparent text-white opacity-80"
                   }`}
                 >
@@ -146,7 +162,7 @@ const DaftarAset = () => {
             ))}
           </div>
           <img
-            src={Vektor}
+            src="/images/DaftarKolabolatorVektor.png"
             alt="Ornamen"
             className="pointer-events-none absolute bottom-0 left-0 w-full object-cover opacity-80"
           />
@@ -156,19 +172,31 @@ const DaftarAset = () => {
         <div className="relative flex w-full flex-col md:w-[65%]">
           <div className="flex-1 overflow-y-auto p-10 pb-6 md:px-16 md:pt-12">
             {currentStep === 1 && (
-              <StepInfoAset formData={formData} handleChange={handleChange} />
+              <StepInfoAset
+                formData={formData}
+                handleChange={handleChange}
+                kategoriAset={kategoriAset}
+              />
             )}
             {currentStep === 2 && (
-              <StepLokasiAset formData={formData} handleChange={handleChange} />
+              <StepLokasiAset
+                formData={formData}
+                handleChange={handleChange}
+                setFormData={setFormData}
+              />
             )}
             {currentStep === 3 && (
               <StepKontakFasilitas
                 formData={formData}
                 handleChange={handleChange}
+                setFormData={setFormData}
               />
             )}
             {currentStep === 4 && (
-              <StepFotoAset formData={formData} setFormData={setFormData} />
+              <StepFotoAset
+                fotoAsetFiles={fotoAsetFiles}
+                setFotoAsetFiles={setFotoAsetFiles}
+              />
             )}
           </div>
 
@@ -180,9 +208,9 @@ const DaftarAset = () => {
                   key={s.num}
                   className={`rounded-full transition-all duration-300 ${
                     currentStep === s.num
-                      ? "h-2 w-6 bg-[#1e1f78]"
+                      ? "h-2 w-6 bg-emerald-600"
                       : currentStep > s.num
-                        ? "size-2 bg-green-400"
+                        ? "size-2 bg-emerald-400"
                         : "size-2 bg-gray-200"
                   }`}
                 />
@@ -192,16 +220,23 @@ const DaftarAset = () => {
               <button
                 type="button"
                 onClick={currentStep === 1 ? () => navigate(-1) : handlePrev}
-                className="text-sm font-bold text-gray-900 hover:text-[#1e1f78]"
+                className="text-sm font-bold text-gray-900 hover:text-emerald-700"
               >
                 Kembali
               </button>
               <button
                 type="button"
+                disabled={isSubmitting}
                 onClick={currentStep === 4 ? handleSubmit : handleNext}
-                className="rounded bg-[#1e1f78] px-10 py-2.5 text-sm font-bold text-white transition-colors hover:bg-[#16175e]"
+                className={`rounded bg-emerald-600 px-10 py-2.5 text-sm font-bold text-white transition-colors hover:bg-emerald-700 ${
+                  isSubmitting ? "cursor-not-allowed opacity-70" : ""
+                }`}
               >
-                {currentStep === 4 ? "Daftarkan Aset" : "Lanjut"}
+                {isSubmitting
+                  ? "Menyimpan..."
+                  : currentStep === 4
+                    ? "Daftarkan Aset"
+                    : "Lanjut"}
               </button>
             </div>
           </div>
@@ -211,4 +246,4 @@ const DaftarAset = () => {
   );
 };
 
-export default DaftarAset;
+export default RegisterAsetPage;

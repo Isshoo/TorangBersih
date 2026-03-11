@@ -13,9 +13,8 @@ import {
   DEFAULT_LNG,
   reverseGeocode,
   forwardGeocode,
-} from "./mapUtils";
+} from "../kolaborator/mapUtils";
 
-// ── Map sub-components ─────────────────────────────────────────────
 function MapClickHandler({ onMapClick }) {
   useMapEvents({
     click(e) {
@@ -33,72 +32,86 @@ function MapCenterUpdater({ center }) {
   return null;
 }
 
-// ── Style constants ────────────────────────────────────────────────
 const inputCls =
-  "w-full rounded-lg border border-gray-200 px-3 py-2 text-sm focus:border-(--primary) focus:ring-1 focus:ring-(--primary) focus:outline-none transition";
+  "w-full rounded-lg border border-gray-200 px-3 py-2 text-sm focus:border-emerald-600 focus:ring-1 focus:ring-emerald-600 focus:outline-none transition";
 const labelCls =
   "block mb-1.5 text-xs font-bold text-gray-600 uppercase tracking-wider";
 
-/**
- * Shared edit modal for kolaborator data.
- *
- * Props:
- *  - data: kolaborator object (pre-fill values)
- *  - jenisOptions: array of { id, nama }
- *  - onClose: () => void
- *  - onSubmit: (formData, logoFile) => Promise<void>
- *  - submitting: boolean
- */
-function KolaboratorEditModal({
+function AsetEditModal({
   data,
-  jenisOptions,
+  kategoriOptions,
   onClose,
   onSubmit,
   submitting,
 }) {
   const [form, setForm] = useState({
-    nama_organisasi: data.nama_organisasi || "",
-    jenis_kolaborator_id:
-      data.jenis_kolaborator?.id || data.jenis_kolaborator_id || "",
-    deskripsi: data.deskripsi || "",
+    nama_aset: data.nama_aset || "",
+    kategori_aset_id: data.kategori_aset?.id || data.kategori_aset_id || "",
+    deskripsi_aset: data.deskripsi_aset || "",
     kabupaten_kota: data.kabupaten_kota || "",
     alamat_lengkap: data.alamat_lengkap || "",
     latitude: data.latitude || "",
     longitude: data.longitude || "",
     penanggung_jawab: data.penanggung_jawab || "",
     kontak: data.kontak || "",
-    email: data.email || "",
-    sosmed: data.sosmed || "",
   });
 
-  const [logoFile, setLogoFile] = useState(null);
-  const [logoPreview, setLogoPreview] = useState(data.logo_url || null);
+  const [existingPhotos, setExistingPhotos] = useState(data.pictures_urls || []);
+  const [fotoAsetFiles, setFotoAsetFiles] = useState([]);
+  const [fotoPreviews, setFotoPreviews] = useState([]);
   const [mapCenter, setMapCenter] = useState(null);
   const [geocoding, setGeocoding] = useState(false);
   const [gpsLoading, setGpsLoading] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
-  const logoInputRef = useRef(null);
+  const inputRef = useRef(null);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
     setForm((prev) => ({ ...prev, [name]: value }));
   };
 
-  const handleLogo = (e) => {
-    const file = e.target.files[0];
-    if (!file) return;
-    const allowed = ["image/jpeg", "image/png", "image/webp", "image/svg+xml"];
-    if (!allowed.includes(file.type)) return;
-    if (file.size > 2 * 1024 * 1024) return;
-    setLogoFile(file);
-    const reader = new FileReader();
-    reader.onload = (ev) => setLogoPreview(ev.target.result);
-    reader.readAsDataURL(file);
+  const handleFoto = (e) => {
+    const files = Array.from(e.target.files);
+    if (!files.length) return;
+
+    const currentTotal = existingPhotos.length + fotoAsetFiles.length;
+    if (currentTotal >= 5) {
+      alert("Maksimal 5 foto.");
+      return;
+    }
+
+    const availableSlots = 5 - currentTotal;
+    const allowed = ["image/jpeg", "image/png", "image/webp"];
+    const valid = files
+      .filter((f) => allowed.includes(f.type) && f.size <= 5 * 1024 * 1024)
+      .slice(0, availableSlots);
+
+    if (valid.length) {
+      setFotoAsetFiles((prev) => [...prev, ...valid]);
+      valid.forEach((file) => {
+        const reader = new FileReader();
+        reader.onload = (ev) => {
+          setFotoPreviews((prev) => [...prev, ev.target.result]);
+        };
+        reader.readAsDataURL(file);
+      });
+    }
+  };
+
+  const removeExistingPhoto = (index) => {
+    setExistingPhotos((prev) => prev.filter((_, i) => i !== index));
+  };
+
+  const removeNewPhoto = (index) => {
+    setFotoAsetFiles((prev) => prev.filter((_, i) => i !== index));
+    setFotoPreviews((prev) => prev.filter((_, i) => i !== index));
   };
 
   const handleSubmit = () => {
-    if (!form.nama_organisasi || !form.jenis_kolaborator_id) return;
-    onSubmit(form, logoFile);
+    if (!form.nama_aset || !form.kategori_aset_id) return;
+    const filesPayload = fotoAsetFiles.length > 0 ? { foto_aset_urls: fotoAsetFiles } : null;
+    const finalForm = { ...form, existing_pictures: existingPhotos };
+    onSubmit(finalForm, filesPayload);
   };
 
   const handleMapClick = async (lat, lng) => {
@@ -143,9 +156,8 @@ function KolaboratorEditModal({
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center overflow-y-auto bg-gray-900/60 p-4 backdrop-blur-sm sm:p-6">
       <div className="flex max-h-[90vh] w-full max-w-2xl flex-col overflow-hidden rounded-2xl bg-white shadow-2xl">
-        {/* Header */}
         <div className="flex items-center justify-between border-b border-gray-100 px-6 py-4">
-          <h2 className="text-lg font-bold text-gray-900">Edit Kolaborator</h2>
+          <h2 className="text-lg font-bold text-gray-900">Edit Aset</h2>
           <button
             onClick={onClose}
             disabled={submitting}
@@ -167,68 +179,103 @@ function KolaboratorEditModal({
           </button>
         </div>
 
-        {/* Form Body */}
         <div className="flex-1 space-y-6 overflow-y-auto p-6">
-          {/* Logo */}
-          <div className="flex items-center gap-5">
-            <div className="flex size-16 shrink-0 items-center justify-center overflow-hidden rounded-xl border border-gray-200 bg-gray-50">
-              {logoPreview ? (
-                <img
-                  src={logoPreview}
-                  alt="Preview"
-                  className="size-full object-cover"
-                />
-              ) : (
-                <span className="text-xl font-bold text-gray-300">
-                  {form.nama_organisasi?.charAt(0)}
-                </span>
+          {/* Foto Gallery */}
+          <div>
+            <div className="mb-2 flex items-center justify-between">
+              <label className={labelCls}>Foto Fasilitas Aset</label>
+              <span className="text-xs font-medium text-gray-500">
+                {existingPhotos.length + fotoAsetFiles.length} / 5 Foto
+              </span>
+            </div>
+            
+            <div className="grid grid-cols-2 gap-3 sm:grid-cols-4 md:grid-cols-5">
+              {/* Existing Photos */}
+              {existingPhotos.map((url, i) => (
+                <div key={`existing-${i}`} className="group relative aspect-square overflow-hidden rounded-xl border border-gray-200 bg-gray-50">
+                  <img src={url} alt="Aset" className="size-full object-cover" />
+                  <button
+                    type="button"
+                    onClick={() => removeExistingPhoto(i)}
+                    className="absolute right-1.5 top-1.5 flex size-6 items-center justify-center rounded-full bg-red-500/80 text-white backdrop-blur-sm transition hover:bg-red-600 scale-0 group-hover:scale-100"
+                  >
+                    <svg className="size-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2.5">
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
+                    </svg>
+                  </button>
+                </div>
+              ))}
+
+              {/* New Photos */}
+              {fotoPreviews.map((preview, i) => (
+                <div key={`new-${i}`} className="group relative aspect-square overflow-hidden rounded-xl border-2 border-dashed border-emerald-400 bg-emerald-50">
+                  <img src={preview} alt="Baru" className="size-full object-cover" />
+                  <div className="absolute top-1 left-1 rounded bg-emerald-500 px-1.5 text-[9px] font-bold text-white uppercase tracking-wider backdrop-blur-sm">
+                    Baru
+                  </div>
+                  <button
+                    type="button"
+                    onClick={() => removeNewPhoto(i)}
+                    className="absolute right-1.5 top-1.5 flex size-6 items-center justify-center rounded-full bg-red-500/80 text-white backdrop-blur-sm transition hover:bg-red-600 scale-0 group-hover:scale-100"
+                  >
+                    <svg className="size-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2.5">
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
+                    </svg>
+                  </button>
+                </div>
+              ))}
+
+              {/* Add Photo Button */}
+              {existingPhotos.length + fotoAsetFiles.length < 5 && (
+                <button
+                  type="button"
+                  onClick={() => inputRef.current?.click()}
+                  className="flex aspect-square flex-col items-center justify-center gap-1.5 rounded-xl border-2 border-dashed border-gray-200 bg-gray-50 text-gray-400 transition hover:border-emerald-400 hover:bg-emerald-50 hover:text-emerald-500"
+                >
+                  <svg className="size-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M12 4v16m8-8H4" />
+                  </svg>
+                  <span className="text-[10px] font-bold uppercase tracking-widest">Tambah</span>
+                </button>
               )}
             </div>
-            <div>
-              <button
-                type="button"
-                onClick={() => logoInputRef.current?.click()}
-                className="rounded-lg border border-gray-200 px-4 py-2 text-xs font-bold text-gray-700 transition hover:bg-gray-50"
-              >
-                Ganti Logo
-              </button>
-              <input
-                ref={logoInputRef}
-                type="file"
-                accept="image/jpeg,image/png,image/webp,image/svg+xml"
-                onChange={handleLogo}
-                className="hidden"
-              />
-              <p className="mt-1 text-[10px] text-gray-400">
-                JPG, PNG, WEBP, SVG · Maks. 2MB
-              </p>
-            </div>
+            
+            <input
+              ref={inputRef}
+              type="file"
+              multiple
+              accept="image/jpeg,image/png,image/webp"
+              onChange={handleFoto}
+              className="hidden"
+            />
+            <p className="mt-2 text-[11px] text-gray-500">
+              Format didukung: JPG, PNG, WEBP. Maksimal 5MB per foto.
+            </p>
           </div>
 
-          {/* Profil */}
           <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
             <div>
-              <label className={labelCls}>Nama Organisasi</label>
+              <label className={labelCls}>Nama Aset / Fasilitas</label>
               <input
-                name="nama_organisasi"
-                value={form.nama_organisasi}
+                name="nama_aset"
+                value={form.nama_aset}
                 onChange={handleChange}
-                maxLength={100}
+                maxLength={200}
                 className={inputCls}
               />
             </div>
             <div>
-              <label className={labelCls}>Jenis Kolaborator</label>
+              <label className={labelCls}>Kategori Aset</label>
               <select
-                name="jenis_kolaborator_id"
-                value={form.jenis_kolaborator_id}
+                name="kategori_aset_id"
+                value={form.kategori_aset_id}
                 onChange={handleChange}
                 className={inputCls}
               >
                 <option value="">-- Pilih --</option>
-                {jenisOptions.map((j) => (
-                  <option key={j.id} value={j.id}>
-                    {j.nama}
+                {kategoriOptions.map((k) => (
+                  <option key={k.id} value={k.id}>
+                    {k.nama}
                   </option>
                 ))}
               </select>
@@ -238,18 +285,14 @@ function KolaboratorEditModal({
           <div>
             <label className={labelCls}>Deskripsi</label>
             <textarea
-              name="deskripsi"
-              value={form.deskripsi}
+              name="deskripsi_aset"
+              value={form.deskripsi_aset}
               onChange={handleChange}
               rows={4}
               className={`${inputCls} resize-none`}
             />
-            <p className="mt-1 text-right text-[10px] text-gray-400">
-              {form.deskripsi.length} karakter
-            </p>
           </div>
 
-          {/* ── Lokasi — Interactive Map ── */}
           <div>
             <label className={labelCls}>Lokasi di Peta</label>
             <form onSubmit={handleSearch} className="mb-2 flex gap-2">
@@ -272,13 +315,13 @@ function KolaboratorEditModal({
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
                   placeholder="Cari alamat..."
-                  className="w-full rounded-lg border border-gray-200 py-2 pr-3 pl-9 text-sm focus:border-(--primary) focus:outline-none"
+                  className="w-full rounded-lg border border-gray-200 py-2 pr-3 pl-9 text-sm focus:border-emerald-600 focus:outline-none"
                 />
               </div>
               <button
                 type="submit"
                 disabled={geocoding}
-                className="shrink-0 rounded-lg bg-(--primary) px-4 py-2 text-sm font-bold text-white transition hover:bg-(--primary-dark) disabled:opacity-50"
+                className="shrink-0 rounded-lg bg-emerald-600 px-4 py-2 text-sm font-bold text-white transition hover:bg-emerald-700 disabled:opacity-50"
               >
                 {geocoding ? "..." : "Cari"}
               </button>
@@ -306,61 +349,28 @@ function KolaboratorEditModal({
                   )}
                 </MapContainer>
 
-                {/* GPS Button */}
                 <button
                   type="button"
                   onClick={handleGps}
                   disabled={gpsLoading}
                   className="absolute right-3 bottom-3 z-1000 flex items-center gap-1.5 rounded-lg bg-white px-3 py-2 text-[12px] font-bold text-gray-700 shadow-md ring-1 ring-gray-900/10 transition hover:bg-gray-50 active:scale-95 disabled:opacity-50"
                 >
-                  {gpsLoading ? (
-                    <div className="size-4 animate-spin rounded-full border-2 border-(--primary) border-t-transparent" />
-                  ) : (
-                    <svg
-                      className="size-4 text-(--primary)"
-                      fill="none"
-                      stroke="currentColor"
-                      strokeWidth="2"
-                      viewBox="0 0 24 24"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        d="M12 2a1 1 0 011 1v2.07A7.003 7.003 0 0118.93 11H21a1 1 0 110 2h-2.07A7.003 7.003 0 0113 18.93V21a1 1 0 11-2 0v-2.07A7.003 7.003 0 015.07 13H3a1 1 0 110-2h2.07A7.003 7.003 0 0111 5.07V3a1 1 0 011-1zm0 5a5 5 0 100 10 5 5 0 000-10z"
-                      />
-                    </svg>
-                  )}
                   {gpsLoading ? "Mendeteksi..." : "GPS"}
                 </button>
               </div>
 
-              {/* Koordinat bar */}
               <div className="flex items-center justify-between border-t border-gray-100 bg-gray-50 px-4 py-2">
                 <p className="text-[11px] text-gray-500">
                   {form.latitude && form.longitude ? (
-                    <>
-                      <span className="font-semibold text-gray-700">
-                        Koordinat:
-                      </span>{" "}
-                      <span className="font-mono">
-                        {Number(form.latitude).toFixed(6)},{" "}
-                        {Number(form.longitude).toFixed(6)}
-                      </span>
-                    </>
+                     `${Number(form.latitude).toFixed(6)}, ${Number(form.longitude).toFixed(6)}`
                   ) : (
                     "Klik pada peta atau gunakan GPS"
                   )}
                 </p>
-                {geocoding && (
-                  <span className="text-[11px] font-medium text-(--primary)">
-                    Mengambil alamat...
-                  </span>
-                )}
               </div>
             </div>
           </div>
 
-          {/* Kota & Alamat (auto-filled, editable) */}
           <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
             <div>
               <label className={labelCls}>Kota / Kabupaten</label>
@@ -384,7 +394,6 @@ function KolaboratorEditModal({
             </div>
           </div>
 
-          {/* Kontak */}
           <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
             <div>
               <label className={labelCls}>Penanggung Jawab</label>
@@ -396,7 +405,7 @@ function KolaboratorEditModal({
               />
             </div>
             <div>
-              <label className={labelCls}>Kontak (WhatsApp)</label>
+              <label className={labelCls}>Nomor WhatsApp</label>
               <input
                 name="kontak"
                 value={form.kontak}
@@ -405,32 +414,8 @@ function KolaboratorEditModal({
               />
             </div>
           </div>
-
-          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-            <div>
-              <label className={labelCls}>Email</label>
-              <input
-                name="email"
-                type="email"
-                value={form.email}
-                onChange={handleChange}
-                className={inputCls}
-              />
-            </div>
-            <div>
-              <label className={labelCls}>Sosial Media</label>
-              <input
-                name="sosmed"
-                value={form.sosmed}
-                onChange={handleChange}
-                placeholder="https://instagram.com/..."
-                className={inputCls}
-              />
-            </div>
-          </div>
         </div>
 
-        {/* Footer */}
         <div className="flex items-center justify-end gap-3 border-t border-gray-100 bg-white px-6 py-4">
           <button
             onClick={onClose}
@@ -442,11 +427,8 @@ function KolaboratorEditModal({
           <button
             onClick={handleSubmit}
             disabled={submitting}
-            className="flex items-center gap-2 rounded-xl bg-(--primary) px-6 py-2.5 text-sm font-bold text-white transition hover:bg-(--primary-dark) disabled:opacity-70"
+            className="flex items-center gap-2 rounded-xl bg-emerald-600 px-6 py-2.5 text-sm font-bold text-white transition hover:bg-emerald-700 disabled:opacity-70"
           >
-            {submitting && (
-              <div className="size-4 animate-spin rounded-full border-2 border-white/30 border-t-white" />
-            )}
             {submitting ? "Menyimpan..." : "Simpan Perubahan"}
           </button>
         </div>
@@ -455,4 +437,4 @@ function KolaboratorEditModal({
   );
 }
 
-export default KolaboratorEditModal;
+export default AsetEditModal;

@@ -19,7 +19,7 @@ const customMarkerIcon = new L.divIcon({
   popupAnchor: [0, -24],
 });
 
-const DetailKolaborator = () => {
+const DetailKolaboratorPage = () => {
   const { id } = useParams();
   const navigate = useNavigate();
 
@@ -143,7 +143,7 @@ const DetailKolaborator = () => {
 
   return (
     <div className="min-h-dvh bg-[#F8FAFC] pt-34 pb-24 selection:bg-(--gray-shine) selection:text-(--primary)">
-      <div className="mx-auto max-w-[1160px] px-4 sm:px-6 lg:px-8">
+      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         {/* HERO / HEADER */}
         <div className="relative mb-10 md:mb-16">
           {/* Cover image / gradient fallback */}
@@ -412,4 +412,4 @@ const DetailKolaborator = () => {
   );
 };
 
-export default DetailKolaborator;
+export default DetailKolaboratorPage;

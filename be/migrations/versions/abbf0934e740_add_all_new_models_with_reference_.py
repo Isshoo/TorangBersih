@@ -1,8 +1,8 @@
-"""initiate all tables again
+"""add all new models with reference tables again
 
-Revision ID: 9d9e8eff51fb
+Revision ID: abbf0934e740
 Revises: 
-Create Date: 2026-03-10 18:58:15.682386
+Create Date: 2026-03-11 12:50:30.396047
 
 """
 from alembic import op
@@ -10,7 +10,7 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision = '9d9e8eff51fb'
+revision = 'abbf0934e740'
 down_revision = None
 branch_labels = None
 depends_on = None
@@ -110,6 +110,7 @@ def upgrade():
     sa.Column('id_user', sa.String(length=36), nullable=False),
     sa.Column('nama_aset', sa.String(length=200), nullable=False),
     sa.Column('kategori_aset_id', sa.String(length=36), nullable=False),
+    sa.Column('deskripsi_aset', sa.Text(), nullable=True),
     sa.Column('status_aktif', sa.Boolean(), nullable=False),
     sa.Column('kabupaten_kota', sa.String(length=100), nullable=True),
     sa.Column('alamat_lengkap', sa.Text(), nullable=True),

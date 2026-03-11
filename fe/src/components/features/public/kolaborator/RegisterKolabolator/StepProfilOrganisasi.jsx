@@ -13,7 +13,7 @@ const RULES = {
     minLength: 50,
   },
   logo: {
-    maxSizeMB: 2,
+    maxSizeMB: 5,
     allowedTypes: ["image/jpeg", "image/png", "image/webp", "image/svg+xml"],
     allowedExt: ["JPG", "PNG", "WEBP", "SVG"],
   },
@@ -179,7 +179,7 @@ const StepProfilOrganisasi = ({
             -- Kategori --
           </option>
           {jenisOptions.map((j) => (
-            <option key={j.id} value={j.id}>
+            <option key={j.id} value={j.id} className="text-gray-900">
               {j.nama}
             </option>
           ))}

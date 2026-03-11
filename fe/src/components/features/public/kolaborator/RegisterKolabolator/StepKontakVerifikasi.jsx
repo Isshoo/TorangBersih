@@ -27,8 +27,7 @@ const RULES = {
 
 const validate = (name, value) => {
   if (!RULES[name]) return null;
-  // Sosmed and email could be optional, but for email we want valid if filled.
-  // Actually, kontak and penanggung_jawab are also optional in backend, but we make them required in form step to ensure good data.
+
   if (name !== "sosmed" && (!value || !value.trim())) return "Wajib diisi.";
 
   if (name === "sosmed" && (!value || !value.trim())) return null;
@@ -36,7 +35,6 @@ const validate = (name, value) => {
   const r = RULES[name];
 
   if (name === "kontak") {
-    // Hanya izinkan: angka, +, spasi, strip (untuk keperluan copy-paste)
     const cleaned = value.replace(/[\s\-()]/g, "");
     if (!/^[\d+]+$/.test(cleaned))
       return "Nomor hanya boleh berisi angka dan tanda +.";

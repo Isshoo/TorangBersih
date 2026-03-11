@@ -66,11 +66,11 @@ function DaftarKolaborator() {
 
   return (
     <div className="z-9999 w-full bg-white px-4 py-8 md:px-6">
-      <div className="mx-auto w-full max-w-6xl space-y-8">
+      <div className="mx-auto w-full max-w-7xl space-y-8">
         {/* Header & Filter */}
         <div className="flex flex-col justify-between gap-4 md:flex-row md:items-center">
           <div>
-            <p className="text-3xl font-semibold">Daftar Kolaborator</p>
+            <p className="text-3xl font-bold">Daftar Kolaborator</p>
             {meta && (
               <p className="mt-1 text-sm text-gray-500">
                 {meta.total} kolaborator terverifikasi
