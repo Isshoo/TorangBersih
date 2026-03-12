@@ -33,6 +33,8 @@ class MarketplaceDaurUlang(db.Model):
     kondisi = db.Column(Enum(KondisiBarang), nullable=False)
     foto_barang_urls = db.Column(db.JSON)
 
+    kontak = db.Column(db.String(20), nullable=True)
+
     # Lokasi COD
     latitude = db.Column(db.Float)
     longitude = db.Column(db.Float)
@@ -67,6 +69,7 @@ class MarketplaceDaurUlang(db.Model):
             'berat_estimasi_kg': self.berat_estimasi_kg,
             'kondisi': self.kondisi.value if self.kondisi else None,
             'foto_barang_urls': self.foto_barang_urls,
+            'kontak': self.kontak,
             'latitude': self.latitude,
             'longitude': self.longitude,
             'kabupaten_kota': self.kabupaten_kota,

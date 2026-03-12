@@ -1,8 +1,8 @@
 """add all new models with reference tables again
 
-Revision ID: abbf0934e740
+Revision ID: 6a65636e7742
 Revises: 
-Create Date: 2026-03-11 12:50:30.396047
+Create Date: 2026-03-12 15:44:06.136204
 
 """
 from alembic import op
@@ -10,7 +10,7 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision = 'abbf0934e740'
+revision = '6a65636e7742'
 down_revision = None
 branch_labels = None
 depends_on = None
@@ -203,6 +203,7 @@ def upgrade():
     sa.Column('berat_estimasi_kg', sa.Float(), nullable=True),
     sa.Column('kondisi', sa.Enum('LAYAK_PAKAI', 'BUTUH_PERBAIKAN', 'RONGSOKAN', name='kondisibarang'), nullable=False),
     sa.Column('foto_barang_urls', sa.JSON(), nullable=True),
+    sa.Column('kontak', sa.String(length=20), nullable=True),
     sa.Column('latitude', sa.Float(), nullable=True),
     sa.Column('longitude', sa.Float(), nullable=True),
     sa.Column('kabupaten_kota', sa.String(length=100), nullable=True),
