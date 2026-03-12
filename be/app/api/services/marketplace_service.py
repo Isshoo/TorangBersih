@@ -28,10 +28,10 @@ class MarketplaceService:
             query = query.filter_by(kategori_barang_id=kategori_barang_id)
 
         if kondisi:
-            query = query.filter_by(MarketplaceDaurUlang.kondisi==KondisiBarang(kondisi))
+            query = query.filter(MarketplaceDaurUlang.kondisi==KondisiBarang(kondisi))
 
         if status_ketersediaan:
-            query = query.filter_by(MarketplaceDaurUlang.status_ketersediaan==StatusKetersediaan(status_ketersediaan))
+            query = query.filter(MarketplaceDaurUlang.status_ketersediaan==StatusKetersediaan(status_ketersediaan))
 
         if kabupaten_kota:
             query = query.filter(MarketplaceDaurUlang.kabupaten_kota.ilike(f'%{kabupaten_kota}%'))
@@ -130,10 +130,10 @@ class MarketplaceService:
             query = query.filter_by(kategori_barang_id=kategori_barang_id)
 
         if kondisi:
-            query = query.filter_by(MarketplaceDaurUlang.kondisi==KondisiBarang(kondisi))
+            query = query.filter(MarketplaceDaurUlang.kondisi==KondisiBarang(kondisi))
 
         if status_ketersediaan:
-            query = query.filter_by(MarketplaceDaurUlang.status_ketersediaan==StatusKetersediaan(status_ketersediaan))
+            query = query.filter(MarketplaceDaurUlang.status_ketersediaan==StatusKetersediaan(status_ketersediaan))
 
         if kabupaten_kota:
             query = query.filter(MarketplaceDaurUlang.kabupaten_kota.ilike(f'%{kabupaten_kota}%'))

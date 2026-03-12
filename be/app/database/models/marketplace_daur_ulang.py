@@ -30,7 +30,7 @@ class MarketplaceDaurUlang(db.Model):
     deskripsi_barang = db.Column(db.Text)
     harga = db.Column(db.Integer, default=0)
     berat_estimasi_kg = db.Column(db.Float)
-    kondisi = db.Column(Enum(KondisiBarang), nullable=False)
+    kondisi = db.Column(Enum(KondisiBarang, values_callable=lambda x: [e.value for e in x]), nullable=False)
     foto_barang_urls = db.Column(db.JSON)
 
     kontak = db.Column(db.String(20), nullable=True)
@@ -41,7 +41,7 @@ class MarketplaceDaurUlang(db.Model):
     kabupaten_kota = db.Column(db.String(100))
     alamat_lengkap = db.Column(db.Text)
 
-    status_ketersediaan = db.Column(Enum(StatusKetersediaan), default=StatusKetersediaan.TERSEDIA, nullable=False)
+    status_ketersediaan = db.Column(Enum(StatusKetersediaan, values_callable=lambda x: [e.value for e in x]), default=StatusKetersediaan.TERSEDIA, nullable=False)
 
     created_at = db.Column(db.DateTime(timezone=True), default=lambda: datetime.now(timezone.utc), nullable=False)
     updated_at = db.Column(db.DateTime(timezone=True), default=lambda: datetime.now(timezone.utc), onupdate=lambda: datetime.now(timezone.utc), nullable=False)

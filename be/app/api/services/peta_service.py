@@ -4,7 +4,8 @@ from app.database.models import (
     MarketplaceDaurUlang,
     StatusVerifikasiKolaborator,
     StatusVerifikasiAset,
-    StatusLaporan
+    StatusLaporan,
+    StatusKetersediaan
 )
 
 
@@ -102,7 +103,8 @@ class PetaService:
         if 'Barang Daur Ulang' in types:
             items = MarketplaceDaurUlang.query.filter(
                 MarketplaceDaurUlang.latitude.isnot(None),
-                MarketplaceDaurUlang.longitude.isnot(None)
+                MarketplaceDaurUlang.longitude.isnot(None),
+                MarketplaceDaurUlang.status_ketersediaan == StatusKetersediaan("tersedia")
             ).all()
             for item in items:
                 markers.append({
