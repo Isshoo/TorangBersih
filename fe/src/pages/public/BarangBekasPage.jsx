@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import ProductCard from "../../components/features/public/barangbekas/ProdukCard";
 import FiturHero from "../../components/shared/FiturHero";
+import { Link } from "react-router-dom";
 
 const BarangBekasPage = () => {
   const [activeCategory, setActiveCategory] = useState("Semua");
@@ -197,8 +198,8 @@ const BarangBekasPage = () => {
         <FiturHero
           title="Temukan Barang Bekas Berkualitas untuk Daur Ulangmu"
           description="Jelajahi katalog barang bekas yang siap didaur ulang, temukan bahan berkualitas untuk proyek kreatifmu, dan dukung gerakan daur ulang yang berkelanjutan."
-          buttonText="Masukan Barang Bekas"
-          buttonLink="/barang-bekas/daftar"
+          buttonText="Temukan Barang Daur Ulang"
+          buttonLink="/peta"
         />
       </div>
       <div className="relative z-0 min-h-dvh bg-white selection:bg-(--gray-shine) selection:text-(--primary)">
@@ -239,7 +240,10 @@ const BarangBekasPage = () => {
               </div>
 
               {/* Tombol Jual */}
-              <button className="group flex shrink-0 items-center justify-center gap-2 rounded-lg bg-(--primary) px-5 py-2.5 text-sm font-bold text-white shadow-sm transition-colors hover:bg-(--primary-dark)">
+              <Link
+                to="/barang-bekas/jual"
+                className="group flex shrink-0 items-center justify-center gap-2 rounded-lg bg-(--primary) px-5 py-2.5 text-sm font-bold text-white shadow-sm transition-colors hover:bg-(--primary-dark)"
+              >
                 <svg
                   className="h-5 w-5"
                   fill="none"
@@ -254,7 +258,7 @@ const BarangBekasPage = () => {
                   ></path>
                 </svg>
                 Jual Barang
-              </button>
+              </Link>
             </div>
           </div>
 

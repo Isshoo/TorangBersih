@@ -31,6 +31,7 @@ import RegisterAsetPage from "./pages/public/RegisterAsetPage";
 import DetailAsetPage from "./pages/public/DetailAsetPage";
 import BarangBekasPage from "./pages/public/BarangBekasPage";
 import BarangBekasDetailPage from "./components/features/public/barangbekas/BarangBekasDetailPages";
+import JualBarangBekasPage from "./pages/public/JualBarangBekasPage";
 import LaporanPage from "./pages/public/LaporanPage";
 import BuatLaporanPageUser from "./pages/public/BuatLaporanPage";
 import DetailLaporan from "./pages/public/DetailLaporan";
@@ -76,6 +77,7 @@ function App() {
         />
         <Route path="/laporan/buat" element={<BuatLaporanPageUser />} />
         <Route path="/aset/daftar" element={<RegisterAsetPage />} />
+        <Route path="/barang-bekas/jual" element={<JualBarangBekasPage />} />
       </Route>
 
       <Route path="/forgot-password" element={<ForgotPasswordPage />} />
