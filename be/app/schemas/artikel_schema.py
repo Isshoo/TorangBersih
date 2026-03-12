@@ -6,9 +6,9 @@ from app.database.models.artikel import StatusPublikasi
 class ArtikelCreateSchema(Schema):
     judul_artikel = fields.String(required=True, validate=validate.Length(min=1, max=255))
     kategori_id = fields.String(required=True)
-    konten_teks = fields.String()
-    foto_cover_url = fields.String(validate=validate.Length(max=500))
-    status_publikasi = fields.String(validate=validate.OneOf([s.value for s in StatusPublikasi]))
+    konten_teks = fields.String(required=False)
+    foto_cover_url = fields.String(required=False)
+    status_publikasi = fields.Str(validate=validate.OneOf(['draft', 'published', 'archived']))
 
 
 class ArtikelUpdateSchema(Schema):
