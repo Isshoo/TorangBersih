@@ -26,3 +26,25 @@ def update(item_id):
 @artikel_bp.route('/<item_id>', methods=['DELETE'])
 def delete(item_id):
     return artikel_controller.delete(item_id)
+
+# Like
+@artikel_bp.route('/<item_id>/like', methods=['POST'])
+def toggle_like(item_id):
+    return artikel_controller.toggle_like(item_id)
+
+# Komentar
+@artikel_bp.route('/<item_id>/komentar', methods=['GET'])
+def get_komentar(item_id):
+    return artikel_controller.get_komentar(item_id)
+
+@artikel_bp.route('/<item_id>/komentar', methods=['POST'])
+def create_komentar(item_id):
+    return artikel_controller.create_komentar(item_id)
+
+@artikel_bp.route('/<item_id>/komentar/<komentar_id>', methods=['PUT', 'PATCH'])
+def update_komentar(item_id, komentar_id):
+    return artikel_controller.update_komentar(item_id, komentar_id)
+
+@artikel_bp.route('/<item_id>/komentar/<komentar_id>', methods=['DELETE'])
+def delete_komentar(item_id, komentar_id):
+    return artikel_controller.delete_komentar(item_id, komentar_id)

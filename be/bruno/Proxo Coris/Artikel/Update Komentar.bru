@@ -1,0 +1,26 @@
+meta {
+  name: Update Komentar Artikel
+  type: http
+  seq: 11
+}
+
+put {
+  url: {{base_url}}/artikel/:item_id/komentar/:komentar_id
+  body: json
+  auth: bearer
+}
+
+params:path {
+  item_id: {{artikel_id}}
+  komentar_id: {{komentar_id}}
+}
+
+auth:bearer {
+  token: {{admin_access_token}}
+}
+
+body:json {
+  {
+    "isi_komentar": "Komentar yang sudah diedit."
+  }
+}

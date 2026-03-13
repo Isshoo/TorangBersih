@@ -31,3 +31,17 @@ class MyArtikelQuerySchema(Schema):
     search = fields.String(validate=validate.Length(max=100))
     sort_by = fields.String(load_default='created_at', validate=validate.OneOf(['created_at', 'judul_artikel', 'waktu_publish', 'jumlah_views']))
     sort_order = fields.String(load_default='desc', validate=validate.OneOf(['asc', 'desc']))
+
+
+class ArtikelKomentarCreateSchema(Schema):
+    isi_komentar = fields.String(required=True, validate=validate.Length(min=1, max=2000))
+    parent_id = fields.String(required=False, allow_none=True)
+
+
+class ArtikelKomentarUpdateSchema(Schema):
+    isi_komentar = fields.String(required=True, validate=validate.Length(min=1, max=2000))
+
+
+class ArtikelKomentarQuerySchema(Schema):
+    page = fields.Integer(load_default=1, validate=validate.Range(min=1))
+    per_page = fields.Integer(load_default=20, validate=validate.Range(min=1, max=100))

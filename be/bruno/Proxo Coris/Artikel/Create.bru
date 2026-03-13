@@ -17,9 +17,15 @@ auth:bearer {
 body:json {
   {
     "judul_artikel": "Pembersihan Pantai di Manado",
-    "kategori_id": "a245825c-dc9a-452c-8f65-261af8f72029",
+    "kategori_id": "4789d5a0-c811-43a1-a1d9-6ea8c547efce",
     "konten_teks": "Hari ini kita melakukan pembersihan pantai di sepanjang Manado...",
     "foto_cover_url": "https://example.com/cover.jpg",
     "status_publikasi": "draft"
+  }
+}
+
+script:post-response {
+  if (res.status === 201) {
+    bru.setVar("artikel_id", res.body.data.id);
   }
 }

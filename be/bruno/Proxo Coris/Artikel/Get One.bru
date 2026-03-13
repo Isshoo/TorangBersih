@@ -5,14 +5,15 @@ meta {
 }
 
 get {
-  url: {{base_url}}/artikel/:item_id.
+  url: {{base_url}}/artikel/:item_id
   body: none
   auth: none
 }
 
 params:path {
-  item_id.: 10
+  item_id: {{artikel_id}}
 }
+
 
 headers {
   Accept: application/json
