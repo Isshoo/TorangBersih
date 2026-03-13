@@ -99,7 +99,7 @@ const BuatLaporanPage = () => {
   };
 
   return (
-    <div className="relative flex min-h-screen items-center justify-center bg-[#f4f6f9] p-4 font-sans sm:p-8">
+    <div className="relative flex min-h-screen items-center justify-center bg-[#f4f6f9] p-4  sm:p-8">
       {/* Tombol batal */}
       <button
         onClick={() => navigate(-1)}

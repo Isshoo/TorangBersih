@@ -117,7 +117,7 @@ const RegisterAsetPage = () => {
   ];
 
   return (
-    <div className="relative flex min-h-screen items-center justify-center bg-[#f4f6f9] p-4 font-sans sm:p-8">
+    <div className="relative flex min-h-screen items-center justify-center bg-[#f4f6f9] p-4  sm:p-8">
       <button
         onClick={() => navigate(-1)}
         className="absolute top-6 left-6 flex items-center gap-2 text-sm font-bold text-gray-500 hover:text-gray-900"

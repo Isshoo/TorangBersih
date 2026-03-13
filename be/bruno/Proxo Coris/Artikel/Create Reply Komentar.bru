@@ -1,0 +1,27 @@
+meta {
+  name: Create Reply Komentar Artikel
+  type: http
+  seq: 10
+}
+
+post {
+  url: {{base_url}}/artikel/:item_id/komentar
+  body: json
+  auth: bearer
+}
+
+params:path {
+  item_id: {{artikel_id}}
+}
+
+auth:bearer {
+  token: {{user_access_token}}
+}
+
+body:json {
+  {
+    "isi_komentar": "Setuju banget dengan komentar di atas!",
+    "parent_id": "{{komentar_id}}"
+  }
+}
+

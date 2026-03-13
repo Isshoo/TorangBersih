@@ -37,6 +37,8 @@ import BuatLaporanPageUser from "./pages/public/BuatLaporanPage";
 import DetailLaporan from "./pages/public/DetailLaporan";
 import ArtikelPage from "./pages/public/ArtikelPage";
 import ArticleDetailPage from "./components/features/public/artikel/DetailArticle";
+import BuatArtikelPage from "./pages/public/BuatArtikelPage";
+
 
 /* user pages */
 import UserDashboardPage from "./pages/user/UserDashboardPage";
@@ -78,6 +80,7 @@ function App() {
         <Route path="/laporan/buat" element={<BuatLaporanPageUser />} />
         <Route path="/aset/daftar" element={<RegisterAsetPage />} />
         <Route path="/barang-bekas/jual" element={<JualBarangBekasPage />} />
+        <Route path="/artikel/buat" element={<BuatArtikelPage />} />
       </Route>
 
       <Route path="/forgot-password" element={<ForgotPasswordPage />} />
@@ -98,10 +101,12 @@ function App() {
         <Route path="laporan" element={<LaporanPage />} />
         <Route path="/laporan/:id" element={<DetailLaporan />} />
         <Route path="artikel" element={<ArtikelPage />} />
-        <Route path="/artikel/:id" element={<ArticleDetailPage />} />
+       
 
         <Route element={<ProtectedRoute />}>
           {/* Untuk halaman publik yang perlu login user */}
+           <Route path="/artikel/:id" element={<ArticleDetailPage />} />
+           
         </Route>
       </Route>
 
