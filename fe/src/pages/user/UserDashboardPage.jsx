@@ -119,7 +119,65 @@ export default function UserDashboardPage() {
 
   // ── Dashboard ──
   return (
-    <div className="space-y-5 bg-[#f3f3fc] p-4 sm:p-6 lg:p-8">
+    <div className="space-y-4 md:space-y-6">
+      {/* ── Greeting ── */}
+      <div className="flex flex-wrap items-center justify-between gap-3">
+        <div>
+          <h1 className="text-2xl font-bold tracking-tight text-[#0f0f0f]">
+            Dashboard Saya
+          </h1>
+          <p className="mt-0.5 text-[13px] text-gray-500">
+            Pantau semua aktivitas dan kontribusi Anda.
+          </p>
+        </div>
+        <button
+          onClick={() => navigate("/laporan/buat")}
+          className="flex items-center gap-2 rounded-lg bg-[#1e1f78] px-5 py-2.5 text-[13px] font-bold text-white shadow transition-colors hover:bg-[#16175e]"
+        >
+          <svg
+            className="size-4"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2"
+            viewBox="0 0 24 24"
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              d="M12 4v16m8-8H4"
+            />
+          </svg>
+          Buat Laporan
+        </button>
+      </div>
+
+      {/* ── Stat Cards Utama ── */}
+      <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3">
+        <StatCard
+          icon={Icons.Laporan}
+          label="Total Laporan Saya"
+          value={data.my_laporan}
+          sub={`${laporanStatus.menunggu} menunggu verifikasi`}
+          accent="#1e1f78"
+          onClick={() => navigate("/laporan")}
+        />
+        <StatCard
+          icon={Icons.Artikel}
+          label="Artikel Saya"
+          value={data.my_artikel}
+          sub={`${artikelStatus.published} tayang · ${artikelStatus.draft} draft`}
+          accent="#5697ff"
+          onClick={() => navigate("/artikel")}
+        />
+        <StatCard
+          icon={Icons.Aset}
+          label="Aset Terdaftar"
+          value={data.my_aset}
+          sub="Fasilitas pengelolaan sampah"
+          accent="#12bae3"
+          onClick={() => navigate("/aset")}
+        />
+      </div>
 
       {/* 1. Hero greeting + quick actions */}
       <DashboardGreeting namaUser={data.nama_user} />
