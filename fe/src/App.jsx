@@ -101,11 +101,11 @@ function App() {
         <Route path="laporan" element={<LaporanPage />} />
         <Route path="/laporan/:id" element={<DetailLaporan />} />
         <Route path="artikel" element={<ArtikelPage />} />
+        <Route path="/artikel/:id" element={<ArticleDetailPage />} />
        
 
         <Route element={<ProtectedRoute />}>
           {/* Untuk halaman publik yang perlu login user */}
-           <Route path="/artikel/:id" element={<ArticleDetailPage />} />
            
         </Route>
       </Route>

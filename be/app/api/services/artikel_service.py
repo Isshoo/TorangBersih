@@ -1,6 +1,6 @@
-"""Artikel service - Business logic for artikel"""
 import re
 import uuid
+from datetime import datetime, timezone
 from sqlalchemy import or_
 
 from app.config.extensions import db
@@ -10,7 +10,7 @@ from app.utils.exceptions import NotFoundError, ForbiddenError, BadRequestError
 
 class ArtikelService:
     @staticmethod
-    def get_all(page=1, per_page=20, search=None, sort_by='created_at', sort_order='desc'):
+    def get_all(page=1, per_page=20, search=None, kategori_id=None, status_publikasi=None, sort_by='created_at', sort_order='desc'):
         query = Artikel.query
 
         if search:
@@ -20,6 +20,18 @@ class ArtikelService:
                     Artikel.konten_teks.ilike(f'%{search}%'),
                 )
             )
+
+        if kategori_id:
+            query = query.filter_by(kategori_id=kategori_id)
+
+        if status_publikasi:
+            # status_publikasi dikirim sebagai string ('draft'/'published'/'archived')
+            try:
+                status_enum = StatusPublikasi(status_publikasi.lower())
+                query = query.filter(Artikel.status_publikasi == status_enum)
+            except ValueError:
+                # jika value tidak valid, biarkan tanpa filter tambahan
+                pass
 
         # Sorting logic
         sort_column = getattr(Artikel, sort_by, Artikel.created_at)
@@ -35,10 +47,13 @@ class ArtikelService:
         return items, total
 
     @staticmethod
-    def get_by_id(item_id):
+    def get_by_id(item_id, increment_view=False):
         item = db.session.get(Artikel, item_id)
         if not item:
             raise NotFoundError("Artikel tidak ditemukan")
+        if increment_view:
+            item.jumlah_views = item.jumlah_views + 1
+            db.session.commit()
         return item
 
     @staticmethod
@@ -59,6 +74,11 @@ class ArtikelService:
                 data['status_publikasi'] = StatusPublikasi(data['status_publikasi'].lower())
             except ValueError:
                 data['status_publikasi'] = StatusPublikasi.DRAFT
+
+        # Set waktu_publish jika dibuat dengan status PUBLISHED
+        status_enum = data.get('status_publikasi', StatusPublikasi.DRAFT)
+        if status_enum == StatusPublikasi.PUBLISHED:
+            data['waktu_publish'] = datetime.now(timezone.utc)
 
         item = Artikel(id_penulis=user.id, **data)
         db.session.add(item)
@@ -91,6 +111,15 @@ class ArtikelService:
                     konten = item.konten_teks
                 if konten is None or str(konten).strip() == "":
                     raise BadRequestError("konten_teks wajib diisi jika status_publikasi=published")
+                
+                # Set waktu_publish jika sebelumnya bukan PUBLISHED
+                if item.status_publikasi != StatusPublikasi.PUBLISHED:
+                    item.waktu_publish = datetime.now(timezone.utc)
+
+        # Update slug jika judul diubah
+        if 'judul_artikel' in data and data['judul_artikel'] != item.judul_artikel:
+            base_slug = re.sub(r'[^a-zA-Z0-9]+', '-', data['judul_artikel'].lower()).strip('-')
+            data['slug'] = f"{base_slug}-{str(uuid.uuid4())[:8]}"
 
         for key, value in data.items():
             # Handle Enum conversion khusus status_publikasi

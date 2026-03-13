@@ -30,9 +30,10 @@ const ArticleCard = ({ article }) => {
           </h2>
         </Link>
 
-        <p className="mb-4 line-clamp-2 text-sm leading-relaxed text-gray-500 sm:text-base">
-          {article.excerpt}
-        </p>
+        <p
+          className="mb-4 line-clamp-2 text-sm leading-relaxed text-gray-500 sm:text-base"
+          dangerouslySetInnerHTML={{ __html: article.excerpt }}
+        />
 
         {/* Meta: Date, Like & Comment */}
         <div className="mt-auto flex items-center gap-6 text-sm text-gray-500">
@@ -52,7 +53,7 @@ const ArticleCard = ({ article }) => {
       {/* --- GAMBAR YANG BISA DIKLIK --- */}
       <Link
         to={`/artikel/${article.id}`}
-        className="block flex w-full shrink-0 items-center overflow-hidden rounded-md bg-gray-100 sm:w-32 md:w-48"
+        className="flex w-full shrink-0 items-center overflow-hidden rounded-md bg-gray-100 sm:w-32 md:w-48"
       >
         <img
           src={article.image}

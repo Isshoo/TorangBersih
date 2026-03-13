@@ -1,8 +1,7 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import ArticleCard from "../../components/features/public/artikel/articleCard";
 import Sidebar from "../../components/features/public/artikel/Sidebar";
-
-import { useArtikel } from "../../components/features/public/artikel/UseArticle"; // sesuaikan path jika berbeda
+import { artikelAPI } from "../../services/api/routes/artikel.route";
 
 // ── Tab config ──────────────────────────────────────────────────
 const TAB_LIST = ["Untuk Anda", "Edukasi", "Berita", "Event", "Opini"];
@@ -73,18 +72,82 @@ function Pagination({ meta, page, onPage }) {
 // ── Main page ────────────────────────────────────────────────────
 const ArtikelPage = () => {
   const [activeTab, setActiveTab] = useState("Untuk Anda");
-  const [page, setPage] = useState(1);
+  const [articles, setArticles] = useState([]);
+  const [meta, setMeta] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
+
+  const [query, setQuery] = useState({
+    page: 1,
+    per_page: 10,
+    search: "",
+    sort_by: "created_at",
+    sort_order: "desc",
+    status_publikasi: "published",
+  });
 
   // Fetch dari backend — reset ke page 1 saat tab berubah
   const handleTabChange = (tab) => {
     setActiveTab(tab);
-    setPage(1);
+    setQuery((q) => ({ ...q, page: 1 }));
   };
 
-  const { articles, loading, error, meta, refetch } = useArtikel({
-    kategori: activeTab,
-    page,
-  });
+  const fetchArtikel = async () => {
+    setLoading(true);
+    setError("");
+    try {
+      const params = Object.fromEntries(
+        // eslint-disable-next-line no-unused-vars
+        Object.entries(query).filter(([_, v]) => v !== ""),
+      );
+
+      const res = await artikelAPI.getAll(params);
+      const data = res.data.data || [];
+
+      setArticles(
+        data.map((item) => ({
+          id: item.id,
+          slug: item.slug,
+          title: item.judul_artikel,
+          excerpt: item.excerpt ?? "",
+          image: item.foto_cover_url ?? "",
+          category: item.kategori?.nama ?? item.kategori ?? "",
+          author: item.penulis?.full_name ?? item.penulis?.username ?? "Anonim",
+          authorImage:
+            item.penulis?.avatar_url ??
+            `https://ui-avatars.com/api/?name=${encodeURIComponent(
+              item.penulis?.full_name ?? "A",
+            )}&background=1e1f78&color=fff`,
+          date: item.waktu_publish
+            ? new Date(item.waktu_publish).toLocaleDateString("id-ID", {
+                day: "numeric",
+                month: "short",
+                year: "numeric",
+              })
+            : "-",
+          views: item.jumlah_views ?? 0,
+          likes: item.jumlah_likes ?? 0,
+          comments: item.jumlah_komentar ?? 0,
+          status: item.status_publikasi,
+        })),
+      );
+      setMeta(res.data.meta || null);
+    } catch (err) {
+      setError(err.response?.data?.message || "Gagal memuat artikel.");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchArtikel();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [activeTab, query.page, query.sort_by, query.sort_order]);
+
+  const filteredArticles =
+    activeTab === "Untuk Anda"
+      ? articles
+      : articles.filter((item) => item.category === activeTab);
 
   // Sidebar data (static — belum ada endpoint populer/topik)
   const popularArticles = [
@@ -140,11 +203,11 @@ const ArtikelPage = () => {
 
             {/* ── Error ── */}
             {!loading && error && (
-              <ErrorState message={error} onRetry={refetch} />
+              <ErrorState message={error} onRetry={fetchArtikel} />
             )}
 
             {/* ── Empty ── */}
-            {!loading && !error && articles.length === 0 && (
+            {!loading && !error && filteredArticles.length === 0 && (
               <div className="flex flex-col items-center justify-center gap-2 py-16 text-center">
                 <p className="text-base font-bold text-gray-900">
                   Belum ada artikel
@@ -156,10 +219,10 @@ const ArtikelPage = () => {
             )}
 
             {/* ── Daftar artikel — markup sama persis ── */}
-            {!loading && !error && articles.length > 0 && (
+            {!loading && !error && filteredArticles.length > 0 && (
               <>
                 <div className="flex flex-col">
-                  {articles.map((item) => (
+                  {filteredArticles.map((item) => (
                     <ArticleCard
                       key={item.id}
                       article={{
@@ -181,7 +244,13 @@ const ArtikelPage = () => {
                 </div>
 
                 {/* Pagination */}
-                <Pagination meta={meta} page={page} onPage={setPage} />
+                <Pagination
+                  meta={meta}
+                  page={query.page}
+                  onPage={(newPage) =>
+                    setQuery((q) => ({ ...q, page: newPage }))
+                  }
+                />
               </>
             )}
           </div>
