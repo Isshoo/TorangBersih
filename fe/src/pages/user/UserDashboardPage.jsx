@@ -522,11 +522,11 @@ const UserDashboardPage = () => {
   const artikelStatus = data.my_artikel_per_status;
 
   return (
-    <div className="space-y-6 p-4 sm:p-6 lg:p-8">
+    <div className="space-y-4 md:space-y-6">
       {/* ── Greeting ── */}
       <div className="flex flex-wrap items-center justify-between gap-3">
         <div>
-          <h1 className="text-[22px] font-black tracking-tight text-[#0f0f0f]">
+          <h1 className="text-2xl font-bold tracking-tight text-[#0f0f0f]">
             Dashboard Saya
           </h1>
           <p className="mt-0.5 text-[13px] text-gray-500">
