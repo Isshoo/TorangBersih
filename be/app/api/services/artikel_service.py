@@ -5,6 +5,7 @@ from sqlalchemy import or_
 
 from app.config.extensions import db
 from app.database.models import Artikel, StatusPublikasi
+from app.database.models.artikel import ArtikelLike, ArtikelKomentar, StatusKomentar
 from app.utils.exceptions import NotFoundError, ForbiddenError
 
 class ArtikelService:
@@ -113,3 +114,102 @@ class ArtikelService:
         items = query.offset((page - 1) * per_page).limit(per_page).all()
 
         return items, total
+
+    # ------------------------------------------------------------------ #
+    #  LIKE
+    # ------------------------------------------------------------------ #
+    @staticmethod
+    def toggle_like(artikel_id, user):
+        """Toggle like untuk artikel. Return (liked: bool, jumlah_like: int)."""
+        artikel = db.session.get(Artikel, artikel_id)
+        if not artikel:
+            raise NotFoundError("Artikel tidak ditemukan")
+
+        existing = ArtikelLike.query.filter_by(
+            id_artikel=artikel_id,
+            id_user=user.id
+        ).first()
+
+        if existing:
+            db.session.delete(existing)
+            db.session.commit()
+            liked = False
+        else:
+            new_like = ArtikelLike(id_artikel=artikel_id, id_user=user.id)
+            db.session.add(new_like)
+            db.session.commit()
+            liked = True
+
+        jumlah_like = ArtikelLike.query.filter_by(id_artikel=artikel_id).count()
+        return liked, jumlah_like
+
+    # ------------------------------------------------------------------ #
+    #  KOMENTAR
+    # ------------------------------------------------------------------ #
+    @staticmethod
+    def get_komentar(artikel_id, page=1, per_page=20):
+        """Ambil semua komentar aktif top-level untuk satu artikel."""
+        artikel = db.session.get(Artikel, artikel_id)
+        if not artikel:
+            raise NotFoundError("Artikel tidak ditemukan")
+
+        query = ArtikelKomentar.query.filter_by(
+            id_artikel=artikel_id,
+            parent_id=None,
+            status_komentar=StatusKomentar.AKTIF
+        ).order_by(ArtikelKomentar.waktu_komentar.asc())
+
+        total = query.count()
+        items = query.offset((page - 1) * per_page).limit(per_page).all()
+        return items, total
+
+    @staticmethod
+    def create_komentar(artikel_id, user, data):
+        """Buat komentar baru atau reply."""
+        artikel = db.session.get(Artikel, artikel_id)
+        if not artikel:
+            raise NotFoundError("Artikel tidak ditemukan")
+
+        # Validasi parent_id jika ada (untuk reply)
+        parent_id = data.get('parent_id')
+        if parent_id:
+            parent = db.session.get(ArtikelKomentar, parent_id)
+            if not parent or parent.id_artikel != artikel_id:
+                raise NotFoundError("Komentar parent tidak ditemukan")
+
+        komentar = ArtikelKomentar(
+            id_artikel=artikel_id,
+            id_user=user.id,
+            isi_komentar=data['isi_komentar'],
+            parent_id=parent_id
+        )
+        db.session.add(komentar)
+        db.session.commit()
+        return komentar
+
+    @staticmethod
+    def update_komentar(komentar_id, user, data):
+        """Edit komentar milik sendiri."""
+        komentar = db.session.get(ArtikelKomentar, komentar_id)
+        if not komentar:
+            raise NotFoundError("Komentar tidak ditemukan")
+
+        if komentar.id_user != user.id and not getattr(user, 'is_admin', False):
+            raise ForbiddenError("Tidak memiliki akses untuk mengubah komentar ini")
+
+        komentar.isi_komentar = data['isi_komentar']
+        db.session.commit()
+        return komentar
+
+    @staticmethod
+    def delete_komentar(komentar_id, user):
+        """Hapus komentar (owner atau admin)."""
+        komentar = db.session.get(ArtikelKomentar, komentar_id)
+        if not komentar:
+            raise NotFoundError("Komentar tidak ditemukan")
+
+        if komentar.id_user != user.id and not getattr(user, 'is_admin', False):
+            raise ForbiddenError("Tidak memiliki akses untuk menghapus komentar ini")
+
+        db.session.delete(komentar)
+        db.session.commit()

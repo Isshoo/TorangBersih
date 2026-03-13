@@ -1,0 +1,20 @@
+meta {
+  name: Delete Komentar Artikel
+  type: http
+  seq: 12
+}
+
+delete {
+  url: {{base_url}}/artikel/:item_id/komentar/:komentar_id
+  body: none
+  auth: bearer
+}
+
+params:path {
+  item_id: {{artikel_id}}
+  komentar_id: {{komentar_id}}
+}
+
+auth:bearer {
+  token: {{admin_access_token}}
+}
