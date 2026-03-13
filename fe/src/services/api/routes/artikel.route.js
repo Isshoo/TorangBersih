@@ -2,6 +2,8 @@ import api from "../axios";
 
 export const artikelAPI = {
   getAll: (params) => api.get("/artikel", { params }),
+  getPopular: () => api.get("/artikel/popular"),
+  getTags: () => api.get("/artikel/tags"),
   getById: (id) => api.get(`/artikel/${id}`),
   getMyArtikel: (params) => api.get("/artikel/my-artikel", { params }),
   

@@ -10,7 +10,7 @@ from app.utils.exceptions import NotFoundError, ForbiddenError, BadRequestError
 
 class ArtikelService:
     @staticmethod
-    def get_all(page=1, per_page=20, search=None, kategori_id=None, status_publikasi=None, sort_by='created_at', sort_order='desc'):
+    def get_all(page=1, per_page=20, search=None, kategori_id=None, status_publikasi=None, tag=None, sort_by='created_at', sort_order='desc'):
         query = Artikel.query
 
         if search:
@@ -23,6 +23,9 @@ class ArtikelService:
 
         if kategori_id:
             query = query.filter_by(kategori_id=kategori_id)
+
+        if tag:
+            query = query.filter(db.cast(Artikel.tags, db.String).ilike(f'%"{tag}"%'))
 
         if status_publikasi:
             # status_publikasi dikirim sebagai string ('draft'/'published'/'archived')
@@ -55,6 +58,24 @@ class ArtikelService:
             item.jumlah_views = item.jumlah_views + 1
             db.session.commit()
         return item
+
+    @staticmethod
+    def get_popular(limit=3):
+        return Artikel.query.filter_by(status_publikasi=StatusPublikasi.PUBLISHED)\
+            .order_by(Artikel.jumlah_views.desc(), Artikel.created_at.desc())\
+            .limit(limit).all()
+
+    @staticmethod
+    def get_unique_tags():
+        artikels = Artikel.query.filter_by(status_publikasi=StatusPublikasi.PUBLISHED)\
+            .with_entities(Artikel.tags).all()
+        unique_tags = set()
+        for art in artikels:
+            if art.tags:
+                for t in art.tags:
+                    unique_tags.add(t)
+        return sorted(list(unique_tags))
+
 
     @staticmethod
     def create(user, data):

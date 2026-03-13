@@ -39,6 +39,7 @@ class ArtikelQuerySchema(Schema):
     # Filter tambahan untuk list publik (opsional)
     kategori_id = fields.String()
     status_publikasi = fields.String(validate=validate.OneOf([s.value for s in StatusPublikasi]))
+    tag = fields.String()
     sort_by = fields.String(load_default='created_at', validate=validate.OneOf(['created_at', 'judul_artikel', 'waktu_publish', 'jumlah_views']))
     sort_order = fields.String(load_default='desc', validate=validate.OneOf(['asc', 'desc']))
 

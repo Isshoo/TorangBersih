@@ -26,6 +26,7 @@ def get_all():
         search=params.get('search'),
         kategori_id=params.get('kategori_id'),
         status_publikasi=params.get('status_publikasi'),
+        tag=params.get('tag'),
         sort_by=params.get('sort_by', 'created_at'),
         sort_order=params.get('sort_order', 'desc'),
     )
@@ -44,6 +45,21 @@ def get_one(item_id):
         data=item.to_dict(include_content=True), 
         message="Detail artikel berhasil diambil"
     )
+
+def get_popular():
+    items = ArtikelService.get_popular(limit=3)
+    return success_response(
+        data=[item.to_dict(include_content=False) for item in items],
+        message="Artikel populer berhasil diambil"
+    )
+
+def get_tags():
+    tags = ArtikelService.get_unique_tags()
+    return success_response(
+        data=tags,
+        message="Daftar tag berhasil diambil"
+    )
+
 
 @jwt_required_custom
 def my_artikel():
