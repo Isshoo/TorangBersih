@@ -232,7 +232,7 @@ const ArtikelEditor = forwardRef(function ArtikelEditor(
     konten === "<p><br></p>";
 
   return (
-    <div className="editor-wrap rounded-sm relative">
+    <div className="editor-wrap relative rounded-sm">
       <div className="mb-2">
         <label className="mb-2 block text-lg font-semibold tracking-widest text-gray-400 uppercase">
           Judul Artikel

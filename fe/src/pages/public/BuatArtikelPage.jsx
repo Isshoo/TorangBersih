@@ -8,19 +8,20 @@ import ArtikelPreviewModal from "../../components/features/public/artikel/BuatAr
 import toaster from "../../utils/toaster";
 import { createArtikel } from "../../components/features/public/artikel/UseArticle";
 
-// Key untuk menyimpan draf agar tidak hilang saat refresh/pindah halaman
+
 const DRAFT_LOCAL_KEY = "torangbersih_draft_artikel";
 
 const BuatArtikelPage = () => {
   const navigate = useNavigate();
 
-  // 1. Ambil data dari localStorage jika ada, kalau kosong pakai default
   const [form, setForm] = useState(() => {
     const savedDraft = localStorage.getItem(DRAFT_LOCAL_KEY);
     if (savedDraft) {
       try {
         return JSON.parse(savedDraft);
-      } catch (err) {}
+      } catch (err) {
+        console.error("Gagal memuat draf dari localStorage:", err);
+      }
     }
     return {
       judul_artikel: "",
@@ -59,7 +60,11 @@ const BuatArtikelPage = () => {
 
   // 3. Tombol Reset / Buang Draf
   const handleResetDraft = () => {
-    if (window.confirm("Apakah Anda yakin ingin menghapus semua tulisan ini dan mulai dari awal?")) {
+    if (
+      window.confirm(
+        "Apakah Anda yakin ingin menghapus semua tulisan ini dan mulai dari awal?",
+      )
+    ) {
       localStorage.removeItem(DRAFT_LOCAL_KEY);
       setForm({
         judul_artikel: "",
@@ -85,7 +90,7 @@ const BuatArtikelPage = () => {
       await createArtikel({ ...form, status_publikasi: "draft" });
       setSaveStatus("saved");
       setIsDirty(false);
-      localStorage.removeItem(DRAFT_LOCAL_KEY); 
+      localStorage.removeItem(DRAFT_LOCAL_KEY);
       toaster.success("Draf berhasil disimpan!");
     } catch (err) {
       setSaveStatus("");
@@ -99,7 +104,7 @@ const BuatArtikelPage = () => {
     setError("");
     try {
       await createArtikel({ ...form, status_publikasi: "published" });
-      localStorage.removeItem(DRAFT_LOCAL_KEY); 
+      localStorage.removeItem(DRAFT_LOCAL_KEY);
       toaster.success("Artikel berhasil diterbitkan!");
       setShowPublish(false);
       setShowPreview(false);
@@ -119,7 +124,7 @@ const BuatArtikelPage = () => {
 
   return (
     <div className="min-h-screen bg-[#f3f3fc]">
-      <div className="mx-auto max-w-7xl px-4 pt-30 space-y-5 pb-20 sm:px-6 lg:px-8">
+      <div className="mx-auto max-w-7xl space-y-5 px-4 pt-5 pb-20 sm:px-6 lg:px-8">
         <ArtikelNavbar
           saveStatus={saveStatus}
           isDirty={isDirty}
@@ -130,7 +135,7 @@ const BuatArtikelPage = () => {
           onPublish={() => setShowPublish(true)}
           onReset={handleResetDraft} // Lempar fungsi Reset ke tombol sampah
         />
-        
+
         <div className="grid grid-cols-1 gap-8 lg:grid-cols-12">
           <div className="lg:col-span-8">
             <div className="rounded-2xl bg-white p-6 shadow-sm sm:p-8">

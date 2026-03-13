@@ -26,7 +26,6 @@ const ArtikelNavbar = ({
   return (
     <header className="z-[9999] rounded-lg border-b border-gray-100 bg-white shadow-sm">
       <div className="mx-auto grid h-16 max-w-7xl grid-cols-[1fr_auto] items-center px-4">
-
         {/* STEP PROGRESS */}
         <div className="flex items-center gap-2 sm:gap-3">
           {STEPS.map((step, idx) => {
@@ -41,8 +40,8 @@ const ArtikelNavbar = ({
                       done
                         ? "bg-green-500 text-white"
                         : active
-                        ? "bg-[#1e1f78] text-white"
-                        : "bg-gray-100 text-gray-400"
+                          ? "bg-[#1e1f78] text-white"
+                          : "bg-gray-100 text-gray-400"
                     }`}
                   >
                     {done ? <RiCheckLine className="h-3 w-3" /> : step.id}
@@ -53,8 +52,8 @@ const ArtikelNavbar = ({
                       active
                         ? "text-[#1e1f78]"
                         : done
-                        ? "text-green-600"
-                        : "text-gray-400"
+                          ? "text-green-600"
+                          : "text-gray-400"
                     }`}
                   >
                     {step.label}
@@ -75,7 +74,6 @@ const ArtikelNavbar = ({
 
         {/* ACTION BUTTON */}
         <div className="flex items-center gap-2">
-
           <div className="hidden lg:block">
             <SaveStatus saveStatus={saveStatus} isDirty={isDirty} />
           </div>

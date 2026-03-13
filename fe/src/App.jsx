@@ -80,6 +80,7 @@ function App() {
         <Route path="/laporan/buat" element={<BuatLaporanPageUser />} />
         <Route path="/aset/daftar" element={<RegisterAsetPage />} />
         <Route path="/barang-bekas/jual" element={<JualBarangBekasPage />} />
+        <Route path="/artikel/buat" element={<BuatArtikelPage />} />
       </Route>
 
       <Route path="/forgot-password" element={<ForgotPasswordPage />} />
@@ -105,7 +106,7 @@ function App() {
         <Route element={<ProtectedRoute />}>
           {/* Untuk halaman publik yang perlu login user */}
            <Route path="/artikel/:id" element={<ArticleDetailPage />} />
-           <Route path="/artikel/buat" element={<BuatArtikelPage />} />
+           
         </Route>
       </Route>
 
