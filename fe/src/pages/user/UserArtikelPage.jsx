@@ -52,8 +52,7 @@ export default function UserArtikelPage() {
   } = useArtikelSaya();
 
   return (
-    <div className="min-h-screen px-2 py-2 sm:px-2 2xl:px-10 transition-all">
-
+    <div className="min-h-screen transition-all">
       {/* Modal hapus */}
       <ArtikelDeleteModal
         open={!!confirmId}
