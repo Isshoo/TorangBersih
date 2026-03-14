@@ -30,6 +30,11 @@ export function useArtikelSaya() {
   const [confirmId, setConfirmId] = useState(null);
   const [deleting,  setDeleting]  = useState(false);
 
+  // ── Edit State ────────────────────────────────────────────
+  const [editId,     setEditId]     = useState(null);
+  const [editingArt, setEditingArt] = useState(null);
+  const [updating,   setUpdating]   = useState(false);
+
   // ── Fetch ─────────────────────────────────────────────────
   const load = useCallback(async () => {
     setLoading(true);
@@ -95,6 +100,36 @@ export function useArtikelSaya() {
     }
   };
 
+  const openEdit = async (id) => {
+    setLoading(true);
+    try {
+      const res = await artikelAPI.getById(id);
+      setEditingArt(res.data.data);
+      setEditId(id);
+    } catch {
+      setError("Gagal mengambil detail artikel untuk diedit.");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const doUpdate = async (data, fotoFile) => {
+    if (!editId) return;
+    setUpdating(true);
+    try {
+      await artikelAPI.update(editId, data, fotoFile);
+      setEditId(null);
+      setEditingArt(null);
+      load();
+      return true;
+    } catch (err) {
+      setError(err?.response?.data?.message || "Gagal memperbarui artikel.");
+      return false;
+    } finally {
+      setUpdating(false);
+    }
+  };
+
   return {
     // data
     articles, total, totalPages, page,
@@ -108,6 +143,8 @@ export function useArtikelSaya() {
     goPage,
     // delete
     confirmId, setConfirmId, deleting, doDelete,
+    // edit
+    editId, setEditId, editingArt, setEditingArt, updating, openEdit, doUpdate,
     // refresh
     load,
   };
