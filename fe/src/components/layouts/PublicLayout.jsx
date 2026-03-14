@@ -14,7 +14,7 @@ function PublicLayout() {
       <Header isAuthenticated={isAuthenticated} user={user} onLogout={logout} />
 
       {/* Content fill empty space*/}
-      <main className="flex-1">
+      <main className="z-100 flex-1">
         <Outlet />
       </main>
 

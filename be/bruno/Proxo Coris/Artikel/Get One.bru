@@ -11,9 +11,14 @@ get {
 }
 
 params:path {
-  item_id: aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee
+  item_id: {{artikel_id}}
 }
+
 
 headers {
   Accept: application/json
+}
+
+vars:pre-request {
+  base_url: http://127.0.0.1:5000/api
 }

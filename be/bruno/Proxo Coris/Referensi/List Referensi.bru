@@ -5,7 +5,11 @@ meta {
 }
 
 get {
-  url: {{base_url}}/referensi/jenis-kolaborator
+  url: {{base_url}}/referensi/kategori-artikel
   body: none
   auth: none
+}
+
+vars:pre-request {
+  base_url: http://127.0.0.1:5000/api
 }

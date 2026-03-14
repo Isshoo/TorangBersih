@@ -55,8 +55,11 @@ const RegisterAsetPage = () => {
         return toaster.warning("Isi nama aset terlebih dahulu.");
       if (!formData.kategori_aset_id)
         return toaster.warning("Pilih kategori aset.");
-      if (!formData.deskripsi_aset.trim())
-        return toaster.warning("Isi deskripsi aset.");
+      if (
+        !formData.deskripsi_aset.trim() ||
+        formData.deskripsi_aset.length < 50
+      )
+        return toaster.warning("Isi deskripsi aset minimal 50 karakter.");
     }
     if (currentStep === 2) {
       if (!formData.kabupaten_kota)
@@ -114,7 +117,7 @@ const RegisterAsetPage = () => {
   ];
 
   return (
-    <div className="relative flex min-h-screen items-center justify-center bg-[#f4f6f9] p-4 font-sans sm:p-8">
+    <div className="relative flex min-h-screen items-center justify-center bg-[#f4f6f9] p-4  sm:p-8">
       <button
         onClick={() => navigate(-1)}
         className="absolute top-6 left-6 flex items-center gap-2 text-sm font-bold text-gray-500 hover:text-gray-900"

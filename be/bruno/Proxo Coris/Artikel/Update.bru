@@ -11,8 +11,9 @@ put {
 }
 
 params:path {
-  item_id: aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee
+  item_id: {{artikel_id}}
 }
+
 
 headers {
   Accept: application/json
@@ -20,7 +21,7 @@ headers {
 }
 
 auth:bearer {
-  token: {{token}}
+  token: {{admin_access_token}}
 }
 
 body:json {

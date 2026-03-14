@@ -11,7 +11,7 @@ delete {
 }
 
 params:path {
-  item_id: aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee
+  item_id: {{artikel_id}}
 }
 
 headers {
@@ -19,5 +19,9 @@ headers {
 }
 
 auth:bearer {
-  token: {{token}}
+  token: {{admin_access_token}}
+}
+
+vars:pre-request {
+  artikel_id: a597639f-44a1-46c7-bb65-9a52e85346db
 }

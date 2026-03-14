@@ -12,6 +12,31 @@ from app.utils.exceptions import NotFoundError, ForbiddenError
 class LaporanService:
 
     @staticmethod
+    def precheck_create(data):
+        """Validasi sebelum upload file: cek referensi wajib ada & aktif."""
+        ref = db.session.get(RefJenisSampah, data['jenis_sampah_id'])
+        if not ref or not ref.is_active:
+            raise NotFoundError("Jenis sampah tidak valid")
+        return data
+
+    @staticmethod
+    def precheck_update(item_id, user, data):
+        """Validasi sebelum upload file saat update: cek akses + referensi (jika diubah)."""
+        item = db.session.get(LaporanSampahIlegal, item_id)
+        if not item:
+            raise NotFoundError("Laporan tidak ditemukan")
+
+        if item.id_warga != user.id and not user.is_admin:
+            raise ForbiddenError("Tidak memiliki akses untuk mengubah laporan ini")
+
+        if 'jenis_sampah_id' in data:
+            ref = db.session.get(RefJenisSampah, data['jenis_sampah_id'])
+            if not ref:
+                raise NotFoundError("Jenis sampah tidak valid")
+
+        return item, data
+
+    @staticmethod
     def get_all(page=1, per_page=20, search=None, status_laporan=None,
                 jenis_sampah_id=None, id_warga=None, sort_by='created_at', sort_order='desc'):
         query = LaporanSampahIlegal.query
@@ -22,7 +47,16 @@ class LaporanService:
             )
 
         if status_laporan:
-            query = query.filter_by(status_laporan=StatusLaporan(status_laporan))
+            if ',' in status_laporan:
+                statuses = [s.strip() for s in status_laporan.split(',')]
+                valid_statuses = [StatusLaporan(s) for s in statuses if s in [e.value for e in StatusLaporan]]
+                query = query.filter(LaporanSampahIlegal.status_laporan.in_(valid_statuses))
+            else:
+                try:
+                    query = query.filter_by(status_laporan=StatusLaporan(status_laporan))
+                except ValueError:
+                    # Invalid status
+                    pass
 
         if jenis_sampah_id:
             query = query.filter_by(jenis_sampah_id=jenis_sampah_id)
@@ -49,9 +83,7 @@ class LaporanService:
 
     @staticmethod
     def create(user, data):
-        ref = db.session.get(RefJenisSampah, data['jenis_sampah_id'])
-        if not ref or not ref.is_active:
-            raise NotFoundError("Jenis sampah tidak valid")
+        LaporanService.precheck_create(data)
 
         # Convert string enum values
         if 'karakteristik' in data and data['karakteristik']:
@@ -112,6 +144,33 @@ class LaporanService:
         return item
 
     @staticmethod
+    def update(item_id, user, data):
+        item = db.session.get(LaporanSampahIlegal, item_id)
+        if not item:
+            raise NotFoundError("Laporan tidak ditemukan")
+
+        # Only owner or admin can update
+        if item.id_warga != user.id and not user.is_admin:
+            raise ForbiddenError("Tidak memiliki akses untuk mengubah laporan ini")
+
+        if 'jenis_sampah_id' in data:
+            ref = db.session.get(RefJenisSampah, data['jenis_sampah_id'])
+            if not ref:
+                raise NotFoundError("Jenis sampah tidak valid")
+
+        # Convert string enum values
+        if 'karakteristik' in data and data['karakteristik']:
+            data['karakteristik'] = Karakteristik(data['karakteristik'])
+        if 'bentuk_timbulan' in data and data['bentuk_timbulan']:
+            data['bentuk_timbulan'] = BentukTimbulan(data['bentuk_timbulan'])
+
+        for key, value in data.items():
+            setattr(item, key, value)
+
+        db.session.commit()
+        return item
+
+    @staticmethod
     def delete(item_id, user):
         item = db.session.get(LaporanSampahIlegal, item_id)
         if not item:
@@ -125,7 +184,7 @@ class LaporanService:
 
     @staticmethod
     def get_my_laporan(user_id, page=1, per_page=20, search=None, status_laporan=None,
-                jenis_sampah_id=None, sort_by='tanggal_lapor', sort_order='desc'):
+                jenis_sampah_id=None, sort_by='created_at', sort_order='desc'):
         query = LaporanSampahIlegal.query.filter_by(id_warga=user_id)
 
         if search:
@@ -139,7 +198,7 @@ class LaporanService:
         if jenis_sampah_id:
             query = query.filter_by(jenis_sampah_id=jenis_sampah_id)
 
-        sort_column = getattr(LaporanSampahIlegal, sort_by, LaporanSampahIlegal.tanggal_lapor)
+        sort_column = getattr(LaporanSampahIlegal, sort_by, LaporanSampahIlegal.created_at)
         if sort_order == 'asc':
             query = query.order_by(sort_column.asc())
         else:
@@ -158,7 +217,7 @@ class TindakLanjutService:
         if not laporan:
             raise NotFoundError("Laporan tidak ditemukan")
         return TindakLanjutLaporan.query.filter_by(id_laporan=laporan_id)\
-            .order_by(TindakLanjutLaporan.waktu_tindak_lanjut.desc()).all()
+            .order_by(TindakLanjutLaporan.created_at.desc()).all()
 
     @staticmethod
     def create(user, laporan_id, data):

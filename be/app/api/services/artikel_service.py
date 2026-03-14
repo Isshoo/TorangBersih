@@ -1,14 +1,16 @@
-"""Artikel service - Business logic for artikel"""
-
+import re
+import uuid
+from datetime import datetime, timezone
 from sqlalchemy import or_
 
 from app.config.extensions import db
-from app.database.models import Artikel
-from app.utils.exceptions import NotFoundError, ForbiddenError
+from app.database.models import Artikel, StatusPublikasi, RefKategoriArtikel
+from app.database.models.artikel import ArtikelLike, ArtikelKomentar, StatusKomentar
+from app.utils.exceptions import NotFoundError, ForbiddenError, BadRequestError
 
 class ArtikelService:
     @staticmethod
-    def get_all(search=None, sort_by='created_at', sort_order='desc'):
+    def get_all(page=1, per_page=20, search=None, kategori_id=None, status_publikasi=None, tag=None, sort_by='created_at', sort_order='desc'):
         query = Artikel.query
 
         if search:
@@ -19,28 +21,86 @@ class ArtikelService:
                 )
             )
 
-        # Sorting
+        if kategori_id:
+            query = query.filter_by(kategori_id=kategori_id)
+
+        if tag:
+            query = query.filter(db.cast(Artikel.tags, db.String).ilike(f'%"{tag}"%'))
+
+        if status_publikasi:
+            # status_publikasi dikirim sebagai string ('draft'/'published'/'archived')
+            try:
+                status_enum = StatusPublikasi(status_publikasi.lower())
+                query = query.filter(Artikel.status_publikasi == status_enum)
+            except ValueError:
+                # jika value tidak valid, biarkan tanpa filter tambahan
+                pass
+
+        # Sorting logic
         sort_column = getattr(Artikel, sort_by, Artikel.created_at)
         if sort_order == 'asc':
             query = query.order_by(sort_column.asc())
         else:
             query = query.order_by(sort_column.desc())
 
-        items = query.all()
-        total = len(items)
+        # Pagination logic
+        total = query.count()
+        items = query.offset((page - 1) * per_page).limit(per_page).all()
 
         return items, total
 
-
     @staticmethod
-    def get_by_id(item_id):
+    def get_by_id(item_id, increment_view=False):
         item = db.session.get(Artikel, item_id)
         if not item:
             raise NotFoundError("Artikel tidak ditemukan")
+        if increment_view:
+            item.jumlah_views = item.jumlah_views + 1
+            db.session.commit()
         return item
 
     @staticmethod
+    def get_popular(limit=3):
+        return Artikel.query.filter_by(status_publikasi=StatusPublikasi.PUBLISHED)\
+            .order_by(Artikel.jumlah_views.desc(), Artikel.created_at.desc())\
+            .limit(limit).all()
+
+    @staticmethod
+    def get_unique_tags():
+        artikels = Artikel.query.filter_by(status_publikasi=StatusPublikasi.PUBLISHED)\
+            .with_entities(Artikel.tags).all()
+        unique_tags = set()
+        for art in artikels:
+            if art.tags:
+                for t in art.tags:
+                    unique_tags.add(t)
+        return sorted(list(unique_tags))
+
+
+    @staticmethod
     def create(user, data):
+        # Validate kategori exists & active
+        ref = db.session.get(RefKategoriArtikel, data['kategori_id'])
+        if not ref or not ref.is_active:
+            raise NotFoundError("Kategori artikel tidak valid")
+
+        # Auto-generate slug jika tidak ada
+        if not data.get('slug'):
+            base_slug = re.sub(r'[^a-zA-Z0-9]+', '-', data['judul_artikel'].lower()).strip('-')
+            data['slug'] = f"{base_slug}-{str(uuid.uuid4())[:8]}"
+
+        # Handle Enum conversion (String to Python Enum)
+        if 'status_publikasi' in data and isinstance(data['status_publikasi'], str):
+            try:
+                data['status_publikasi'] = StatusPublikasi(data['status_publikasi'].lower())
+            except ValueError:
+                data['status_publikasi'] = StatusPublikasi.DRAFT
+
+        # Set waktu_publish jika dibuat dengan status PUBLISHED
+        status_enum = data.get('status_publikasi', StatusPublikasi.DRAFT)
+        if status_enum == StatusPublikasi.PUBLISHED:
+            data['waktu_publish'] = datetime.now(timezone.utc)
+
         item = Artikel(id_penulis=user.id, **data)
         db.session.add(item)
         db.session.commit()
@@ -52,11 +112,43 @@ class ArtikelService:
         if not item:
             raise NotFoundError("Artikel tidak ditemukan")
 
-        # Only owner or admin can update
+        # Otorisasi: Hanya pemilik atau Admin yang bisa update
         if item.id_penulis != user.id and not getattr(user, 'is_admin', False):
             raise ForbiddenError("Tidak memiliki akses untuk mengubah artikel ini")
 
+        if 'kategori_id' in data:
+            ref = db.session.get(RefKategoriArtikel, data['kategori_id'])
+            if not ref:
+                raise NotFoundError("Kategori artikel tidak valid")
+
+        # Jika status dipublish, pastikan konten tidak kosong (pakai konten baru atau existing)
+        if 'status_publikasi' in data:
+            status_val = data.get('status_publikasi')
+            # status_val bisa Enum atau string (akan dikonversi di bawah), normalisasi dulu
+            status_str = status_val.value if hasattr(status_val, "value") else str(status_val or "").lower()
+            if status_str == StatusPublikasi.PUBLISHED.value:
+                konten = data.get('konten_teks')
+                if konten is None:
+                    konten = item.konten_teks
+                if konten is None or str(konten).strip() == "":
+                    raise BadRequestError("konten_teks wajib diisi jika status_publikasi=published")
+                
+                # Set waktu_publish jika sebelumnya bukan PUBLISHED
+                if item.status_publikasi != StatusPublikasi.PUBLISHED:
+                    item.waktu_publish = datetime.now(timezone.utc)
+
+        # Update slug jika judul diubah
+        if 'judul_artikel' in data and data['judul_artikel'] != item.judul_artikel:
+            base_slug = re.sub(r'[^a-zA-Z0-9]+', '-', data['judul_artikel'].lower()).strip('-')
+            data['slug'] = f"{base_slug}-{str(uuid.uuid4())[:8]}"
+
         for key, value in data.items():
+            # Handle Enum conversion khusus status_publikasi
+            if key == 'status_publikasi' and isinstance(value, str):
+                try:
+                    value = StatusPublikasi(value.lower())
+                except ValueError:
+                    continue
             setattr(item, key, value)
 
         db.session.commit()
@@ -68,6 +160,7 @@ class ArtikelService:
         if not item:
             raise NotFoundError("Artikel tidak ditemukan")
 
+        # Otorisasi: Hanya pemilik atau Admin yang bisa hapus
         if item.id_penulis != user.id and not getattr(user, 'is_admin', False):
             raise ForbiddenError("Tidak memiliki akses untuk menghapus artikel ini")
 
@@ -86,14 +179,114 @@ class ArtikelService:
                 )
             )
 
-        # Sorting
         sort_column = getattr(Artikel, sort_by, Artikel.created_at)
-        if sort_order == 'asc':
-            query = query.order_by(sort_column.asc())
-        else:
-            query = query.order_by(sort_column.desc())
+        query = query.order_by(sort_column.asc() if sort_order == 'asc' else sort_column.desc())
 
         total = query.count()
         items = query.offset((page - 1) * per_page).limit(per_page).all()
 
-        return items, total 
+        return items, total
+
+    # ------------------------------------------------------------------ #
+    #  LIKE
+    # ------------------------------------------------------------------ #
+    @staticmethod
+    def toggle_like(artikel_id, user):
+        """Toggle like untuk artikel. Return (liked: bool, jumlah_like: int)."""
+        artikel = db.session.get(Artikel, artikel_id)
+        if not artikel:
+            raise NotFoundError("Artikel tidak ditemukan")
+
+        existing = ArtikelLike.query.filter_by(
+            id_artikel=artikel_id,
+            id_user=user.id
+        ).first()
+
+        if existing:
+            db.session.delete(existing)
+            db.session.commit()
+            liked = False
+        else:
+            new_like = ArtikelLike(id_artikel=artikel_id, id_user=user.id)
+            db.session.add(new_like)
+            db.session.commit()
+            liked = True
+
+        jumlah_like = ArtikelLike.query.filter_by(id_artikel=artikel_id).count()
+        return liked, jumlah_like
+
+    # ------------------------------------------------------------------ #
+    #  KOMENTAR
+    # ------------------------------------------------------------------ #
+    @staticmethod
+    def get_komentar(artikel_id, page=1, per_page=20):
+        """Ambil semua komentar aktif top-level untuk satu artikel."""
+        artikel = db.session.get(Artikel, artikel_id)
+        if not artikel:
+            raise NotFoundError("Artikel tidak ditemukan")
+
+        query = ArtikelKomentar.query.filter_by(
+            id_artikel=artikel_id,
+            parent_id=None,
+            status_komentar=StatusKomentar.AKTIF
+        ).order_by(ArtikelKomentar.waktu_komentar.asc())
+
+        total = query.count()
+        items = query.offset((page - 1) * per_page).limit(per_page).all()
+        return items, total
+
+    @staticmethod
+    def create_komentar(artikel_id, user, data):
+        """Buat komentar baru atau reply."""
+        artikel = db.session.get(Artikel, artikel_id)
+        if not artikel:
+            raise NotFoundError("Artikel tidak ditemukan")
+
+        # Validasi parent_id jika ada (untuk reply)
+        parent_id = data.get('parent_id')
+        if parent_id:
+            parent = db.session.get(ArtikelKomentar, parent_id)
+            if not parent or parent.id_artikel != artikel_id:
+                raise NotFoundError("Komentar parent tidak ditemukan")
+
+        komentar = ArtikelKomentar(
+            id_artikel=artikel_id,
+            id_user=user.id,
+            isi_komentar=data['isi_komentar'],
+            parent_id=parent_id
+        )
+        db.session.add(komentar)
+        db.session.commit()
+        return komentar
+
+    @staticmethod
+    def update_komentar(komentar_id, user, data):
+        """Edit komentar milik sendiri."""
+        komentar = db.session.get(ArtikelKomentar, komentar_id)
+        if not komentar:
+            raise NotFoundError("Komentar tidak ditemukan")
+
+        if komentar.id_user != user.id and not getattr(user, 'is_admin', False):
+            raise ForbiddenError("Tidak memiliki akses untuk mengubah komentar ini")
+
+        komentar.isi_komentar = data['isi_komentar']
+        db.session.commit()
+        return komentar
+
+    @staticmethod
+    def delete_komentar(komentar_id, user):
+        """Hapus komentar (owner atau admin)."""
+        komentar = db.session.get(ArtikelKomentar, komentar_id)
+        if not komentar:
+            raise NotFoundError("Komentar tidak ditemukan")
+
+        if komentar.id_user != user.id and not getattr(user, 'is_admin', False):
+            raise ForbiddenError("Tidak memiliki akses untuk menghapus komentar ini")
+
+        # hapus juga komentar-komentar yang merupakan balasan dari komentar ini
+        replies = ArtikelKomentar.query.filter_by(parent_id=komentar_id).all()
+        for reply in replies:
+            db.session.delete(reply)
+
+        db.session.delete(komentar)
+        db.session.commit()

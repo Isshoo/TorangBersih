@@ -1,0 +1,32 @@
+meta {
+  name: Create Komentar Artikel
+  type: http
+  seq: 9
+}
+
+post {
+  url: {{base_url}}/artikel/:item_id/komentar
+  body: json
+  auth: bearer
+}
+
+params:path {
+  item_id: {{artikel_id}}
+}
+
+auth:bearer {
+  token: {{user_access_token}}
+}
+
+body:json {
+  {
+    "isi_komentar": "Artikel yang sangat informatif dan bermanfaat!"
+  }
+}
+
+script:post-response {
+  if (res.status === 201) {
+    bru.setVar("komentar_id", res.body.data.id);
+  }
+}
+

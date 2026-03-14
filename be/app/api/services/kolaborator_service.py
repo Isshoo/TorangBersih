@@ -3,14 +3,60 @@ from sqlalchemy import or_
 
 from app.config.extensions import db
 from app.database.models import Kolaborator, RefJenisKolaborator, StatusVerifikasiKolaborator
-from app.utils.exceptions import NotFoundError, ForbiddenError, BadRequestError
+from app.utils.exceptions import NotFoundError, ForbiddenError, BadRequestError, ConflictError
 
 
 class KolaboratorService:
 
     @staticmethod
+    def precheck_create(user, data):
+        """Validasi sebelum upload file: cek referensi + duplikasi."""
+        ref = db.session.get(RefJenisKolaborator, data['jenis_kolaborator_id'])
+        if not ref or not ref.is_active:
+            raise NotFoundError("Jenis kolaborator tidak valid")
+
+        nama = data['nama_organisasi'].strip()
+        existing = Kolaborator.query.filter(
+            Kolaborator.id_user == user.id,
+            db.func.lower(Kolaborator.nama_organisasi) == nama.lower()
+        ).first()
+        if existing:
+            raise ConflictError("Nama organisasi sudah digunakan")
+
+        data['nama_organisasi'] = nama
+        return data
+
+    @staticmethod
+    def precheck_update(item_id, user, data):
+        """Validasi sebelum upload file saat update: cek akses + referensi + duplikasi."""
+        item = db.session.get(Kolaborator, item_id)
+        if not item:
+            raise NotFoundError("Kolaborator tidak ditemukan")
+
+        if item.id_user != user.id and not user.is_admin:
+            raise ForbiddenError("Tidak memiliki akses untuk mengubah kolaborator ini")
+
+        if 'jenis_kolaborator_id' in data:
+            ref = db.session.get(RefJenisKolaborator, data['jenis_kolaborator_id'])
+            if not ref:
+                raise NotFoundError("Jenis kolaborator tidak valid")
+
+        if 'nama_organisasi' in data and data['nama_organisasi'] is not None:
+            new_name = data['nama_organisasi'].strip()
+            existing = Kolaborator.query.filter(
+                Kolaborator.id_user == item.id_user,
+                db.func.lower(Kolaborator.nama_organisasi) == new_name.lower(),
+                Kolaborator.id != item.id
+            ).first()
+            if existing:
+                raise ConflictError("Nama organisasi sudah digunakan")
+            data['nama_organisasi'] = new_name
+
+        return item, data
+
+    @staticmethod
     def get_all(page=1, per_page=20, search=None, jenis_kolaborator_id=None,
-                kabupaten_kota=None, status_verifikasi=None, sort_by='created_at', sort_order='desc'):
+                kabupaten_kota=None,status_aktif=None, status_verifikasi=None, sort_by='created_at', sort_order='desc'):
         query = Kolaborator.query
 
         if search:
@@ -26,6 +72,9 @@ class KolaboratorService:
 
         if kabupaten_kota:
             query = query.filter(Kolaborator.kabupaten_kota.ilike(f'%{kabupaten_kota}%'))
+
+        if status_aktif is not None:
+            query = query.filter_by(status_aktif=status_aktif)
 
         if status_verifikasi:
             query = query.filter(Kolaborator.status_verifikasi == StatusVerifikasiKolaborator(status_verifikasi))
@@ -51,11 +100,7 @@ class KolaboratorService:
 
     @staticmethod
     def create(user, data):
-        # Validate jenis_kolaborator exists
-        ref = db.session.get(RefJenisKolaborator, data['jenis_kolaborator_id'])
-        if not ref or not ref.is_active:
-            raise NotFoundError("Jenis kolaborator tidak valid")
-
+        KolaboratorService.precheck_create(user, data)
         item = Kolaborator(id_user=user.id, **data)
         db.session.add(item)
         db.session.commit()
@@ -73,8 +118,19 @@ class KolaboratorService:
 
         if 'jenis_kolaborator_id' in data:
             ref = db.session.get(RefJenisKolaborator, data['jenis_kolaborator_id'])
-            if not ref or not ref.is_active:
+            if not ref:
                 raise NotFoundError("Jenis kolaborator tidak valid")
+
+        if 'nama_organisasi' in data and data['nama_organisasi'] is not None:
+            new_name = data['nama_organisasi'].strip()
+            existing = Kolaborator.query.filter(
+                Kolaborator.id_user == item.id_user,
+                db.func.lower(Kolaborator.nama_organisasi) == new_name.lower(),
+                Kolaborator.id != item.id
+            ).first()
+            if existing:
+                raise ConflictError("Nama organisasi sudah digunakan")
+            data['nama_organisasi'] = new_name
 
         for key, value in data.items():
             setattr(item, key, value)
@@ -124,7 +180,7 @@ class KolaboratorService:
 
     @staticmethod
     def get_my_kolaborator(user_id, page=1, per_page=20, search=None, jenis_kolaborator_id=None,
-                kabupaten_kota=None, sort_by='created_at', sort_order='desc'):
+                kabupaten_kota=None, status_aktif=None, status_verifikasi=None, sort_by='created_at', sort_order='desc'):
         query = Kolaborator.query.filter_by(id_user=user_id)
 
         if search:
@@ -140,6 +196,12 @@ class KolaboratorService:
 
         if kabupaten_kota:
             query = query.filter(Kolaborator.kabupaten_kota.ilike(f'%{kabupaten_kota}%'))
+
+        if status_aktif is not None:
+            query = query.filter_by(status_aktif=status_aktif)
+
+        if status_verifikasi:
+            query = query.filter(Kolaborator.status_verifikasi == StatusVerifikasiKolaborator(status_verifikasi))
 
         # Sorting
         sort_column = getattr(Kolaborator, sort_by, Kolaborator.created_at)

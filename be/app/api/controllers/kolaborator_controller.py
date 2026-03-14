@@ -27,6 +27,7 @@ def get_all():
         search=params.get('search'),
         jenis_kolaborator_id=params.get('jenis_kolaborator_id'),
         kabupaten_kota=params.get('kabupaten_kota'),
+        status_aktif=params.get('status_aktif'),
         status_verifikasi=params.get('status_verifikasi'),
         sort_by=params.get('sort_by', 'created_at'),
         sort_order=params.get('sort_order', 'desc'),
@@ -68,6 +69,9 @@ def create():
             status_code=422
         )
 
+    # Precheck (ref + duplikasi) sebelum upload logo
+    KolaboratorService.precheck_create(request.current_user, data)
+
     # Handle logo file upload if present
     if 'logo' in request.files:
         logo_file = request.files['logo']
@@ -107,6 +111,9 @@ def update(item_id):
             errors=[{"field": k, "message": v[0]} for k, v in err.messages.items()],
             status_code=422
         )
+
+    # Precheck sebelum upload logo (akses + ref + duplikasi nama)
+    KolaboratorService.precheck_update(item_id, request.current_user, data)
 
     # Handle logo file upload if present
     if 'logo' in request.files:
@@ -175,6 +182,8 @@ def my_kolaborator():
         search=params.get('search'),
         jenis_kolaborator_id=params.get('jenis_kolaborator_id'),
         kabupaten_kota=params.get('kabupaten_kota'),
+        status_aktif=params.get('status_aktif'),
+        status_verifikasi=params.get('status_verifikasi'),
         sort_by=params.get('sort_by', 'created_at'),
         sort_order=params.get('sort_order', 'desc'),
     )

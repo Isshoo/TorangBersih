@@ -25,6 +25,7 @@ def get_all():
         kategori_aset_id=params.get('kategori_aset_id'),
         kabupaten_kota=params.get('kabupaten_kota'),
         status_aktif=params.get('status_aktif'),
+        status_verifikasi=params.get('status_verifikasi'),
         sort_by=params.get('sort_by', 'created_at'),
         sort_order=params.get('sort_order', 'desc'),
     )
@@ -66,16 +67,14 @@ def create():
             status_code=422
         )
 
+    # Precheck (ref + duplikasi) sebelum upload foto
+    AsetService.precheck_create(request.current_user, data)
+
     # Handle multiple foto uploads
     if 'pictures_urls' in request.files:
-        from app.lib.cloudinary import upload_image
+        from app.lib.cloudinary import upload_images_concurrently
         files = request.files.getlist('pictures_urls')
-        uploaded_urls = []
-        for file in files:
-            if file.filename:
-                res = upload_image(file, folder="aset_pictures")
-                if res and 'url' in res:
-                    uploaded_urls.append(res['url'])
+        uploaded_urls = upload_images_concurrently(files, folder="aset_pictures")
         
         if uploaded_urls:
             data['pictures_urls'] = uploaded_urls
@@ -108,6 +107,9 @@ def update(item_id):
             status_code=422
         )
 
+    # Precheck sebelum upload foto (akses + ref + duplikasi nama)
+    AsetService.precheck_update(item_id, request.current_user, data)
+
     # Check for existing pictures kept by user
     existing_pictures = request.form.getlist('existing_pictures') if request.form else []
     if not request.form and 'existing_pictures' in raw_data:
@@ -117,17 +119,11 @@ def update(item_id):
 
     # Handle multiple new foto uploads
     if 'pictures_urls' in request.files:
-        from app.lib.cloudinary import upload_image
+        from app.lib.cloudinary import upload_images_concurrently
         files = request.files.getlist('pictures_urls')
-        for file in files:
-            if file.filename:
-                res = upload_image(file, folder="aset_pictures")
-                if res and 'url' in res:
-                    uploaded_urls.append(res['url'])
+        new_urls = upload_images_concurrently(files, folder="aset_pictures")
+        uploaded_urls.extend(new_urls)
         
-    # If the user touched the photos (either provided existing photos or new uploads), update the pictures_urls
-    # Or if they deleted all photos (existing_pictures is empty but they submitted it).
-    # We can signal "photos updated" if 'existing_pictures' is in request.form
     if request.form and 'existing_pictures' in request.form:
         data['pictures_urls'] = uploaded_urls
     elif 'pictures_urls' in request.files:
@@ -186,6 +182,7 @@ def my_aset():
         kategori_aset_id=params.get('kategori_aset_id'),
         kabupaten_kota=params.get('kabupaten_kota'),
         status_aktif=params.get('status_aktif'),
+        status_verifikasi=params.get('status_verifikasi'),
         sort_by=params.get('sort_by', 'created_at'),
         sort_order=params.get('sort_order', 'desc'),
     )

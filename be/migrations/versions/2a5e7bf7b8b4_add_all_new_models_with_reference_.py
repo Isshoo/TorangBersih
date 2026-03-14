@@ -1,8 +1,8 @@
 """add all new models with reference tables again
 
-Revision ID: abbf0934e740
+Revision ID: 2a5e7bf7b8b4
 Revises: 
-Create Date: 2026-03-11 12:50:30.396047
+Create Date: 2026-03-14 01:44:18.305284
 
 """
 from alembic import op
@@ -10,7 +10,7 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision = 'abbf0934e740'
+revision = '2a5e7bf7b8b4'
 down_revision = None
 branch_labels = None
 depends_on = None
@@ -93,6 +93,8 @@ def upgrade():
     sa.Column('foto_cover_url', sa.String(length=500), nullable=True),
     sa.Column('status_publikasi', sa.Enum('DRAFT', 'PUBLISHED', 'ARCHIVED', name='statuspublikasi'), nullable=False),
     sa.Column('jumlah_views', sa.Integer(), nullable=False),
+    sa.Column('tags', sa.JSON(), nullable=True),
+    sa.Column('is_featured', sa.Boolean(), nullable=False),
     sa.Column('waktu_publish', sa.DateTime(timezone=True), nullable=True),
     sa.Column('created_at', sa.DateTime(timezone=True), nullable=False),
     sa.Column('updated_at', sa.DateTime(timezone=True), nullable=False),
@@ -201,13 +203,14 @@ def upgrade():
     sa.Column('deskripsi_barang', sa.Text(), nullable=True),
     sa.Column('harga', sa.Integer(), nullable=True),
     sa.Column('berat_estimasi_kg', sa.Float(), nullable=True),
-    sa.Column('kondisi', sa.Enum('LAYAK_PAKAI', 'BUTUH_PERBAIKAN', 'RONGSOKAN', name='kondisibarang'), nullable=False),
+    sa.Column('kondisi', sa.Enum('layak_pakai', 'butuh_perbaikan', 'rongsokan', name='kondisibarang'), nullable=False),
     sa.Column('foto_barang_urls', sa.JSON(), nullable=True),
+    sa.Column('kontak', sa.String(length=20), nullable=True),
     sa.Column('latitude', sa.Float(), nullable=True),
     sa.Column('longitude', sa.Float(), nullable=True),
     sa.Column('kabupaten_kota', sa.String(length=100), nullable=True),
     sa.Column('alamat_lengkap', sa.Text(), nullable=True),
-    sa.Column('status_ketersediaan', sa.Enum('TERSEDIA', 'DIPESAN', 'TERJUAL', name='statusketersediaan'), nullable=False),
+    sa.Column('status_ketersediaan', sa.Enum('tersedia', 'dipesan', 'terjual', name='statusketersediaan'), nullable=False),
     sa.Column('created_at', sa.DateTime(timezone=True), nullable=False),
     sa.Column('updated_at', sa.DateTime(timezone=True), nullable=False),
     sa.ForeignKeyConstraint(['id_penjual'], ['users.id'], ),
