@@ -17,8 +17,8 @@ const ArticleDetailPage = () => {
   const [error, setError] = useState("");
   const [fetchedKomentar, setFetchedKomentar] = useState([]);
 
-  const fetchDetail = async () => {
-    setLoading(true);
+  const fetchDetail = async (silent = false) => {
+    if (!silent) setLoading(true);
     setError("");
     try {
       const res = await artikelAPI.getById(id);
@@ -28,9 +28,10 @@ const ArticleDetailPage = () => {
       setLikesCount(data.jumlah_likes || 0);
       setCommentsCount(data.jumlah_komentar || 0);
     } catch (err) {
-      setError(err.response?.data?.message || "Artikel tidak ditemukan.");
+      if (!silent)
+        setError(err.response?.data?.message || "Artikel tidak ditemukan.");
     } finally {
-      setLoading(false);
+      if (!silent) setLoading(false);
     }
   };
 
@@ -128,7 +129,7 @@ const ArticleDetailPage = () => {
       } else {
         toaster.success("Komentar berhasil ditambahkan");
       }
-      setCommentsCount((prev) => prev + 1);
+      fetchDetail(true); // Sync real count from backend
       fetchKomentar();
     } catch (err) {
       if (err.response?.status === 401)
@@ -151,7 +152,7 @@ const ArticleDetailPage = () => {
     try {
       await artikelAPI.deleteKomentar(id, komentarId);
       toaster.success("Komentar berhasil dihapus");
-      setCommentsCount((prev) => prev - 1);
+      fetchDetail(true); // Sync real count from backend
       fetchKomentar();
     } catch (err) {
       toaster.error(err.response?.data?.message || "Gagal menghapus komentar.");

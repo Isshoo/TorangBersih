@@ -61,6 +61,12 @@ const ArtikelPublishModal = ({
       required: false,
       hint: fotoPreview ? "Ada" : "Tidak ada — opsional",
     },
+    {
+      label: "Tags",
+      ok: !!form.tags?.length,
+      required: false,
+      hint: form.tags?.length ? "Ada" : "Tidak ada — opsional",
+    },
   ];
 
   const mandatoryOk = checks.every((c) => !c.required || c.ok);
