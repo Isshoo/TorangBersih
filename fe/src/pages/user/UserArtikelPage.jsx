@@ -45,7 +45,7 @@ export default function UserArtikelPage() {
   } = useArtikelSaya();
 
   return (
-    <div className="min-h-screen px-2 py-4 sm:px-4 md:px-6 lg:px-12 xl:px-28 2xl:px-10 transition-all">
+    <div className="min-h-screen px-2 py-2 sm:px-2 2xl:px-10 transition-all">
 
       {/* Modal hapus */}
       <ArtikelDeleteModal
@@ -67,7 +67,7 @@ export default function UserArtikelPage() {
       {/* Header */}
       <div className="mb-8 flex flex-col-reverse items-start gap-3 sm:flex-row sm:items-center sm:justify-between sm:gap-4">
         <div>
-          <h1 className="text-xl font-extrabold sm:text-2xl">Artikel Saya</h1>
+          <h1 className="text-xl font-bold sm:text-2xl">Artikel Saya</h1>
           <p className="mt-0.5 text-xs text-gray-500 sm:text-sm">
             Kelola tulisanmu — pantau status, edit, atau hapus kapan saja.
           </p>
