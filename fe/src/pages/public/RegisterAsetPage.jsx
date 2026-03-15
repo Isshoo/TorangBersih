@@ -117,10 +117,10 @@ const RegisterAsetPage = () => {
   ];
 
   return (
-    <div className="relative flex min-h-screen items-center justify-center bg-[#f4f6f9] p-4  sm:p-8">
+    <div className="relative flex min-h-screen items-center justify-center bg-[#f4f6f9] p-4 pt-16 sm:p-8 sm:pt-8">
       <button
         onClick={() => navigate(-1)}
-        className="absolute top-6 left-6 flex items-center gap-2 text-sm font-bold text-gray-500 hover:text-gray-900"
+        className="absolute top-4 left-4 sm:top-6 sm:left-6 flex items-center gap-2 text-sm font-bold text-gray-500 hover:text-gray-900 z-20"
       >
         <svg
           className="size-4"
@@ -138,14 +138,23 @@ const RegisterAsetPage = () => {
         Batal
       </button>
 
-      <div className="relative z-10 mt-10 flex h-[600px] w-full max-w-[1000px] flex-col overflow-hidden rounded-2xl bg-white shadow-lg md:mt-0 md:flex-row">
-        {/* SIDEBAR */}
-        <div className="relative flex w-full shrink-0 flex-col overflow-hidden bg-emerald-700 p-10 text-white md:w-[35%]">
-          <div className="relative z-10 mt-6 flex flex-col gap-10">
+      <div className="relative z-10 flex h-auto min-h-[600px] w-full max-w-[1000px] flex-col overflow-hidden rounded-2xl bg-white shadow-lg lg:h-[600px] md:flex-row">
+        
+        {/* SIDEBAR KIRI - Stepper Horizontal di Mobile, Vertikal di Desktop */}
+        <div className="relative flex w-full shrink-0 flex-col overflow-hidden bg-emerald-700 p-5 sm:p-8 text-white md:w-[35%] md:p-10">
+          
+          {/* Container Steps */}
+          <div className="relative z-10 mt-2 flex w-full flex-row justify-between md:mt-6 md:flex-col md:justify-start md:gap-10">
             {steps.map((step) => (
-              <div key={step.num} className="flex items-center gap-4">
+              <div 
+                key={step.num} 
+                // Di mobile: elemen ditumpuk ke bawah (flex-col) agar teks ada di bawah bulatannya
+                // Di desktop (md): elemen berjajar ke samping (flex-row) seperti desain awal
+                className="flex flex-1 flex-col items-center gap-1.5 md:flex-none md:flex-row md:items-center md:gap-4"
+              >
+                {/* Lingkaran Angka */}
                 <div
-                  className={`flex size-[42px] shrink-0 items-center justify-center rounded-full border border-white text-sm font-bold transition-all ${
+                  className={`flex size-8 shrink-0 items-center justify-center rounded-full border border-white text-xs font-bold transition-all md:size-[42px] md:text-sm ${
                     currentStep === step.num
                       ? "bg-white text-emerald-700"
                       : "bg-transparent text-white opacity-80"
@@ -153,27 +162,36 @@ const RegisterAsetPage = () => {
                 >
                   {step.num}
                 </div>
+                
+                {/* Teks Judul Langkah */}
                 <div
-                  className={`flex flex-col transition-opacity ${currentStep === step.num ? "opacity-100" : "opacity-80"}`}
+                  className={`flex flex-col items-center text-center md:items-start md:text-left transition-opacity ${
+                    currentStep === step.num ? "opacity-100" : "opacity-70 md:opacity-80"
+                  }`}
                 >
-                  <span className="text-[13px] tracking-wide">
+                  {/* Tulisan "Step X" hanya dimunculkan di layar besar agar mobile tidak kepenuhan */}
+                  <span className="hidden text-[13px] tracking-wide md:block">
                     Step {step.num}
                   </span>
-                  <span className="text-base font-semibold">{step.title}</span>
+                  {/* Ukuran font diperkecil di mobile (text-[10px]) */}
+                  <span className="text-[10px] font-semibold leading-tight sm:text-xs md:text-base">
+                    {step.title}
+                  </span>
                 </div>
               </div>
             ))}
           </div>
+
           <img
             src="/images/DaftarKolabolatorVektor.png"
             alt="Ornamen"
-            className="pointer-events-none absolute bottom-0 left-0 w-full object-cover opacity-80"
+            className="pointer-events-none absolute bottom-0 left-0 w-full object-cover opacity-80 hidden md:block"
           />
         </div>
 
-        {/* FORM */}
-        <div className="relative flex w-full flex-col md:w-[65%]">
-          <div className="flex-1 overflow-y-auto p-10 pb-6 md:px-16 md:pt-12">
+        {/* FORM KANAN */}
+        <div className="relative flex w-full flex-1 flex-col md:w-[65%]">
+          <div className="flex-1 overflow-y-auto p-6 sm:p-8 md:px-16 md:pt-12 md:pb-6">
             {currentStep === 1 && (
               <StepInfoAset
                 formData={formData}
@@ -203,9 +221,10 @@ const RegisterAsetPage = () => {
             )}
           </div>
 
-          {/* Footer */}
-          <div className="flex shrink-0 items-center justify-between border-t border-gray-100 bg-white px-10 py-6 md:px-16">
-            <div className="flex items-center gap-1.5">
+          {/* FOOTER NAVIGASI */}
+          <div className="flex shrink-0 items-center justify-between border-t border-gray-100 bg-white px-6 py-5 sm:px-8 md:px-16 md:py-6">
+            {/* Indikator bar kecil (titik-titik) disembunyikan di HP karena sudah ada stepper horizontal di atas */}
+            <div className="hidden sm:flex items-center gap-1.5">
               {steps.map((s) => (
                 <div
                   key={s.num}
@@ -219,7 +238,7 @@ const RegisterAsetPage = () => {
                 />
               ))}
             </div>
-            <div className="flex items-center gap-4">
+            <div className="flex w-full sm:w-auto items-center justify-between sm:justify-end gap-4">
               <button
                 type="button"
                 onClick={currentStep === 1 ? () => navigate(-1) : handlePrev}
@@ -231,14 +250,14 @@ const RegisterAsetPage = () => {
                 type="button"
                 disabled={isSubmitting}
                 onClick={currentStep === 4 ? handleSubmit : handleNext}
-                className={`rounded bg-emerald-600 px-10 py-2.5 text-sm font-bold text-white transition-colors hover:bg-emerald-700 ${
+                className={`rounded bg-emerald-600 px-6 py-2 sm:px-10 sm:py-2.5 text-sm font-bold text-white transition-colors hover:bg-emerald-700 ${
                   isSubmitting ? "cursor-not-allowed opacity-70" : ""
                 }`}
               >
                 {isSubmitting
                   ? "Menyimpan..."
                   : currentStep === 4
-                    ? "Daftarkan Aset"
+                    ? "Daftarkan"
                     : "Lanjut"}
               </button>
             </div>

@@ -60,6 +60,7 @@ function MobileMenu({
             className="block rounded-lg px-3 py-2.5 text-sm font-medium text-gray-700 transition hover:bg-gray-50 hover:font-semibold hover:text-black"
           >
             Artikel
+            
           </Link>
 
           {/* Fitur accordion */}
@@ -91,6 +92,14 @@ function MobileMenu({
             )}
           </div>
 
+          <Link
+            to="/tentang-kami"
+            onClick={() => setMenuOpen(false)}
+            className="block rounded-lg px-3 py-2.5 text-sm font-medium text-gray-700 transition hover:bg-gray-50 hover:font-semibold hover:text-black"
+          >
+            Tentang Kami
+          </Link>
+
           {/* Auth section */}
           <div className="mt-2 border-t border-gray-200 pt-2">
             {isAuthenticated ? (
@@ -113,7 +122,7 @@ function MobileMenu({
                   </Link>
                 ) : (
                   <Link
-                    to={`/:${user?.username}`}
+                    to={`/${user?.username}`}
                     onClick={() => setMenuOpen(false)}
                     className="block rounded-lg px-3 py-2.5 text-sm font-medium text-gray-700 transition hover:bg-gray-50 hover:text-emerald-600"
                   >

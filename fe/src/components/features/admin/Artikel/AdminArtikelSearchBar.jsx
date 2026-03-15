@@ -1,103 +1,51 @@
 // components/features/admin/artikel/AdminArtikelSearchBar.jsx
-import React, { useState, useRef, useEffect } from "react";
-import { RiSearchLine, RiArrowDownSLine, RiSettings4Line } from "react-icons/ri";
-
-function useDebouncePerWordEffect(callback, value, delay) {
-  const handler = useRef();
-  const lastFiredValue = useRef(undefined);
-
-  useEffect(() => {
-    if (handler.current) clearTimeout(handler.current);
-    if (value.endsWith(" ")) {
-      const trimmed = value.trim();
-      if (trimmed !== lastFiredValue.current) {
-        callback(trimmed);
-        lastFiredValue.current = trimmed;
-      }
-      return;
-    }
-
-    handler.current = setTimeout(() => {
-      const trimmed = value.trim();
-      if (trimmed !== lastFiredValue.current) {
-        callback(trimmed);
-        lastFiredValue.current = trimmed;
-      }
-    }, delay);
-
-    return () => {
-      if (handler.current) clearTimeout(handler.current);
-    };
-  }, [value, callback, delay]);
-}
+import React, { useEffect } from "react";
+import {
+  RiSearchLine,
+  RiArrowDownSLine,
+  RiSettings4Line,
+} from "react-icons/ri";
 
 const AdminArtikelSearchBar = ({
-  search,
-  onSearchChange,
-  filters,
-  onFilterChange,
+  query,
+  setQuery,
+  handleSearch,
   categories,
   onManageRef,
 }) => {
-  const [searchDraft, setSearchDraft] = useState(search ?? "");
-
-  React.useEffect(() => {
-    setSearchDraft(search ?? "");
-  }, [search]);
-  useDebouncePerWordEffect(
-    (val) => {
-      if (val !== (search ?? "").trim()) {
-        onSearchChange?.(val);
-      }
-    },
-    searchDraft,
-    300,
-  );
-
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    const trimmed = searchDraft.trim();
-    if (trimmed !== (search ?? "").trim()) {
-      onSearchChange?.(trimmed);
-    }
-  };
-
   return (
     <div className="mb-6 rounded-2xl border border-gray-200 bg-white p-6 shadow-sm">
       {/* Search Bar */}
       <form
         className="relative mb-4"
-        onSubmit={handleSubmit}
+        onSubmit={handleSearch}
         autoComplete="off"
       >
-        <RiSearchLine
-          className="absolute top-1/2 left-4 -translate-y-1/2 text-gray-400"
-          size={20}
-        />
-        <input
-          type="text"
-          placeholder="Cari judul artikel atau penulis..."
-          value={searchDraft}
-          onChange={(e) => setSearchDraft(e.target.value)}
-          className="w-full rounded-xl border border-gray-300 py-3 pr-4 pl-12 text-sm transition-all outline-none focus:border-[#1e1f78] focus:ring-4 focus:ring-[#1e1f78]/10"
-          style={{ color: "var(--dark-text)" }}
-        />
-        <button
-          type="submit"
-          className="absolute top-1/2 right-2 -translate-y-1/2 rounded-lg bg-[#1e1f78] px-6 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-[#1a1b65]"
-          disabled={searchDraft.trim() === ""}
-          tabIndex={0}
-        >
-          Cari
-        </button>
+        <div className="flex gap-3">
+          <input
+            type="text"
+            placeholder="Cari judul artikel atau penulis..."
+            value={query.search}
+            onChange={(e) => setQuery((q) => ({ ...q, search: e.target.value }))}
+            className="flex-1 rounded-lg border-2 border-gray-200 px-3 py-2 text-sm focus:ring-1 focus:ring-(--primary) focus:outline-none md:px-4"
+            style={{ color: "var(--dark-text)" }}
+          />
+          <button
+            type="submit"
+            className="cursor-pointer rounded-lg bg-(--primary) px-3 py-2 text-sm text-white transition hover:bg-(--primary-dark) md:px-4"
+            tabIndex={0}
+          >
+            Cari
+          </button>
+        </div>
       </form>
 
       {/* Filters */}
       <div className="flex flex-wrap gap-3">
         <FilterDropdown
           label="Semua Kategori"
-          value={filters?.kategori_id ?? ""}
-          onChange={(val) => onFilterChange?.("kategori_id", val)}
+          value={query.kategori_id ?? ""}
+          onChange={(val) => setQuery((q) => ({ ...q, kategori_id: val }))}
           options={[
             { value: "", label: "Semua Kategori" },
             ...categories.map((category) => ({
@@ -106,7 +54,7 @@ const AdminArtikelSearchBar = ({
             })),
           ]}
         />
-        <button 
+        <button
           onClick={onManageRef}
           className="flex items-center justify-center rounded-xl border border-gray-300 bg-white p-2.5 text-gray-500 transition-all hover:border-[#1e1f78] hover:bg-indigo-50 hover:text-[#1e1f78]"
           title="Kelola Daftar Kategori"
@@ -116,8 +64,8 @@ const AdminArtikelSearchBar = ({
 
         <FilterDropdown
           label="Semua Status"
-          value={filters?.status_publikasi ?? ""}
-          onChange={(val) => onFilterChange?.("status_publikasi", val)}
+          value={query.status_publikasi ?? ""}
+          onChange={(val) => setQuery((q) => ({ ...q, status_publikasi: val }))}
           options={[
             { value: "", label: "Semua Status" },
             { value: "published", label: "Terbit" },
@@ -127,8 +75,8 @@ const AdminArtikelSearchBar = ({
 
         <FilterDropdown
           label="Terbaru"
-          value={filters?.sort_order ?? "desc"}
-          onChange={(val) => onFilterChange?.("sort_order", val)}
+          value={query.sort_order ?? "desc"}
+          onChange={(val) => setQuery((q) => ({ ...q, sort_order: val }))}
           options={[
             { value: "desc", label: "Terbaru" },
             { value: "asc", label: "Terlama" },

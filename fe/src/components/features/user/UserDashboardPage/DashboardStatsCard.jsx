@@ -15,7 +15,6 @@ import {
 
 // ─── Big stat card ────────────────────────────────────────────────
 function BigStatCard({ icon: Icon, label, value, sub, accent, path }) {
-  console.log(Icon);
   const navigate = useNavigate();
   return (
     <button
@@ -54,7 +53,6 @@ function BigStatCard({ icon: Icon, label, value, sub, accent, path }) {
 
 // ─── Mini activity cell ───────────────────────────────────────────
 function MiniCell({ icon: Icon, label, value, accent }) {
-  console.log(Icon);
   return (
     <div className="flex flex-col items-center justify-center gap-1.5 rounded-2xl border border-gray-100 bg-white p-4 text-center shadow-sm">
       <div
@@ -136,17 +134,12 @@ export default function DashboardStatCards({ data }) {
       label: "Tindak Lanjut",
       value: data?.my_tindak_lanjut,
       accent: "#f59e0b",
-    },
-    {
-      icon: RiFileTextLine,
-      label: "Laporan Total",
-      value: data?.my_laporan,
-      accent: "#1e1f78",
-    },
+    }
+  
   ];
 
   return (
-    <div className="space-y-4">
+    <div className="space-y-4">git 
       {/* Big cards — 3 col */}
       <div className="grid grid-cols-1 gap-3 sm:grid-cols-3">
         {MAIN.map((c) => (
@@ -159,8 +152,8 @@ export default function DashboardStatCards({ data }) {
         <p className="mb-2.5 text-[12px] font-bold tracking-widest text-gray-400 uppercase">
           Aktivitas Lainnya
         </p>
-        <div className="grid grid-cols-3 gap-2 sm:grid-cols-6">
-          {MINI.map((m) => (
+        <div className="grid grid-cols-3 gap-5  sm:grid-cols-5">
+          {MINI.map((m) => ( 
             <MiniCell key={m.label} {...m} />
           ))}
         </div>

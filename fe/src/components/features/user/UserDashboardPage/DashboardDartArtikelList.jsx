@@ -25,7 +25,17 @@ const fmtDate = (iso) => {
 
 // ─── Single artikel row ────────────────────────────────────────────
 function ArtikelRow({ artikel, onClick }) {
-  const s = STATUS_CFG[artikel.status] ?? STATUS_CFG.draft;
+  // Menggunakan status_publikasi dari Backend
+  const statusKey = artikel?.status_publikasi?.toLowerCase() || "draft";
+  const s = STATUS_CFG[statusKey] ?? STATUS_CFG.draft;
+  
+  const [imgError, setImgError] = React.useState(false);
+
+  // Menggunakan judul_artikel dan foto_cover_url dari Backend
+  const judulArtikel = artikel?.judul_artikel || "Tanpa Judul";
+  const coverImgUrl = artikel?.foto_cover_url;
+  
+  const showImg = coverImgUrl && !imgError;
 
   return (
     <button
@@ -35,11 +45,13 @@ function ArtikelRow({ artikel, onClick }) {
     >
       {/* Cover thumbnail */}
       <div className="size-14 shrink-0 overflow-hidden rounded-xl bg-[#f3f3fc]">
-        {artikel.cover_url ? (
+        {showImg ? (
           <img
-            src={artikel.cover_url}
-            alt=""
+            src={coverImgUrl}
+            alt="Cover Artikel"
             className="h-full w-full object-cover"
+            onError={() => setImgError(true)}
+            loading="lazy"
           />
         ) : (
           <div className="flex h-full items-center justify-center">
@@ -51,11 +63,12 @@ function ArtikelRow({ artikel, onClick }) {
       {/* Info */}
       <div className="min-w-0 flex-1">
         <p className="truncate text-[13px] font-bold text-gray-900">
-          {artikel.judul}
+          {judulArtikel}
         </p>
         <p className="mt-1 flex items-center gap-1 text-[11px] text-gray-400">
           <RiTimeLine size={11} className="shrink-0" />
-          {fmtDate(artikel.created_at)}
+          {/* Menggunakan waktu_publish atau fallback ke created_at */}
+          {fmtDate(artikel?.waktu_publish || artikel?.created_at)}
         </p>
       </div>
 
@@ -103,9 +116,9 @@ export default function DashboardArtikelList({ data }) {
 
       {/* List */}
       <div className="space-y-2.5">
-        {artikel.map((a) => (
+        {artikel.map((a, idx) => (
           <ArtikelRow
-            key={a.id}
+            key={a.id || idx}
             artikel={a}
             onClick={() => navigate(`/artikel/${a.id}`)}
           />

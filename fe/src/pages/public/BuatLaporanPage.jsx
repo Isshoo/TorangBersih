@@ -90,7 +90,7 @@ const BuatLaporanPage = () => {
     } catch (error) {
       console.error("Failed to make laporan:", error.response.data.errors);
       toaster.error(
-        error.response.data.message ||
+        error.response?.data?.message ||
           "Gagal mengirim laporan. Silakan coba lagi.",
       );
     } finally {
@@ -99,11 +99,12 @@ const BuatLaporanPage = () => {
   };
 
   return (
-    <div className="relative flex min-h-screen items-center justify-center bg-[#f4f6f9] p-4  sm:p-8">
+    // Tambahan padding-top (pt-16) di mobile agar tombol Batal tidak menabrak batas layar
+    <div className="relative flex min-h-screen items-center justify-center bg-[#f4f6f9] p-4 pt-16 sm:p-8 sm:pt-8">
       {/* Tombol batal */}
       <button
         onClick={() => navigate(-1)}
-        className="absolute top-6 left-6 flex items-center gap-2 text-sm font-bold text-gray-500 hover:text-gray-900"
+        className="absolute top-4 left-4 z-20 flex items-center gap-2 text-sm font-bold text-gray-500 hover:text-gray-900 sm:top-6 sm:left-6"
       >
         <svg
           className="size-4"
@@ -122,30 +123,36 @@ const BuatLaporanPage = () => {
       </button>
 
       {/* Card utama */}
-      <div className="relative z-10 mt-10 flex h-auto min-h-[600px] w-full max-w-[1000px] flex-col overflow-hidden rounded-2xl bg-white shadow-lg md:mt-0 md:h-[640px] md:flex-row">
+      <div className="relative z-10 flex h-auto min-h-[600px] w-full max-w-[1000px] flex-col overflow-hidden rounded-2xl bg-white shadow-lg md:mt-0 md:h-[640px] md:flex-row">
+        
         {/* ── SIDEBAR KIRI ── */}
-        <div className="relative flex w-full shrink-0 flex-col overflow-hidden bg-[#1e1f78] p-8 text-white md:w-[35%] md:p-10">
+        <div className="relative flex w-full shrink-0 flex-col overflow-hidden bg-[#1e1f78] p-5 text-white sm:p-8 md:w-[35%] md:p-10">
+          
           {/* Label halaman */}
-          <div className="relative z-10 mb-8">
-            <p className="text-[11px] font-semibold tracking-widest text-white/50 uppercase">
+          <div className="relative z-10 mb-4 md:mb-8">
+            <p className="text-[10px] sm:text-[11px] font-semibold tracking-widest text-white/50 uppercase">
               Warga Peduli
             </p>
-            <h1 className="mt-1 text-xl leading-tight font-bold">
+            <h1 className="mt-1 text-lg sm:text-xl leading-tight font-bold">
               Buat Laporan
-              <br />
+              <span className="hidden sm:inline"> <br /></span>
+              <span className="inline sm:hidden"> </span>
               Sampah Ilegal
             </h1>
           </div>
 
-          {/* Steps */}
-          <div className="relative z-10 flex flex-col gap-8">
+          {/* Container Steps (Horizontal di Mobile, Vertikal di Desktop) */}
+          <div className="relative z-10 mt-2 flex w-full flex-row justify-between md:mt-0 md:flex-col md:justify-start md:gap-8">
             {steps.map((step) => {
               const isDone = currentStep > step.num;
               const isActive = currentStep === step.num;
               return (
-                <div key={step.num} className="flex items-center gap-4">
+                <div 
+                  key={step.num} 
+                  className="flex flex-1 flex-col items-center gap-1.5 md:flex-none md:flex-row md:items-center md:gap-4"
+                >
                   <div
-                    className={`flex size-[42px] shrink-0 items-center justify-center rounded-full border border-white text-sm font-bold transition-all ${
+                    className={`flex size-8 md:size-[42px] shrink-0 items-center justify-center rounded-full border border-white text-xs md:text-sm font-bold transition-all ${
                       isActive
                         ? "bg-white text-[#1e1f78]"
                         : isDone
@@ -155,7 +162,7 @@ const BuatLaporanPage = () => {
                   >
                     {isDone ? (
                       <svg
-                        className="size-5"
+                        className="size-4 md:size-5"
                         fill="currentColor"
                         viewBox="0 0 20 20"
                       >
@@ -169,13 +176,14 @@ const BuatLaporanPage = () => {
                       <span>{step.num}</span>
                     )}
                   </div>
+                  
                   <div
-                    className={`flex flex-col transition-opacity ${isActive ? "opacity-100" : "opacity-70"}`}
+                    className={`flex flex-col items-center text-center transition-opacity md:items-start md:text-left ${isActive ? "opacity-100" : "opacity-70"}`}
                   >
-                    <span className="text-[12px] tracking-wide">
+                    <span className="hidden text-[12px] tracking-wide md:block">
                       Step {step.num}
                     </span>
-                    <span className="text-[15px] font-semibold">
+                    <span className="text-[10px] font-semibold leading-tight sm:text-xs md:text-[15px]">
                       {step.title}
                     </span>
                   </div>
@@ -184,18 +192,18 @@ const BuatLaporanPage = () => {
             })}
           </div>
 
-          {/* Vektor dekorasi — sama seperti RegisterKolaborator */}
+          {/* Vektor dekorasi — Disembunyikan di Mobile */}
           <img
             src={LaporanVektor}
             alt=""
-            className="pointer-events-none absolute bottom-0 left-0 w-full object-cover opacity-80"
+            className="pointer-events-none absolute bottom-0 left-0 w-full object-cover opacity-80 hidden md:block"
           />
         </div>
 
         {/* ── FORM KANAN ── */}
-        <div className="relative flex w-full flex-col md:w-[65%]">
+        <div className="relative flex w-full flex-1 flex-col md:w-[65%]">
           {/* Scrollable form area */}
-          <div className="flex-1 overflow-y-auto px-8 pt-10 pb-6 md:px-14 md:pt-12">
+          <div className="flex-1 overflow-y-auto p-6 sm:p-8 md:px-14 md:pt-12 md:pb-6">
             {currentStep === 1 && (
               <StepFotoBukti formData={formData} setFormData={setFormData} />
             )}
@@ -216,8 +224,8 @@ const BuatLaporanPage = () => {
             )}
           </div>
 
-          {/* Footer navigasi — sama persis RegisterKolaborator */}
-          <div className="flex shrink-0 items-center justify-between border-t border-gray-100 bg-white px-8 py-6 md:px-14">
+          {/* Footer navigasi */}
+          <div className="flex shrink-0 items-center justify-between border-t border-gray-100 bg-white px-6 py-5 sm:px-8 md:px-14 md:py-6">
             <button
               type="button"
               onClick={currentStep === 1 ? () => navigate(-1) : handlePrev}
@@ -229,7 +237,7 @@ const BuatLaporanPage = () => {
               type="button"
               onClick={currentStep === 3 ? handleSubmit : handleNext}
               disabled={submitting}
-              className="flex items-center gap-2 rounded bg-[#1e1f78] px-10 py-2.5 text-sm font-bold text-white transition-colors hover:bg-[#16175e] disabled:opacity-60"
+              className="flex items-center gap-2 rounded bg-[#1e1f78] px-6 py-2 sm:px-10 sm:py-2.5 text-sm font-bold text-white transition-colors hover:bg-[#16175e] disabled:opacity-60"
             >
               {submitting ? (
                 <>

@@ -32,6 +32,8 @@
 
 import { useState, useEffect, useCallback } from "react";
 import { getToken } from "../../../../utils/storage";
+// Tambahkan import toaster 
+import { toast } from "react-hot-toast";
 
 const BASE_URL = "http://127.0.0.1:5000";
 
@@ -135,10 +137,12 @@ export function useArtikel({
         setMeta(json.meta ?? null);
       } else {
         setError(json.message ?? "Gagal memuat artikel.");
+        toast.error(json.message ?? "Gagal memuat artikel.");
       }
     } catch (err) {
       console.error("[useArtikel]", err);
       setError("Tidak dapat terhubung ke server.");
+      toast.error("Tidak dapat terhubung ke server.");
     } finally {
       setLoading(false);
     }
@@ -176,10 +180,12 @@ export function useArtikelDetail(id) {
           setArtikel(json.data);
         } else {
           setError(json.message ?? "Artikel tidak ditemukan.");
+          toast.error(json.message ?? "Artikel tidak ditemukan.");
         }
       } catch (err) {
         console.error("[useArtikelDetail]", err);
         setError("Tidak dapat terhubung ke server.");
+        toast.error("Tidak dapat terhubung ke server.");
       } finally {
         setLoading(false);
       }
@@ -233,13 +239,16 @@ export function useMyArtikel({
         setMeta(json.meta ?? null);
       } else {
         setError(json.message ?? "Gagal memuat artikel Anda.");
+        toast.error(json.message ?? "Gagal memuat artikel Anda.");
       }
     } catch (err) {
       if (err.message === "not_authenticated") {
         setError("Sesi habis. Silakan login kembali.");
+        toast.error("Sesi habis. Silakan login kembali.");
       } else {
         console.error("[useMyArtikel]", err);
         setError("Tidak dapat terhubung ke server.");
+        toast.error("Tidak dapat terhubung ke server.");
       }
     } finally {
       setLoading(false);
@@ -267,7 +276,10 @@ export async function createArtikel(payload) {
     body:    JSON.stringify(payload),
   });
   const json = await res.json();
-  if (!res.ok) throw new Error(json.message ?? "Gagal membuat artikel.");
+  if (!res.ok) {
+    toast.error(json.message ?? "Gagal membuat artikel.");
+    throw new Error(json.message ?? "Gagal membuat artikel.");
+  }
   return json;
 }
 
@@ -288,7 +300,10 @@ export async function updateArtikel(id, payload) {
     body:    JSON.stringify(payload),
   });
   const json = await res.json();
-  if (!res.ok) throw new Error(json.message ?? "Gagal memperbarui artikel.");
+  if (!res.ok) {
+    toast.error(json.message ?? "Gagal memperbarui artikel.");
+    throw new Error(json.message ?? "Gagal memperbarui artikel.");
+  }
   return json;
 }
 
@@ -307,7 +322,10 @@ export async function deleteArtikel(id) {
     headers: authHeaders(true),  // token wajib
   });
   const json = await res.json();
-  if (!res.ok) throw new Error(json.message ?? "Gagal menghapus artikel.");
+  if (!res.ok) {
+    toast.error(json.message ?? "Gagal menghapus artikel.");
+    throw new Error(json.message ?? "Gagal menghapus artikel.");
+  }
   return json;
 }
 
@@ -325,7 +343,10 @@ export async function postLike(artikelId) {
     headers: authHeaders(true),
   });
   const json = await res.json();
-  if (!res.ok) throw new Error(json.message ?? "Gagal like artikel.");
+  if (!res.ok) {
+    toast.error(json.message ?? "Gagal like artikel.");
+    throw new Error(json.message ?? "Gagal like artikel.");
+  }
   return json;
 }
 
@@ -341,7 +362,10 @@ export async function postKomentar(artikelId, teks) {
     body:    JSON.stringify({ teks }),
   });
   const json = await res.json();
-  if (!res.ok) throw new Error(json.message ?? "Gagal mengirim komentar.");
+  if (!res.ok) {
+    toast.error(json.message ?? "Gagal mengirim komentar.");
+    throw new Error(json.message ?? "Gagal mengirim komentar.");
+  }
   return json;
 }
 
@@ -370,10 +394,12 @@ export function useArtikelKomentar(artikelId) {
         setKomentar(json.data ?? []);
       } else {
         setError(json.message ?? "Gagal memuat komentar.");
+        toast.error(json.message ?? "Gagal memuat komentar.");
       }
     } catch (err) {
       console.error("[useArtikelKomentar]", err);
       setError("Tidak dapat terhubung ke server.");
+      toast.error("Tidak dapat terhubung ke server.");
     } finally {
       setLoading(false);
     }

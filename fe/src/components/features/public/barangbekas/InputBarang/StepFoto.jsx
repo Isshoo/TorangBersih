@@ -32,48 +32,58 @@ export const StepFoto = ({ fotos, setFotos }) => {
   const onDrop = e => { e.preventDefault(); setDrag(false); addFiles(e.dataTransfer.files); };
 
   return (
-    <div className="flex h-full gap-6">
-      <div className="flex w-56 shrink-0 flex-col">
+    // Di mobile flex-col (atas-bawah), di layar sm flex-row (kiri-kanan)
+    <div className="flex flex-col sm:flex-row h-full gap-5 sm:gap-6">
+      
+      {/* --- AREA UPLOAD (Atas di Mobile, Kiri di Desktop) --- */}
+      <div className="flex w-full sm:w-56 shrink-0 flex-col">
         <div
           onDragOver={e => { e.preventDefault(); setDrag(true); }}
           onDragLeave={() => setDrag(false)}
           onDrop={onDrop}
           onClick={() => inputRef.current?.click()}
-          className={`flex flex-1 cursor-pointer flex-col items-center justify-center gap-3 rounded-2xl border-2 border-dashed transition-all ${
+          // Tambahan py-6 untuk mobile agar kotaknya punya tinggi yang cukup
+          className={`flex flex-1 cursor-pointer flex-col items-center justify-center gap-3 rounded-2xl border-2 border-dashed py-6 sm:py-0 transition-all ${
             drag ? "border-[#1e1f78] bg-[#eef0ff]" : "border-gray-200 bg-gray-50 hover:border-[#1e1f78]/50 hover:bg-gray-100"
           }`}
         >
-          <div className="flex size-14 items-center justify-center rounded-2xl border border-gray-200 bg-white shadow-sm">
-            <RiImageAddLine size={26} className="text-[#1e1f78]" />
+          <div className="flex size-12 sm:size-14 items-center justify-center rounded-2xl border border-gray-200 bg-white shadow-sm">
+            <RiImageAddLine size={24} className="text-[#1e1f78] sm:size-[26px]" />
           </div>
           <div className="text-center px-3">
-            <p className="text-[13px] font-bold text-gray-700">{drag ? "Lepaskan di sini" : "Seret foto ke sini"}</p>
-            <p className="mt-1 text-[11px] text-gray-400">atau klik untuk pilih</p>
-            <p className="mt-2 text-[10px] text-gray-400">JPG · PNG · WEBP · Maks {MAX_FOTO} foto</p>
+            <p className="text-[12px] sm:text-[13px] font-bold text-gray-700">{drag ? "Lepaskan di sini" : "Pilih atau Seret foto"}</p>
+            <p className="mt-1 text-[10px] sm:text-[11px] text-gray-400">JPG · PNG · WEBP</p>
+            <p className="mt-1.5 text-[10px] font-semibold text-[#1e1f78]">Maksimal {MAX_FOTO} foto</p>
           </div>
-          <button type="button" className="flex items-center gap-1.5 rounded-lg bg-[#1e1f78] px-4 py-1.5 text-[12px] font-bold text-white hover:bg-[#16175e] transition-colors">
+          <button type="button" className="mt-1 flex items-center gap-1.5 rounded-lg bg-[#1e1f78] px-4 py-1.5 text-[11px] sm:text-[12px] font-bold text-white hover:bg-[#16175e] transition-colors">
             <RiAddLine size={13} /> Pilih Foto
           </button>
         </div>
         <input ref={inputRef} type="file" accept="image/jpeg,image/png,image/webp" multiple className="hidden" onChange={e => addFiles(e.target.files)} />
       </div>
 
-      <div className="flex flex-1 flex-col gap-3 overflow-hidden">
+      {/* --- AREA PREVIEW (Bawah di Mobile, Kanan di Desktop) --- */}
+      <div className="flex flex-1 flex-col gap-2 sm:gap-3 overflow-hidden">
         <div className="flex items-center justify-between">
-          <p className="text-[12px] font-bold text-gray-700">Preview Foto</p>
-          <span className="rounded-full bg-gray-100 px-2.5 py-0.5 text-[11px] font-semibold text-gray-500">
+          <p className="text-[11px] sm:text-[12px] font-bold text-gray-700">Preview Foto</p>
+          <span className="rounded-full bg-gray-100 px-2 py-0.5 text-[10px] sm:text-[11px] font-semibold text-gray-500">
             {fotos.length}/{MAX_FOTO}
           </span>
         </div>
 
         {fotos.length === 0 ? (
-          <div className="flex flex-1 items-center justify-center rounded-2xl border-2 border-dashed border-gray-200 bg-gray-50">
-            <p className="text-[12px] text-gray-400">Foto yang dipilih akan muncul di sini</p>
+          <div className="flex flex-1 min-h-[100px] items-center justify-center rounded-2xl border-2 border-dashed border-gray-200 bg-gray-50">
+            <p className="text-[11px] sm:text-[12px] text-gray-400">Foto yang dipilih akan muncul di sini</p>
           </div>
         ) : (
-          <div className="grid grid-cols-4 gap-2">
+          // Di mobile: flex horizontal bergeser (swipe), Di desktop: Grid 4 kolom
+          <div className="flex overflow-x-auto pb-2 gap-2 hide-scrollbar sm:grid sm:grid-cols-4 sm:overflow-visible sm:pb-0">
             {fotos.map((foto, idx) => (
-              <div key={foto.id} draggable onDragStart={() => setDraggingIdx(idx)} onDragEnter={() => { dragTarget.current = idx; }}
+              <div 
+                key={foto.id} 
+                draggable 
+                onDragStart={() => setDraggingIdx(idx)} 
+                onDragEnter={() => { dragTarget.current = idx; }}
                 onDragEnd={() => {
                   if (draggingIdx !== null && dragTarget.current !== null && draggingIdx !== dragTarget.current) {
                     setFotos(prev => {
@@ -82,25 +92,51 @@ export const StepFoto = ({ fotos, setFotos }) => {
                   }
                   setDraggingIdx(null); dragTarget.current = null;
                 }}
-                className={`group relative aspect-square cursor-grab overflow-hidden rounded-xl border-2 transition-all active:cursor-grabbing ${
+                // Mobile: kotak ukuran pas (size-20), Desktop: otomatis menyesuaikan grid (aspect-square)
+                className={`group relative size-20 sm:size-auto sm:w-full sm:aspect-square shrink-0 cursor-grab overflow-hidden rounded-xl border-2 transition-all active:cursor-grabbing ${
                   idx === 0 ? "border-[#1e1f78] ring-2 ring-[#1e1f78]/20" : "border-gray-200"
                 } ${draggingIdx === idx ? "opacity-40 scale-95" : ""}`}
               >
                 <img src={foto.url} alt="" className="h-full w-full object-cover" draggable={false} />
-                {idx === 0 && <div className="absolute bottom-0 inset-x-0 bg-[#1e1f78] py-0.5 text-center text-[9px] font-bold text-white">Cover</div>}
-                <div className="absolute left-1 top-1 hidden rounded bg-black/40 p-0.5 group-hover:flex"><RiDraggable size={10} className="text-white" /></div>
-                <button type="button" onClick={e => { e.stopPropagation(); remove(foto.id); }} className="absolute right-1 top-1 hidden size-5 items-center justify-center rounded-full bg-red-500 text-white shadow group-hover:flex"><RiCloseLine size={12} /></button>
+                {/* Label Cover (Sampul) */}
+                {idx === 0 && <div className="absolute bottom-0 inset-x-0 bg-[#1e1f78] py-0.5 text-center text-[8px] sm:text-[9px] font-bold text-white">Cover</div>}
+                {/* Ikon Drag (Hanya terlihat saat di-hover di desktop) */}
+                <div className="absolute left-1 top-1 hidden rounded bg-black/40 p-0.5 sm:group-hover:flex">
+                  <RiDraggable size={10} className="text-white" />
+                </div>
+                {/* Tombol Hapus */}
+                <button 
+                  type="button" 
+                  onClick={e => { e.stopPropagation(); remove(foto.id); }} 
+                  // Di mobile selalu terlihat kecil, di desktop muncul saat hover
+                  className="absolute right-1 top-1 flex size-5 items-center justify-center rounded-full bg-red-500 text-white shadow sm:hidden sm:group-hover:flex"
+                >
+                  <RiCloseLine size={12} />
+                </button>
               </div>
             ))}
+
+            {/* Kotak Tambah Foto Lanjutan */}
             {fotos.length < MAX_FOTO && (
-              <button type="button" onClick={() => inputRef.current?.click()} className="flex aspect-square items-center justify-center rounded-xl border-2 border-dashed border-gray-200 bg-gray-50 hover:border-[#1e1f78]/50 hover:bg-gray-100 transition-all">
-                <RiAddLine size={22} className="text-gray-300" />
+              <button 
+                type="button" 
+                onClick={() => inputRef.current?.click()} 
+                // Sama seperti kotak preview, di mobile size-20, di desktop aspect-square
+                className="flex size-20 sm:size-auto sm:w-full sm:aspect-square shrink-0 items-center justify-center rounded-xl border-2 border-dashed border-gray-200 bg-gray-50 hover:border-[#1e1f78]/50 hover:bg-gray-100 transition-all"
+              >
+                <RiAddLine size={20} className="text-gray-400 sm:size-[22px]" />
               </button>
             )}
           </div>
         )}
-        <p className="text-[11px] text-gray-400">Foto pertama jadi cover. Seret untuk mengubah urutan.</p>
+        <p className="text-[10px] sm:text-[11px] text-gray-400 leading-tight">Foto pertama jadi cover. Tahan dan geser (drag) untuk mengubah urutan.</p>
       </div>
+
+      {/* Sembunyikan scrollbar bawaan browser untuk area swipe horizontal */}
+      <style>{`
+        .hide-scrollbar::-webkit-scrollbar { display: none; }
+        .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+      `}</style>
     </div>
   );
 };

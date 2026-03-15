@@ -6,6 +6,7 @@ import AdminLaporanFilter from "../../components/features/admin/Laporan/AdminLap
 import AdminLaporanTable from "../../components/features/admin/Laporan/AdminLaporanTable";
 import AdminLaporanDetailModal from "../../components/features/admin/Laporan/AdminLaporanDetailModal";
 import ReferensiModalManager from "../../components/ui/ReferensiModalManager";
+import toast from "react-hot-toast";
 
 const STATUS_LABELS = {
   menunggu: { text: "Menunggu", bg: "bg-yellow-50", color: "text-yellow-700" },
@@ -110,7 +111,7 @@ function AdminLaporanPage() {
         openDetail(id);
       }
     } catch (err) {
-      alert(err.response?.data?.message || "Gagal mengubah status");
+      toast.error(err.response?.data?.message || "Gagal mengubah status");
     }
   };
 
@@ -124,7 +125,7 @@ function AdminLaporanPage() {
         setDetailItem(null);
       }
     } catch (err) {
-      alert(err.response?.data?.message || "Gagal menghapus laporan");
+      toast.error(err.response?.data?.message || "Gagal menghapus laporan");
     }
   };
 
@@ -135,7 +136,7 @@ function AdminLaporanPage() {
       setTindakLanjutList(res.data.data.tindak_lanjut || []);
       setShowDetail(true);
     } catch (err) {
-      alert(err.response?.data?.message || "Gagal memuat detail");
+      toast.error(err.response?.data?.message || "Gagal memuat detail");
     }
   };
 
@@ -143,7 +144,7 @@ function AdminLaporanPage() {
     e.preventDefault();
     if (!tlForm.tindak_lanjut_penanganan.trim()) return;
     if (!tlForm.foto_setelah) {
-      alert("Foto Setelah Tindakan wajib diunggah.");
+      toast.error("Foto Setelah Tindakan wajib diunggah.");
       return;
     }
 
@@ -175,7 +176,7 @@ function AdminLaporanPage() {
       // Optionally re-fetch to see updates immediately
       openDetail(detailItem.id);
     } catch (err) {
-      alert(err.response?.data?.message || "Gagal menambah tindak lanjut");
+      toast.error(err.response?.data?.message || "Gagal menambah tindak lanjut");
     } finally {
       setTlLoading(false);
     }

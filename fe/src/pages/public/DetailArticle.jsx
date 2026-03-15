@@ -1,18 +1,33 @@
 import React, { useState, useEffect } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, Link } from "react-router-dom";
 import { Sidebar } from "../../components/features/public/artikel/Sidebar";
 import { artikelAPI } from "../../services/api/routes/artikel.route";
 import { useAuth } from "../../contexts/AuthContext";
 import toaster from "../../utils/toaster";
 import { ProseStyles } from "../../components/ui/ProsesStyles";
 
+// Button "Buat Artikel" sticky di kanan bawah layar hanya di mobile/tablet, di atas tablet kembalikan ke tempat sebelumnya (sidebar kanan)
+
 const DetailArticlePage = () => {
   const { id } = useParams();
   const { isAuthenticated } = useAuth();
 
-  // ── Auth: cek token & Sidebar State ────────────────────────
+  // Responsive state for controlling "Buat Artikel" button placement
+  const [isTabletOrAbove, setIsTabletOrAbove] = useState(
+    typeof window !== "undefined" ? window.innerWidth >= 1024 : true // lg breakpoint (tailwind = 1024px)
+  );
 
-  // ── Fetch artikel detail & daftar komentar ───────────────────────
+  useEffect(() => {
+    function handleResize() {
+      setIsTabletOrAbove(window.innerWidth >= 1024);
+    }
+    window.addEventListener("resize", handleResize);
+    // initial check
+    handleResize();
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
+
+  // ── Data State ─────────────────────────
   const [artikel, setArtikel] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
@@ -53,13 +68,11 @@ const DetailArticlePage = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [id]);
 
-  // ── Like state ───────────────────────────────────────────────────
+  // ── Like state ─────────────────────────
   const [isLiked, setIsLiked] = useState(false);
   const [likesCount, setLikesCount] = useState(0);
   const [commentsCount, setCommentsCount] = useState(0);
   const [likeLoading, setLikeLoading] = useState(false);
-
-  // Redundant useEffect removed
 
   const handleLike = async () => {
     if (!isAuthenticated) {
@@ -78,8 +91,6 @@ const DetailArticlePage = () => {
 
     try {
       await artikelAPI.toggleLike(id);
-      // Optional: you can sync with actual server count here if needed
-      // setLikesCount(res.data.jumlah_like);
     } catch (err) {
       // Revert on Error
       setIsLiked(prevLiked);
@@ -96,14 +107,13 @@ const DetailArticlePage = () => {
     }
   };
 
-  // ── Komentar state ───────────────────────────────────────────────
+  // ── Komentar state ─────────────────────
   const [komentarTeks, setKomentarTeks] = useState("");
   const [komentarList, setKomentarList] = useState([]);
   const [komentarLoading, setKomentarLoading] = useState(false);
   const [komentarError, setKomentarError] = useState("");
   const [replyTo, setReplyTo] = useState(null); // { id: string, name: string }
 
-  // Sinkronisasi data komentar dari fetch API ke state lokal
   useEffect(() => {
     if (fetchedKomentar) {
       setKomentarList(fetchedKomentar);
@@ -162,7 +172,7 @@ const DetailArticlePage = () => {
     }
   };
 
-  // ── Loading ──────────────────────────────────────────────────────
+  // ── Loading ────────────────────────────
   if (loading) {
     return (
       <div className="relative bg-white pt-20 pb-20 text-gray-900">
@@ -190,7 +200,7 @@ const DetailArticlePage = () => {
     );
   }
 
-  // ── Error ────────────────────────────────────────────────────────
+  // ── Error ──────────────────────────────
   if (error) {
     return (
       <div className="flex min-h-[60vh] flex-col items-center justify-center gap-3 pt-20 text-center">
@@ -204,7 +214,7 @@ const DetailArticlePage = () => {
 
   if (!artikel) return null;
 
-  // ── Normalisasi data dari API ────────────────────────────────────
+  // ── Normalisasi data dari API ──────────
   const penulisNama =
     artikel.penulis?.full_name ?? artikel.penulis?.username ?? "Anonim";
   const penulisAvatar =
@@ -224,12 +234,24 @@ const DetailArticlePage = () => {
     .split(/\s+/).length;
   const readTime = Math.max(1, Math.ceil(wordCount / 200));
 
-  // commentsCount now uses state initialized in fetchDetail
-
-  // ── Render ───────────────────────────────────────────────────────
+  // ── Render ─────────────────────────────
   return (
     <div className="relative bg-white pt-20 pb-20 text-gray-900">
       <ProseStyles />
+      {/* Sticky/Floating Buat Artikel Button di kanan bawah hanya pada mobile/tablet, di atas tablet pindah ke sidebar */}
+      {!isTabletOrAbove && (
+        <Link
+          to="/artikel/buat"
+          className="fixed z-50 bottom-6 right-5 md:right-8 bg-(--primary) hover:bg-blue-700 text-white font-semibold px-5 py-3 rounded-full shadow-lg transition text-base"
+          style={{
+            boxShadow:
+              "0 4px 32px 0 rgba(30,41,255,0.10),0 1.5px 3px -1.5px rgba(16, 30, 255, 0.07)",
+          }}
+        >
+          + Buat Artikel
+        </Link>
+      )}
+
       <div className="mx-auto max-w-7xl px-4 py-10 sm:px-6 lg:px-8">
         <div className="grid grid-cols-1 gap-8 lg:grid-cols-12 lg:gap-12">
           {/* Kolom tengah */}
@@ -329,8 +351,21 @@ const DetailArticlePage = () => {
             </article>
           </main>
 
-          {/* Sidebar kanan — Menyuplai state dan props drawer */}
+          {/* Sidebar kanan */}
           <div className="sticky top-30 h-fit lg:col-span-4">
+            {/* Button "Buat Artikel" di atas tablet (lg ke atas), tampilkan di sidebar */}
+            {isTabletOrAbove && (
+              <Link
+                to="/artikel/buat"
+                className="block mb-6 w-full bg-(--primary) hover:bg-blue-700 text-white font-semibold px-5 py-3 rounded-full shadow-lg transition text-base text-center"
+                style={{
+                  boxShadow:
+                    "0 4px 32px 0 rgba(30,41,255,0.10),0 1.5px 3px -1.5px rgba(16, 30, 255, 0.07)",
+                }}
+              >
+                + Buat Artikel
+              </Link>
+            )}
             <Sidebar
               comments={komentarList}
               commentsCount={commentsCount}

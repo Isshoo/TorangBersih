@@ -4,7 +4,8 @@ import DaftarAset from "../../components/features/public/aset/DaftarAset";
 
 const AsetPage = () => {
   return (
-    <div className="relative min-h-dvh w-full bg-[#FAFAFA] selection:bg-(--gray-shine) selection:text-(--primary)">
+    // Tambahkan overflow-x-hidden di sini!
+    <div className="relative min-h-dvh w-full overflow-x-hidden bg-[#FAFAFA] selection:bg-(--gray-shine) selection:text-(--primary)">
       <div className="relative z-0">
         <FiturHero
           title="Temukan Aset Daur Ulang di Sekitarmu"
