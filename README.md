@@ -2,7 +2,7 @@
 
 <!-- Logo: letakkan file di docs/images/logo.png. Isi gambar: logo resmi Torang Bersih (ikon atau teks), background transparan atau selaras tema, rekomendasi lebar 200-400px -->
 <p align="center">
-  <img src="docs/images/logo.png" alt="Torang Bersih" width="280">
+  <img src="./fe/public/images/logo-fill.png" alt="Torang Bersih" width="280">
 </p>
 
 <p align="center">
@@ -60,14 +60,14 @@ Letakkan screenshot di folder `docs/images/`. Setelah file ada, gambar akan tamp
 
 <!-- Isi gambar: landing page lengkap dengan hero dan kartu fitur. File: docs/images/landing-hero.png -->
 <p align="center">
-  <img src="docs/images/landing-hero.png" alt="Landing page Torang Bersih" width="800">
+  <img src="./fe/public/images/landing-hero.png" alt="Landing page Torang Bersih" width="800">
 </p>
 
 **Peta interaktif** — Sidebar filter dan peta dengan marker Kolaborator, Aset, Laporan Sampah, Barang Daur Ulang.
 
 <!-- Isi gambar: halaman peta penuh dengan sidebar dan peta Sulawesi Utara. File: docs/images/peta-interaktif.png -->
 <p align="center">
-  <img src="docs/images/peta-interaktif.png" alt="Peta interaktif" width="800">
+  <img src="./fe/public/images/maps-sulut.png" alt="Peta interaktif" width="800">
 </p>
 
 **Daftar screenshot lain** (opsional, isi file sesuai deskripsi):
@@ -222,11 +222,11 @@ Web: `http://localhost:5173`. Pastikan `VITE_API_URL` mengarah ke backend.
 ## Skrip
 
 ```bash
-# Seed database
-cd be && python -m scripts.db.seed
-
 # Buat admin baru
 cd be && python -m scripts.db.create_admin
+
+# Seed database
+cd be && python -m scripts.db.seed
 
 # Tes backend
 cd be && pytest
