@@ -33,25 +33,15 @@ const AdminArtikelPage = () => {
     label: "",
   });
 
-  const [searchQuery, setSearchQuery] = useState("");
-
   const [query, setQuery] = useState({
     page: 1,
     per_page: 10,
-    search: searchQuery,
     kategori_id: "",
+    search: "",
     status_publikasi: "",
     sort_by: "created_at",
     sort_order: "desc",
   });
-
-  // Sync searchQuery to query state with debounce logic
-  useEffect(() => {
-    const handler = setTimeout(() => {
-      setQuery((prev) => ({ ...prev, search: searchQuery, page: 1 }));
-    }, 400);
-    return () => clearTimeout(handler);
-  }, [searchQuery]);
 
   // --- Fetch Data ---
   const fetchArticles = async () => {
@@ -75,7 +65,7 @@ const AdminArtikelPage = () => {
   useEffect(() => {
     fetchArticles();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [query]);
+  }, [query.page, query.kategori_id, query.status_publikasi, query.sort_order]);
 
   const fetchCategories = async () => {
     try {
@@ -90,32 +80,10 @@ const AdminArtikelPage = () => {
     fetchCategories();
   }, []);
 
-  const handleFilterChange = (key, value) => {
-    let mapping = {
-      jenis: "kategori_id",
-      status: "status_publikasi",
-      sort: "sort_mapping",
-    };
-
-    const apiKey = mapping[key] || key;
-
-    if (key === "sort") {
-      const sortMap = {
-        terbaru: { sort_by: "created_at", sort_order: "desc" },
-        terlama: { sort_by: "created_at", sort_order: "asc" },
-        terpopuler: { sort_by: "jumlah_views", sort_order: "desc" },
-      };
-      const { sort_by, sort_order } = sortMap[value] || sortMap.terbaru;
-      setQuery((prev) => ({
-        ...prev,
-        sort_by,
-        sort_order,
-        sort: value,
-        page: 1,
-      }));
-    } else {
-      setQuery((prev) => ({ ...prev, [apiKey]: value, [key]: value, page: 1 }));
-    }
+  const handleSearch = (e) => {
+    e.preventDefault();
+    setQuery((q) => ({ ...q, page: 1 }));
+    fetchArticles();
   };
 
   // --- Handlers ---
@@ -233,10 +201,9 @@ const AdminArtikelPage = () => {
 
       {/* Search and Filters */}
       <AdminArtikelSearchBar
-        search={searchQuery}
-        onSearchChange={setSearchQuery}
-        filters={query}
-        onFilterChange={handleFilterChange}
+        query={query}
+        setQuery={setQuery}
+        handleSearch={handleSearch}
         categories={categories}
         onManageRef={() =>
           setRefModal({
