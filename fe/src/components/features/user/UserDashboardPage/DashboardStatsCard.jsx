@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 
 import React from "react";
 import { useNavigate } from "react-router-dom";
@@ -134,8 +135,7 @@ export default function DashboardStatCards({ data }) {
       label: "Tindak Lanjut",
       value: data?.my_tindak_lanjut,
       accent: "#f59e0b",
-    }
-  
+    },
   ];
 
   return (
@@ -152,8 +152,8 @@ export default function DashboardStatCards({ data }) {
         <p className="mb-2.5 text-[12px] font-bold tracking-widest text-gray-400 uppercase">
           Aktivitas Lainnya
         </p>
-        <div className="grid grid-cols-3 gap-5  sm:grid-cols-5">
-          {MINI.map((m) => ( 
+        <div className="grid grid-cols-3 gap-5 sm:grid-cols-5">
+          {MINI.map((m) => (
             <MiniCell key={m.label} {...m} />
           ))}
         </div>

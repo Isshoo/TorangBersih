@@ -93,7 +93,7 @@ function App() {
         <Route path="peta" element={<PetaPage />} />
         <Route path="kolaborator" element={<KolaboratorPage />} />
         <Route path="kolaborator/:id" element={<DetailKolaboratorPage />} />
-        <Route path="tentang-kami" element={<AboutPage/>}/>
+        <Route path="tentang-kami" element={<AboutPage />} />
 
         <Route path="aset" element={<AsetPage />} />
         <Route path="aset/:id" element={<DetailAsetPage />} />

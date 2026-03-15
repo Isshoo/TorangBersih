@@ -33,8 +33,16 @@ export const KONDISI = [
 
 // Label mapping untuk display
 export const KONDISI_LABELS = {
-  layak_pakai: { text: "Layak Pakai", bg: "bg-green-50", color: "text-green-700" },
-  butuh_perbaikan: { text: "Butuh Perbaikan", bg: "bg-yellow-50", color: "text-yellow-700" },
+  layak_pakai: {
+    text: "Layak Pakai",
+    bg: "bg-green-50",
+    color: "text-green-700",
+  },
+  butuh_perbaikan: {
+    text: "Butuh Perbaikan",
+    bg: "bg-yellow-50",
+    color: "text-yellow-700",
+  },
   rongsokan: { text: "Rongsokan", bg: "bg-red-50", color: "text-red-700" },
 };
 

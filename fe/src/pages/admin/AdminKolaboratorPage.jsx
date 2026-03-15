@@ -25,7 +25,11 @@ function AdminKolaboratorPage() {
 
   const [selectedKolaborator, setSelectedKolaborator] = useState(null);
   const [actionLoading, setActionLoading] = useState(false);
-  const [refModal, setRefModal] = useState({ show: false, tipe: "", label: "" });
+  const [refModal, setRefModal] = useState({
+    show: false,
+    tipe: "",
+    label: "",
+  });
 
   const fetchItems = async () => {
     setLoading(true);
@@ -162,7 +166,13 @@ function AdminKolaboratorPage() {
               ))}
             </select>
             <button
-              onClick={() => setRefModal({ show: true, tipe: 'jenis-kolaborator', label: 'Jenis Kolaborator' })}
+              onClick={() =>
+                setRefModal({
+                  show: true,
+                  tipe: "jenis-kolaborator",
+                  label: "Jenis Kolaborator",
+                })
+              }
               className="cursor-pointer rounded-lg border border-gray-200 bg-white p-2 text-gray-500 hover:border-(--primary) hover:bg-(--primary-lightest) hover:text-(--primary)"
               title="Kelola Jenis Kolaborator"
             >

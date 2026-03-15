@@ -227,7 +227,9 @@ function KolaboratorEditModal({
               >
                 <option value="">-- Pilih --</option>
                 {jenisOptions
-                  .filter((j) => j.is_active || j.id === form.jenis_kolaborator_id)
+                  .filter(
+                    (j) => j.is_active || j.id === form.jenis_kolaborator_id,
+                  )
                   .map((j) => (
                     <option key={j.id} value={j.id}>
                       {j.nama} {!j.is_active && "(Nonaktif)"}

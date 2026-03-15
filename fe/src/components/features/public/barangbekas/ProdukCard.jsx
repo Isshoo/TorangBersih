@@ -72,7 +72,9 @@ const ProductCard = ({ product }) => {
               />
             </svg>
             <span className="truncate">
-              {product.penjual?.full_name || product.penjual?.username || "Anonim"}
+              {product.penjual?.full_name ||
+                product.penjual?.username ||
+                "Anonim"}
             </span>
           </div>
           <div className="flex items-center gap-1.5 text-[11px] text-gray-500">

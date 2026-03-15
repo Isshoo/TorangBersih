@@ -55,9 +55,14 @@ const LaporanItem = ({ data }) => {
     });
   };
 
-  const pelaporName = data.pelapor ? (data.pelapor.full_name || data.pelapor.username) : "Anonim";
-  const namaJenisSampah = data.jenis_sampah ? data.jenis_sampah.nama : "Tidak diketahui";
-  const bentukTimbulan = data.bentuk_timbulan === "tercecer" ? "Tercecer" : "Menumpuk";
+  const pelaporName = data.pelapor
+    ? data.pelapor.full_name || data.pelapor.username
+    : "Anonim";
+  const namaJenisSampah = data.jenis_sampah
+    ? data.jenis_sampah.nama
+    : "Tidak diketahui";
+  const bentukTimbulan =
+    data.bentuk_timbulan === "tercecer" ? "Tercecer" : "Menumpuk";
 
   return (
     <Link
@@ -96,7 +101,7 @@ const LaporanItem = ({ data }) => {
         {/* Info Lokasi & Detail Sampah */}
         <div className="flex flex-1 flex-col">
           <div className="mb-2 flex flex-wrap items-center gap-2">
-            <span className="text-[11px] font-bold tracking-widest text-gray-400 uppercase break-all">
+            <span className="text-[11px] font-bold tracking-widest break-all text-gray-400 uppercase">
               {data.id}
             </span>
             <span className="hidden size-1 rounded-full bg-gray-300 sm:block"></span>

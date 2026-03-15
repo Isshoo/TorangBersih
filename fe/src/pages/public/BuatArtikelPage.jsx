@@ -13,7 +13,14 @@ import { useAuth } from "../../contexts/AuthContext";
 const DRAFT_LOCAL_KEY = "torangbersih_draft_artikel";
 
 // Simple ConfirmModal component
-function ConfirmModal({ open, title, description, onConfirm, onCancel, loading }) {
+function ConfirmModal({
+  open,
+  title,
+  description,
+  onConfirm,
+  onCancel,
+  loading,
+}) {
   if (!open) return null;
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/20">

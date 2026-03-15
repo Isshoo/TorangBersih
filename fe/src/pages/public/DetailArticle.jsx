@@ -14,7 +14,7 @@ const DetailArticlePage = () => {
 
   // Responsive state for controlling "Buat Artikel" button placement
   const [isTabletOrAbove, setIsTabletOrAbove] = useState(
-    typeof window !== "undefined" ? window.innerWidth >= 1024 : true // lg breakpoint (tailwind = 1024px)
+    typeof window !== "undefined" ? window.innerWidth >= 1024 : true, // lg breakpoint (tailwind = 1024px)
   );
 
   useEffect(() => {
@@ -242,7 +242,7 @@ const DetailArticlePage = () => {
       {!isTabletOrAbove && (
         <Link
           to="/artikel/buat"
-          className="fixed z-50 bottom-6 right-5 md:right-8 bg-(--primary) hover:bg-blue-700 text-white font-semibold px-5 py-3 rounded-full shadow-lg transition text-base"
+          className="fixed right-5 bottom-6 z-50 rounded-full bg-(--primary) px-5 py-3 text-base font-semibold text-white shadow-lg transition hover:bg-blue-700 md:right-8"
           style={{
             boxShadow:
               "0 4px 32px 0 rgba(30,41,255,0.10),0 1.5px 3px -1.5px rgba(16, 30, 255, 0.07)",
@@ -357,7 +357,7 @@ const DetailArticlePage = () => {
             {isTabletOrAbove && (
               <Link
                 to="/artikel/buat"
-                className="block mb-6 w-full bg-(--primary) hover:bg-blue-700 text-white font-semibold px-5 py-3 rounded-full shadow-lg transition text-base text-center"
+                className="mb-6 block w-full rounded-full bg-(--primary) px-5 py-3 text-center text-base font-semibold text-white shadow-lg transition hover:bg-blue-700"
                 style={{
                   boxShadow:
                     "0 4px 32px 0 rgba(30,41,255,0.10),0 1.5px 3px -1.5px rgba(16, 30, 255, 0.07)",

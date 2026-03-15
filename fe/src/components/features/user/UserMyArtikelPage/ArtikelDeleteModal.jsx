@@ -12,19 +12,25 @@
 import React from "react";
 import { RiDeleteBinLine } from "react-icons/ri";
 
-export default function ArtikelDeleteModal({ open, deleting, onCancel, onConfirm }) {
+export default function ArtikelDeleteModal({
+  open,
+  deleting,
+  onCancel,
+  onConfirm,
+}) {
   if (!open) return null;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm px-4">
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 px-4 backdrop-blur-sm">
       <div className="w-full max-w-sm rounded-2xl bg-white p-6 shadow-2xl">
-
         <div className="mb-4 flex gap-3">
           <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-red-50">
             <RiDeleteBinLine className="h-5 w-5 text-red-500" />
           </div>
           <div>
-            <p className="text-sm font-bold text-gray-900">Hapus artikel ini?</p>
+            <p className="text-sm font-bold text-gray-900">
+              Hapus artikel ini?
+            </p>
             <p className="mt-0.5 text-xs text-gray-500">
               Tindakan ini permanen dan tidak bisa dibatalkan.
             </p>

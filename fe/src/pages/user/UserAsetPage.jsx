@@ -39,7 +39,7 @@ function UserAsetPage() {
       referensiAPI
         .getAll("kategori-aset", { include_inactive: true })
         .then((res) => setKategoriOptions(res.data.data || []))
-        .catch(() => { });
+        .catch(() => {});
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [editing]);

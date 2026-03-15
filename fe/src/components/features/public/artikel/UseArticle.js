@@ -32,7 +32,7 @@
 
 import { useState, useEffect, useCallback } from "react";
 import { getToken } from "../../../../utils/storage";
-// Tambahkan import toaster 
+// Tambahkan import toaster
 import { toast } from "react-hot-toast";
 
 const BASE_URL = "http://127.0.0.1:5000";
@@ -49,21 +49,18 @@ function authHeaders(required = false) {
 // ─── normalizeArtikel: API item → ArticleCard props ────────────────
 export function normalizeArtikel(item) {
   return {
-    id:    item.id,
-    slug:  item.slug,
+    id: item.id,
+    slug: item.slug,
     title: item.judul_artikel,
     // konten_teks tidak dikembalikan di list endpoint, pakai "" sebagai default
-    excerpt:     item.konten_teks ?? "",
-    image:       item.foto_cover_url ?? "",
-    category:    item.kategori?.nama ?? item.kategori ?? "",
-    author:
-      item.penulis?.full_name ??
-      item.penulis?.username ??
-      "Anonim",
+    excerpt: item.konten_teks ?? "",
+    image: item.foto_cover_url ?? "",
+    category: item.kategori?.nama ?? item.kategori ?? "",
+    author: item.penulis?.full_name ?? item.penulis?.username ?? "Anonim",
     authorImage:
       item.penulis?.avatar_url ??
       `https://ui-avatars.com/api/?name=${encodeURIComponent(
-        item.penulis?.full_name ?? "A"
+        item.penulis?.full_name ?? "A",
       )}&background=1e1f78&color=fff`,
     date: item.waktu_publish
       ? new Date(item.waktu_publish).toLocaleDateString("id-ID", {
@@ -72,10 +69,10 @@ export function normalizeArtikel(item) {
           year: "numeric",
         })
       : "-",
-    views:    item.jumlah_views    ?? 0,
-    likes:    item.jumlah_likes    ?? 0,
+    views: item.jumlah_views ?? 0,
+    likes: item.jumlah_likes ?? 0,
     comments: item.jumlah_komentar ?? 0,
-    status:   item.status_publikasi,
+    status: item.status_publikasi,
   };
 }
 
@@ -92,14 +89,14 @@ export function normalizeArtikel(item) {
  */
 export function useArtikel({
   kategori = "Semua",
-  page     = 1,
-  perPage  = 20,
-  search   = "",
+  page = 1,
+  perPage = 20,
+  search = "",
 } = {}) {
   const [articles, setArticles] = useState([]);
-  const [loading,  setLoading]  = useState(true);
-  const [error,    setError]    = useState("");
-  const [meta,     setMeta]     = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
+  const [meta, setMeta] = useState(null);
 
   const fetch_ = useCallback(async () => {
     setLoading(true);
@@ -111,11 +108,11 @@ export function useArtikel({
       // hanya sort_by + sort_order yang wajib
       // page/per_page & search hanya ditambah jika ada nilainya
       const params = new URLSearchParams({
-        sort_by:    "created_at",
+        sort_by: "created_at",
         sort_order: "desc",
       });
 
-      if (page && page > 1)         params.append("page",     String(page));
+      if (page && page > 1) params.append("page", String(page));
       if (perPage && perPage !== 20) params.append("per_page", String(perPage));
 
       const cleanSearch = (search ?? "").trim();
@@ -126,10 +123,9 @@ export function useArtikel({
         params.append("kategori", kategori);
       }
 
-      const res  = await fetch(
-        `${BASE_URL}/api/artikel?${params.toString()}`,
-        { headers: authHeaders() }
-      );
+      const res = await fetch(`${BASE_URL}/api/artikel?${params.toString()}`, {
+        headers: authHeaders(),
+      });
       const json = await res.json();
 
       if (res.ok && json.success) {
@@ -148,7 +144,9 @@ export function useArtikel({
     }
   }, [kategori, page, perPage, search]);
 
-  useEffect(() => { fetch_(); }, [fetch_]);
+  useEffect(() => {
+    fetch_();
+  }, [fetch_]);
 
   return { articles, loading, error, meta, refetch: fetch_ };
 }
@@ -159,9 +157,9 @@ export function useArtikel({
 // auth: none (token dikirim jika ada)
 // ══════════════════════════════════════════════════════════════════
 export function useArtikelDetail(id) {
-  const [artikel,  setArtikel]  = useState(null);
-  const [loading,  setLoading]  = useState(true);
-  const [error,    setError]    = useState("");
+  const [artikel, setArtikel] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
 
   useEffect(() => {
     if (!id) return;
@@ -170,9 +168,9 @@ export function useArtikelDetail(id) {
       setLoading(true);
       setError("");
       try {
-        const res  = await fetch(
+        const res = await fetch(
           `${BASE_URL}/api/artikel/${id}`,
-          { headers: authHeaders() }  // token opsional
+          { headers: authHeaders() }, // token opsional
         );
         const json = await res.json();
 
@@ -203,15 +201,11 @@ export function useArtikelDetail(id) {
 // auth: bearer (wajib login)
 // Dipakai di halaman "Artikel Saya" / dashboard penulis
 // ══════════════════════════════════════════════════════════════════
-export function useMyArtikel({
-  page    = 1,
-  perPage = 20,
-  search  = "",
-} = {}) {
+export function useMyArtikel({ page = 1, perPage = 20, search = "" } = {}) {
   const [articles, setArticles] = useState([]);
-  const [loading,  setLoading]  = useState(true);
-  const [error,    setError]    = useState("");
-  const [meta,     setMeta]     = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
+  const [meta, setMeta] = useState(null);
 
   const fetch_ = useCallback(async () => {
     setLoading(true);
@@ -219,8 +213,8 @@ export function useMyArtikel({
     try {
       const params = new URLSearchParams({
         page,
-        per_page:   perPage,
-        sort_by:    "created_at",
+        per_page: perPage,
+        sort_by: "created_at",
         sort_order: "desc",
       });
 
@@ -228,9 +222,9 @@ export function useMyArtikel({
       const cleanSearchMy = (search ?? "").trim();
       if (cleanSearchMy) params.append("search", cleanSearchMy);
 
-      const res  = await fetch(
+      const res = await fetch(
         `${BASE_URL}/api/artikel/my-artikel?${params.toString()}`,
-        { headers: authHeaders(true) }  // token wajib
+        { headers: authHeaders(true) }, // token wajib
       );
       const json = await res.json();
 
@@ -255,7 +249,9 @@ export function useMyArtikel({
     }
   }, [page, perPage, search]);
 
-  useEffect(() => { fetch_(); }, [fetch_]);
+  useEffect(() => {
+    fetch_();
+  }, [fetch_]);
 
   return { articles, loading, error, meta, refetch: fetch_ };
 }
@@ -270,10 +266,10 @@ export function useMyArtikel({
  * @returns {Promise<{ success, data, message }>}
  */
 export async function createArtikel(payload) {
-  const res  = await fetch(`${BASE_URL}/api/artikel`, {
-    method:  "POST",
-    headers: authHeaders(true),  // token wajib
-    body:    JSON.stringify(payload),
+  const res = await fetch(`${BASE_URL}/api/artikel`, {
+    method: "POST",
+    headers: authHeaders(true), // token wajib
+    body: JSON.stringify(payload),
   });
   const json = await res.json();
   if (!res.ok) {
@@ -294,10 +290,10 @@ export async function createArtikel(payload) {
  * @returns {Promise<{ success, data, message }>}
  */
 export async function updateArtikel(id, payload) {
-  const res  = await fetch(`${BASE_URL}/api/artikel/${id}`, {
-    method:  "PUT",
-    headers: authHeaders(true),  // token wajib
-    body:    JSON.stringify(payload),
+  const res = await fetch(`${BASE_URL}/api/artikel/${id}`, {
+    method: "PUT",
+    headers: authHeaders(true), // token wajib
+    body: JSON.stringify(payload),
   });
   const json = await res.json();
   if (!res.ok) {
@@ -317,9 +313,9 @@ export async function updateArtikel(id, payload) {
  * @returns {Promise<{ success, message }>}
  */
 export async function deleteArtikel(id) {
-  const res  = await fetch(`${BASE_URL}/api/artikel/${id}`, {
-    method:  "DELETE",
-    headers: authHeaders(true),  // token wajib
+  const res = await fetch(`${BASE_URL}/api/artikel/${id}`, {
+    method: "DELETE",
+    headers: authHeaders(true), // token wajib
   });
   const json = await res.json();
   if (!res.ok) {
@@ -338,8 +334,8 @@ export async function deleteArtikel(id) {
  * @returns {Promise<{ success, liked: boolean, jumlah_likes: number }>}
  */
 export async function postLike(artikelId) {
-  const res  = await fetch(`${BASE_URL}/api/artikel/${artikelId}/like`, {
-    method:  "POST",
+  const res = await fetch(`${BASE_URL}/api/artikel/${artikelId}/like`, {
+    method: "POST",
     headers: authHeaders(true),
   });
   const json = await res.json();
@@ -356,10 +352,10 @@ export async function postLike(artikelId) {
 // auth: bearer (wajib login)
 // ══════════════════════════════════════════════════════════════════
 export async function postKomentar(artikelId, teks) {
-  const res  = await fetch(`${BASE_URL}/api/artikel/${artikelId}/komentar`, {
-    method:  "POST",
+  const res = await fetch(`${BASE_URL}/api/artikel/${artikelId}/komentar`, {
+    method: "POST",
     headers: authHeaders(true),
-    body:    JSON.stringify({ teks }),
+    body: JSON.stringify({ teks }),
   });
   const json = await res.json();
   if (!res.ok) {
@@ -376,18 +372,17 @@ export async function postKomentar(artikelId, teks) {
 // ══════════════════════════════════════════════════════════════════
 export function useArtikelKomentar(artikelId) {
   const [komentar, setKomentar] = useState([]);
-  const [loading,  setLoading]  = useState(true);
-  const [error,    setError]    = useState("");
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
 
   const fetch_ = useCallback(async () => {
     if (!artikelId) return;
     setLoading(true);
     setError("");
     try {
-      const res  = await fetch(
-        `${BASE_URL}/api/artikel/${artikelId}/komentar`,
-        { headers: authHeaders() }
-      );
+      const res = await fetch(`${BASE_URL}/api/artikel/${artikelId}/komentar`, {
+        headers: authHeaders(),
+      });
       const json = await res.json();
 
       if (res.ok && json.success) {
@@ -405,7 +400,9 @@ export function useArtikelKomentar(artikelId) {
     }
   }, [artikelId]);
 
-  useEffect(() => { fetch_(); }, [fetch_]);
+  useEffect(() => {
+    fetch_();
+  }, [fetch_]);
 
   return { komentar, loading, error, refetch: fetch_ };
 }

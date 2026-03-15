@@ -114,7 +114,7 @@ const RegisterKolaborator = () => {
     <div className="relative flex min-h-screen items-center justify-center bg-[#f4f6f9] p-4 pt-16 sm:p-8 sm:pt-8">
       <button
         onClick={() => navigate(-1)}
-        className="absolute top-4 left-4 sm:top-6 sm:left-6 flex items-center gap-2 text-sm font-bold text-gray-500 hover:text-gray-900 z-20"
+        className="absolute top-4 left-4 z-20 flex items-center gap-2 text-sm font-bold text-gray-500 hover:text-gray-900 sm:top-6 sm:left-6"
       >
         <svg
           className="size-4"
@@ -133,16 +133,15 @@ const RegisterKolaborator = () => {
       </button>
 
       {/* Tinggi otomatis (h-auto) di layar kecil, kembali ke fix (650px) di layar besar */}
-      <div className="relative z-10 flex h-auto min-h-[600px] w-full max-w-[1000px] flex-col overflow-hidden rounded-2xl bg-white shadow-lg lg:h-[650px] md:flex-row">
-        
+      <div className="relative z-10 flex h-auto min-h-[600px] w-full max-w-[1000px] flex-col overflow-hidden rounded-2xl bg-white shadow-lg md:flex-row lg:h-[650px]">
         {/* SIDEBAR KIRI - Diubah padding dan arah flex-nya untuk mobile */}
-        <div className="relative flex w-full shrink-0 flex-col overflow-hidden bg-[#1e1f78] p-6 sm:p-8 text-white md:w-[35%] md:p-10">
+        <div className="relative flex w-full shrink-0 flex-col overflow-hidden bg-[#1e1f78] p-6 text-white sm:p-8 md:w-[35%] md:p-10">
           {/* Di mobile menyamping (flex-row wrap), di desktop menurun (flex-col) */}
           <div className="relative z-10 mt-2 flex flex-row flex-wrap gap-4 sm:gap-6 md:mt-6 md:flex-col md:gap-10">
             {steps.map((step) => (
               <div key={step.num} className="flex items-center gap-3 sm:gap-4">
                 <div
-                  className={`flex size-[36px] sm:size-[42px] shrink-0 items-center justify-center rounded-full border border-white text-xs sm:text-sm font-bold transition-all ${
+                  className={`flex size-[36px] shrink-0 items-center justify-center rounded-full border border-white text-xs font-bold transition-all sm:size-[42px] sm:text-sm ${
                     currentStep === step.num
                       ? "bg-white text-[#1e1f78]"
                       : "bg-transparent text-white opacity-80"
@@ -153,10 +152,12 @@ const RegisterKolaborator = () => {
                 <div
                   className={`flex flex-col transition-opacity ${currentStep === step.num ? "opacity-100" : "opacity-80"}`}
                 >
-                  <span className="text-[11px] sm:text-[13px] tracking-wide">
+                  <span className="text-[11px] tracking-wide sm:text-[13px]">
                     Step {step.num}
                   </span>
-                  <span className="text-sm sm:text-base font-semibold">{step.title}</span>
+                  <span className="text-sm font-semibold sm:text-base">
+                    {step.title}
+                  </span>
                 </div>
               </div>
             ))}
@@ -164,7 +165,7 @@ const RegisterKolaborator = () => {
           <img
             src="/images/DaftarKolabolatorVektor.png"
             alt="Ornamen"
-            className="pointer-events-none absolute bottom-0 left-0 w-full object-cover opacity-80 hidden md:block"
+            className="pointer-events-none absolute bottom-0 left-0 hidden w-full object-cover opacity-80 md:block"
           />
         </div>
 
@@ -210,7 +211,7 @@ const RegisterKolaborator = () => {
               type="button"
               disabled={submitting}
               onClick={currentStep === 3 ? handleSubmit : handleNext}
-              className="flex items-center gap-2 rounded bg-[#1e1f78] px-6 py-2 sm:px-10 sm:py-2.5 text-sm font-bold text-white transition-colors hover:bg-[#16175e] disabled:opacity-70"
+              className="flex items-center gap-2 rounded bg-[#1e1f78] px-6 py-2 text-sm font-bold text-white transition-colors hover:bg-[#16175e] disabled:opacity-70 sm:px-10 sm:py-2.5"
             >
               {submitting && (
                 <div className="size-4 animate-spin rounded-full border-2 border-white/30 border-t-white" />

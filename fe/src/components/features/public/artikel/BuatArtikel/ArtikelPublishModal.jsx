@@ -28,6 +28,7 @@ const ArtikelPublishModal = ({
 
   // Reset step if modal reopened
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     if (isOpen) setStep(1);
   }, [isOpen]);
 
@@ -36,7 +37,7 @@ const ArtikelPublishModal = ({
   if (!isOpen) return null;
 
   const kategoriIndex = kategoriList.findIndex(
-    (k) => k.id === form.kategori_id
+    (k) => k.id === form.kategori_id,
   );
   const kategoriObj = kategoriIndex > -1 ? kategoriList[kategoriIndex] : null;
   const style =
@@ -157,10 +158,12 @@ const ArtikelPublishModal = ({
                   </h3>
                   <div className="mt-2 flex items-center gap-3 text-[11px] text-gray-400">
                     <span className="flex items-center gap-1">
-                      <RiFileTextLine className="h-3.5 w-3.5" /> {wordCount} kata
+                      <RiFileTextLine className="h-3.5 w-3.5" /> {wordCount}{" "}
+                      kata
                     </span>
                     <span className="flex items-center gap-1">
-                      <RiTimeLine className="h-3.5 w-3.5" /> {readTime} menit baca
+                      <RiTimeLine className="h-3.5 w-3.5" /> {readTime} menit
+                      baca
                     </span>
                   </div>
                 </div>
@@ -174,8 +177,8 @@ const ArtikelPublishModal = ({
                       c.ok
                         ? "bg-green-50"
                         : c.required
-                        ? "bg-red-50"
-                        : "bg-gray-50"
+                          ? "bg-red-50"
+                          : "bg-gray-50"
                     }`}
                   >
                     <div
@@ -183,8 +186,8 @@ const ArtikelPublishModal = ({
                         c.ok
                           ? "bg-green-500 text-white"
                           : c.required
-                          ? "bg-red-400 text-white"
-                          : "bg-gray-300 text-white"
+                            ? "bg-red-400 text-white"
+                            : "bg-gray-300 text-white"
                       }`}
                     >
                       {c.ok ? (
@@ -201,8 +204,8 @@ const ArtikelPublishModal = ({
                           c.ok
                             ? "text-green-800"
                             : c.required
-                            ? "text-red-700"
-                            : "text-gray-600"
+                              ? "text-red-700"
+                              : "text-gray-600"
                         }`}
                       >
                         {c.label}
@@ -251,8 +254,8 @@ const ArtikelPublishModal = ({
                     Langsung tayang untuk semua pengguna
                   </li>
                   <li className="flex items-start gap-2.5 text-xs text-gray-600">
-                    <RiCheckLine className="mt-0.5 h-3.5 w-3.5 text-[#1e1f78]" /> Bisa
-                    dikomentari dan dibagikan
+                    <RiCheckLine className="mt-0.5 h-3.5 w-3.5 text-[#1e1f78]" />{" "}
+                    Bisa dikomentari dan dibagikan
                   </li>
                 </ul>
               </div>

@@ -28,13 +28,13 @@ function ArtikelRow({ artikel, onClick }) {
   // Menggunakan status_publikasi dari Backend
   const statusKey = artikel?.status_publikasi?.toLowerCase() || "draft";
   const s = STATUS_CFG[statusKey] ?? STATUS_CFG.draft;
-  
+
   const [imgError, setImgError] = React.useState(false);
 
   // Menggunakan judul_artikel dan foto_cover_url dari Backend
   const judulArtikel = artikel?.judul_artikel || "Tanpa Judul";
   const coverImgUrl = artikel?.foto_cover_url;
-  
+
   const showImg = coverImgUrl && !imgError;
 
   return (

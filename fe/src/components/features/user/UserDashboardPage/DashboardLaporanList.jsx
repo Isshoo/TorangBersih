@@ -17,11 +17,36 @@ import {
 
 // ─── Status config ─────────────────────────────────────────────────
 const STATUS_CFG = {
-  menunggu: { label: "Menunggu",  bg: "bg-amber-50",  text: "text-amber-700",  dot: "bg-amber-400"  },
-  diterima: { label: "Diterima",  bg: "bg-blue-50",   text: "text-blue-700",   dot: "bg-blue-400"   },
-  ditindak: { label: "Ditindak",  bg: "bg-orange-50", text: "text-orange-700", dot: "bg-orange-400" },
-  ditolak:  { label: "Ditolak",   bg: "bg-red-50",    text: "text-red-700",    dot: "bg-red-400"    },
-  selesai:  { label: "Selesai",   bg: "bg-green-50",  text: "text-green-700",  dot: "bg-green-500"  },
+  menunggu: {
+    label: "Menunggu",
+    bg: "bg-amber-50",
+    text: "text-amber-700",
+    dot: "bg-amber-400",
+  },
+  diterima: {
+    label: "Diterima",
+    bg: "bg-blue-50",
+    text: "text-blue-700",
+    dot: "bg-blue-400",
+  },
+  ditindak: {
+    label: "Ditindak",
+    bg: "bg-orange-50",
+    text: "text-orange-700",
+    dot: "bg-orange-400",
+  },
+  ditolak: {
+    label: "Ditolak",
+    bg: "bg-red-50",
+    text: "text-red-700",
+    dot: "bg-red-400",
+  },
+  selesai: {
+    label: "Selesai",
+    bg: "bg-green-50",
+    text: "text-green-700",
+    dot: "bg-green-500",
+  },
 };
 
 // ─── Helpers ───────────────────────────────────────────────────────
@@ -38,7 +63,9 @@ const fmtDate = (iso) => {
 function StatusBadge({ status }) {
   const s = STATUS_CFG[status] ?? STATUS_CFG.menunggu;
   return (
-    <span className={`inline-flex shrink-0 items-center gap-1.5 rounded-full px-2.5 py-1 text-[10px] font-bold ${s.bg} ${s.text}`}>
+    <span
+      className={`inline-flex shrink-0 items-center gap-1.5 rounded-full px-2.5 py-1 text-[10px] font-bold ${s.bg} ${s.text}`}
+    >
       <span className={`size-1.5 rounded-full ${s.dot}`} />
       {s.label}
     </span>
@@ -59,7 +86,11 @@ function LaporanRow({ laporan, onClick }) {
       {/* Thumbnail */}
       <div className="size-[60px] shrink-0 overflow-hidden rounded-xl bg-[#f3f3fc]">
         {fotoUrl ? (
-          <img src={fotoUrl} alt="bukti" className="h-full w-full object-cover" />
+          <img
+            src={fotoUrl}
+            alt="bukti"
+            className="h-full w-full object-cover"
+          />
         ) : (
           <div className="flex h-full items-center justify-center">
             <RiImageLine size={22} className="text-gray-300" />
@@ -71,8 +102,10 @@ function LaporanRow({ laporan, onClick }) {
       <div className="min-w-0 flex-1 space-y-1">
         {/* Top row */}
         <div className="flex items-start justify-between gap-2">
-          <p className="truncate text-[13px] font-bold leading-tight text-gray-900">
-            {laporan.jenis_sampah?.nama ?? laporan.jenis_sampah ?? "Tidak diketahui"}
+          <p className="truncate text-[13px] leading-tight font-bold text-gray-900">
+            {laporan.jenis_sampah?.nama ??
+              laporan.jenis_sampah ??
+              "Tidak diketahui"}
             {laporan.estimasi_berat_kg && (
               <span className="ml-1.5 text-[11px] font-normal text-gray-400">
                 {laporan.estimasi_berat_kg} kg
@@ -97,14 +130,16 @@ function LaporanRow({ laporan, onClick }) {
           <div className="flex items-center gap-1.5">
             {karakter && (
               <span className="flex items-center gap-1 rounded-full bg-[#eef0ff] px-2 py-0.5 text-[10px] font-semibold text-[#1e1f78]">
-                {karakter === "bisa_didaur_ulang"
-                  ? <RiRecycleLine size={11} />
-                  : <RiDeleteBin6Line size={11} />}
+                {karakter === "bisa_didaur_ulang" ? (
+                  <RiRecycleLine size={11} />
+                ) : (
+                  <RiDeleteBin6Line size={11} />
+                )}
                 {karakter === "bisa_didaur_ulang" ? "Daur ulang" : "Residu"}
               </span>
             )}
             {laporan.bentuk_timbulan && (
-              <span className="rounded-full bg-gray-100 px-2 py-0.5 text-[10px] font-semibold capitalize text-gray-600">
+              <span className="rounded-full bg-gray-100 px-2 py-0.5 text-[10px] font-semibold text-gray-600 capitalize">
                 {laporan.bentuk_timbulan}
               </span>
             )}
@@ -113,15 +148,18 @@ function LaporanRow({ laporan, onClick }) {
       </div>
 
       {/* Caret */}
-      <RiArrowRightSLine size={16} className="shrink-0 text-gray-300 transition group-hover:translate-x-0.5 group-hover:text-gray-400" />
+      <RiArrowRightSLine
+        size={16}
+        className="shrink-0 text-gray-300 transition group-hover:translate-x-0.5 group-hover:text-gray-400"
+      />
     </button>
   );
 }
 
 // ─── Main export ───────────────────────────────────────────────────
 export default function DashboardLaporanList({ data }) {
-  const navigate  = useNavigate();
-  const laporan   = data?.recent_laporan ?? [];
+  const navigate = useNavigate();
+  const laporan = data?.recent_laporan ?? [];
 
   return (
     <div>
@@ -129,7 +167,9 @@ export default function DashboardLaporanList({ data }) {
       <div className="mb-3 flex items-center justify-between">
         <div>
           <p className="text-[15px] font-bold text-gray-900">Laporan Terbaru</p>
-          <p className="text-[11px] text-gray-400">Aktivitas laporan sampah Anda</p>
+          <p className="text-[11px] text-gray-400">
+            Aktivitas laporan sampah Anda
+          </p>
         </div>
         {laporan.length > 0 && (
           <button
@@ -149,9 +189,12 @@ export default function DashboardLaporanList({ data }) {
             <RiImageLine size={28} className="text-gray-300" />
           </div>
           <div>
-            <p className="text-[14px] font-bold text-gray-700">Belum ada laporan</p>
+            <p className="text-[14px] font-bold text-gray-700">
+              Belum ada laporan
+            </p>
             <p className="mt-1 text-[12px] text-gray-400">
-              Temukan tumpukan sampah ilegal? Bantu komunitas dengan melaporkannya.
+              Temukan tumpukan sampah ilegal? Bantu komunitas dengan
+              melaporkannya.
             </p>
           </div>
           <button

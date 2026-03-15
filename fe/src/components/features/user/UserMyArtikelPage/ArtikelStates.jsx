@@ -1,5 +1,3 @@
-
-
 /**
  * components/ArtikelStates.jsx
  * State kosong dan skeleton loading untuk grid artikel.
@@ -20,8 +18,8 @@ export function ArtikelSkeleton() {
           <div className="h-44 animate-pulse bg-gray-100" />
           <div className="space-y-3 p-4">
             <div className="h-4 w-3/4 animate-pulse rounded-full bg-gray-100" />
-            <div className="h-3 w-full  animate-pulse rounded-full bg-gray-100" />
-            <div className="h-3 w-2/3  animate-pulse rounded-full bg-gray-100" />
+            <div className="h-3 w-full animate-pulse rounded-full bg-gray-100" />
+            <div className="h-3 w-2/3 animate-pulse rounded-full bg-gray-100" />
           </div>
         </div>
       ))}
@@ -54,7 +52,8 @@ export function ArtikelEmpty({ hasSearch, onReset, onWrite }) {
           Reset Pencarian
         </button>
       ) : (
-        <Link to="/artikel/buat"
+        <Link
+          to="/artikel/buat"
           onClick={onWrite}
           className="mt-5 flex items-center gap-2 rounded-xl bg-[#1e1f78] px-5 py-2.5 text-sm font-bold text-white hover:bg-[#1a1b65]"
         >

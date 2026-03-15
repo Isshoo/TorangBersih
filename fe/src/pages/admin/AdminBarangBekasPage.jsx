@@ -267,7 +267,11 @@ function AdminBarangBekasPage() {
   const [error, setError] = useState(null);
   const [kategoriOptions, setKategoriOptions] = useState([]);
   const [selectedItem, setSelectedItem] = useState(null);
-  const [refModal, setRefModal] = useState({ show: false, tipe: "", label: "" });
+  const [refModal, setRefModal] = useState({
+    show: false,
+    tipe: "",
+    label: "",
+  });
 
   const [query, setQuery] = useState({
     page: 1,
@@ -381,7 +385,13 @@ function AdminBarangBekasPage() {
               ))}
             </select>
             <button
-              onClick={() => setRefModal({ show: true, tipe: 'kategori-barang', label: 'Kategori Barang' })}
+              onClick={() =>
+                setRefModal({
+                  show: true,
+                  tipe: "kategori-barang",
+                  label: "Kategori Barang",
+                })
+              }
               className="cursor-pointer rounded-lg border border-gray-200 bg-white p-2 text-gray-500 hover:border-(--primary) hover:bg-(--primary-lightest) hover:text-(--primary)"
               title="Kelola Kategori Barang"
             >
