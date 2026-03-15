@@ -403,12 +403,6 @@ const DetailKolaboratorPage = () => {
                   </button>
                 )}
               </div>
-
-              <div className="mt-8 border-t border-gray-100 pt-6 text-center">
-                <button className="text-xs font-semibold text-gray-400 transition-colors hover:text-red-500">
-                  Laporkan profil ini
-                </button>
-              </div>
             </div>
           </div>
         </div>

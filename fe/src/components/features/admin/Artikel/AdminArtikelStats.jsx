@@ -11,14 +11,14 @@ import StatsCard from "../../../ui/StatsCard";
 const AdminArtikelStats = ({ meta, articles }) => {
   const total = meta?.total || 0;
   const totalPublished = articles.filter(
-    (a) => a.status_publikasi === "published"
+    (a) => a.status_publikasi === "published",
   ).length;
   const totalDraft = articles.filter(
-    (a) => a.status_publikasi === "draft"
+    (a) => a.status_publikasi === "draft",
   ).length;
   const totalViews = articles.reduce(
     (sum, a) => sum + (a.jumlah_views || 0),
-    0
+    0,
   );
 
   const stats = [
@@ -53,7 +53,7 @@ const AdminArtikelStats = ({ meta, articles }) => {
   ];
 
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+    <div className="mb-8 grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-4">
       {stats.map((stat, index) => (
         <StatsCard key={index} {...stat} />
       ))}

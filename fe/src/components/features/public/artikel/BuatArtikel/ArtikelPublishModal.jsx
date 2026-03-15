@@ -1,16 +1,16 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
-  X,
-  Check,
-  AlertCircle,
-  Eye,
-  Clock,
-  FileText,
-  Send,
-  Info,
-  ArrowLeft,
-  BookOpen,
-} from "lucide-react";
+  RiCloseLine,
+  RiCheckLine,
+  RiAlertLine,
+  RiEyeLine,
+  RiTimeLine,
+  RiFileTextLine,
+  RiSendPlane2Line,
+  RiInformationLine,
+  RiArrowLeftLine,
+  RiBookOpenLine,
+} from "react-icons/ri";
 import { getKatStyle } from "./constant";
 
 const ArtikelPublishModal = ({
@@ -25,6 +25,15 @@ const ArtikelPublishModal = ({
   fotoPreview,
 }) => {
   const [step, setStep] = useState(1);
+
+  // Reset step if modal reopened
+  useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    if (isOpen) setStep(1);
+  }, [isOpen]);
+
+  // Modal will NOT auto-close when onPublish is called, only when publishing done
+  // Parent should set isOpen to false after publishing complete (isPublishing=false)
   if (!isOpen) return null;
 
   const kategoriIndex = kategoriList.findIndex(
@@ -71,9 +80,10 @@ const ArtikelPublishModal = ({
 
   const mandatoryOk = checks.every((c) => !c.required || c.ok);
 
+  // onPublish hanya trigger publish, modal baru CLOSE kalau isPublishing jadi false & publish sukses
   const handlePublish = () => {
     onPublish();
-    onClose();
+    // Jangan close di sini, tunggu isPublishing berubah, parent atur modal isOpen
   };
   const handleClose = () => {
     setStep(1);
@@ -90,7 +100,7 @@ const ArtikelPublishModal = ({
         <div className="flex items-center justify-between border-b border-gray-100 px-6 py-4">
           <div>
             <h2 className="text-base font-bold text-gray-900">
-              {step === 1 ? "Cek Dulu Ya" : "Siap Diterbitkan? 🚀"}
+              {step === 1 ? "Cek Dulu Ya" : "Siap Diterbitkan?"}
             </h2>
             <p className="text-xs text-gray-500">
               {step === 1
@@ -102,7 +112,7 @@ const ArtikelPublishModal = ({
             onClick={handleClose}
             className="rounded-full p-1 text-gray-400 hover:bg-gray-100"
           >
-            <X className="h-5 w-5" />
+            <RiCloseLine className="h-5 w-5" />
           </button>
         </div>
         <div className="max-h-[70vh] overflow-y-auto">
@@ -125,7 +135,7 @@ const ArtikelPublishModal = ({
                       <div
                         className={`inline-flex items-center gap-1 rounded-full px-2.5 py-1 text-xs font-semibold ${style.bg} ${style.color}`}
                       >
-                        <BookOpen className="h-3.5 w-3.5" />
+                        <RiBookOpenLine className="h-3.5 w-3.5" />
                         {kategoriObj.nama}
                       </div>
                     )}
@@ -148,10 +158,12 @@ const ArtikelPublishModal = ({
                   </h3>
                   <div className="mt-2 flex items-center gap-3 text-[11px] text-gray-400">
                     <span className="flex items-center gap-1">
-                      <FileText className="h-3.5 w-3.5" /> {wordCount} kata
+                      <RiFileTextLine className="h-3.5 w-3.5" /> {wordCount}{" "}
+                      kata
                     </span>
                     <span className="flex items-center gap-1">
-                      <Clock className="h-3.5 w-3.5" /> {readTime} menit baca
+                      <RiTimeLine className="h-3.5 w-3.5" /> {readTime} menit
+                      baca
                     </span>
                   </div>
                 </div>
@@ -161,27 +173,47 @@ const ArtikelPublishModal = ({
                 {checks.map((c, i) => (
                   <div
                     key={i}
-                    className={`flex items-start gap-3 rounded-xl px-4 py-3 ${c.ok ? "bg-green-50" : c.required ? "bg-red-50" : "bg-gray-50"}`}
+                    className={`flex items-start gap-3 rounded-xl px-4 py-3 ${
+                      c.ok
+                        ? "bg-green-50"
+                        : c.required
+                          ? "bg-red-50"
+                          : "bg-gray-50"
+                    }`}
                   >
                     <div
-                      className={`mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full ${c.ok ? "bg-green-500 text-white" : c.required ? "bg-red-400 text-white" : "bg-gray-300 text-white"}`}
+                      className={`mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full ${
+                        c.ok
+                          ? "bg-green-500 text-white"
+                          : c.required
+                            ? "bg-red-400 text-white"
+                            : "bg-gray-300 text-white"
+                      }`}
                     >
                       {c.ok ? (
-                        <Check className="h-3 w-3" />
+                        <RiCheckLine className="h-3 w-3" />
                       ) : c.required ? (
-                        <AlertCircle className="h-3 w-3" />
+                        <RiAlertLine className="h-3 w-3" />
                       ) : (
-                        <Info className="h-3 w-3" />
+                        <RiInformationLine className="h-3 w-3" />
                       )}
                     </div>
                     <div className="flex-1">
                       <p
-                        className={`text-sm font-semibold ${c.ok ? "text-green-800" : c.required ? "text-red-700" : "text-gray-600"}`}
+                        className={`text-sm font-semibold ${
+                          c.ok
+                            ? "text-green-800"
+                            : c.required
+                              ? "text-red-700"
+                              : "text-gray-600"
+                        }`}
                       >
                         {c.label}
                       </p>
                       <p
-                        className={`text-xs ${c.ok ? "text-green-600" : "text-red-500"}`}
+                        className={`text-xs ${
+                          c.ok ? "text-green-600" : "text-red-500"
+                        }`}
                       >
                         {c.hint}
                       </p>
@@ -193,9 +225,13 @@ const ArtikelPublishModal = ({
               <button
                 onClick={() => setStep(2)}
                 disabled={!mandatoryOk}
-                className={`flex w-full items-center justify-center gap-2 rounded-xl py-3 text-sm font-bold text-white transition-all disabled:cursor-not-allowed ${mandatoryOk ? "bg-green-600 hover:bg-green-700" : "bg-gray-200 text-gray-400"}`}
+                className={`flex w-full items-center justify-center gap-2 rounded-xl py-3 text-sm font-bold text-white transition-all disabled:cursor-not-allowed ${
+                  mandatoryOk
+                    ? "bg-green-600 hover:bg-green-700"
+                    : "bg-gray-200 text-gray-400"
+                }`}
               >
-                <Eye className="h-4 w-4" />{" "}
+                <RiEyeLine className="h-4 w-4" />{" "}
                 {mandatoryOk ? "Lanjut ke Konfirmasi →" : "Lengkapi Dulu"}
               </button>
             </div>
@@ -205,7 +241,7 @@ const ArtikelPublishModal = ({
             <div className="px-6 py-5">
               <div className="mb-6 rounded-xl bg-[#f8f9ff] p-5">
                 <div className="mb-3 flex items-start gap-3">
-                  <span className="text-3xl">📣</span>
+                  <RiInformationLine className="h-6 w-6 text-[#1e1f78]" />
                   <div>
                     <p className="text-sm font-bold text-gray-900">
                       Alur Verifikasi Artikel:
@@ -214,12 +250,12 @@ const ArtikelPublishModal = ({
                 </div>
                 <ul className="space-y-2">
                   <li className="flex items-start gap-2.5 text-xs text-gray-600">
-                    <Check className="mt-0.5 h-3.5 w-3.5 text-[#1e1f78]" />{" "}
+                    <RiCheckLine className="mt-0.5 h-3.5 w-3.5 text-[#1e1f78]" />{" "}
                     Langsung tayang untuk semua pengguna
                   </li>
                   <li className="flex items-start gap-2.5 text-xs text-gray-600">
-                    <Check className="mt-0.5 h-3.5 w-3.5 text-[#1e1f78]" /> Bisa
-                    dikomentari dan dibagikan
+                    <RiCheckLine className="mt-0.5 h-3.5 w-3.5 text-[#1e1f78]" />{" "}
+                    Bisa dikomentari dan dibagikan
                   </li>
                 </ul>
               </div>
@@ -237,7 +273,7 @@ const ArtikelPublishModal = ({
                     </>
                   ) : (
                     <>
-                      <Send className="h-4 w-4" /> Terbitkan Artikel
+                      <RiSendPlane2Line className="h-4 w-4" /> Terbitkan Artikel
                     </>
                   )}
                 </button>
@@ -245,7 +281,7 @@ const ArtikelPublishModal = ({
                   onClick={() => setStep(1)}
                   className="flex w-full items-center justify-center gap-2 rounded-xl border border-gray-200 py-3 text-sm font-medium text-gray-600 hover:bg-gray-50"
                 >
-                  <ArrowLeft className="h-4 w-4" /> Kembali Cek
+                  <RiArrowLeftLine className="h-4 w-4" /> Kembali Cek
                 </button>
               </div>
             </div>

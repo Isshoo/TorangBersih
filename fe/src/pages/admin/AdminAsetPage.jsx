@@ -25,7 +25,11 @@ function AdminAsetPage() {
 
   const [selectedAset, setSelectedAset] = useState(null);
   const [actionLoading, setActionLoading] = useState(false);
-  const [refModal, setRefModal] = useState({ show: false, tipe: "", label: "" });
+  const [refModal, setRefModal] = useState({
+    show: false,
+    tipe: "",
+    label: "",
+  });
 
   const fetchItems = async () => {
     setLoading(true);
@@ -153,7 +157,13 @@ function AdminAsetPage() {
               ))}
             </select>
             <button
-              onClick={() => setRefModal({ show: true, tipe: 'kategori-aset', label: 'Kategori Aset' })}
+              onClick={() =>
+                setRefModal({
+                  show: true,
+                  tipe: "kategori-aset",
+                  label: "Kategori Aset",
+                })
+              }
               className="cursor-pointer rounded-lg border border-gray-200 bg-white p-2 text-gray-500 hover:border-(--primary) hover:bg-(--primary-lightest) hover:text-(--primary)"
               title="Kelola Kategori Aset"
             >

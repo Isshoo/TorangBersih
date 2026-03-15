@@ -7,6 +7,45 @@ import {
   formatHarga,
 } from "../../components/features/public/barangbekas/InputBarang/Constant";
 import EditBarangBekasModal from "../../components/features/public/barangbekas/EditBarangBekasModal";
+import { toast } from "react-hot-toast";
+
+// Modal konfirmasi sederhana
+function ConfirmModal({
+  open,
+  title,
+  description,
+  onConfirm,
+  onCancel,
+  loading,
+}) {
+  if (!open) return null;
+  return (
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/20">
+      <div className="relative w-full max-w-xs rounded-xl bg-white p-6 shadow-lg">
+        <h3 className="mb-2 text-lg font-semibold">{title}</h3>
+        <p className="mb-5 text-sm text-gray-500">{description}</p>
+        <div className="flex justify-end gap-3">
+          <button
+            className="rounded-lg px-3 py-1.5 text-sm font-semibold text-gray-500 transition hover:bg-gray-100"
+            onClick={onCancel}
+            disabled={loading}
+            type="button"
+          >
+            Batal
+          </button>
+          <button
+            className="rounded-lg bg-red-500 px-3 py-1.5 text-sm font-semibold text-white transition hover:bg-red-600"
+            onClick={onConfirm}
+            disabled={loading}
+            type="button"
+          >
+            {loading ? "Menghapus..." : "Hapus"}
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+}
 
 const STATUS_OPTIONS = [
   { value: "tersedia", label: "Tersedia" },
@@ -22,6 +61,9 @@ const UserBarangBekasPage = () => {
   const [updatingId, setUpdatingId] = useState(null);
   const [deletingId, setDeletingId] = useState(null);
   const [editingItem, setEditingItem] = useState(null);
+
+  // state utk modal konfirmasi hapus
+  const [confirmDelete, setConfirmDelete] = useState({ open: false, id: null });
 
   const [query, setQuery] = useState({
     page: 1,
@@ -69,24 +111,33 @@ const UserBarangBekasPage = () => {
           item.id === id ? { ...item, status_ketersediaan: newStatus } : item,
         ),
       );
+      toast.success("Status berhasil diperbarui");
     } catch (err) {
-      alert(err.response?.data?.message || "Gagal memperbarui status");
+      toast.error(err?.response?.data?.message || "Gagal memperbarui status");
     } finally {
       setUpdatingId(null);
     }
   };
 
-  const handleDelete = async (id) => {
-    if (!confirm("Yakin ingin menghapus barang ini?")) return;
+  // Fungsi ini hanya membuka modal konfirmasi hapus
+  const handleDelete = (id) => {
+    setConfirmDelete({ open: true, id });
+  };
+
+  // Fungsi eksekusi hapus setelah user konfirmasi di modal
+  const handleConfirmDelete = async () => {
+    const id = confirmDelete.id;
     setDeletingId(id);
     try {
       await marketplaceAPI.delete(id);
       setItems((prev) => prev.filter((item) => item.id !== id));
       if (meta) setMeta((m) => ({ ...m, total: m.total - 1 }));
+      toast.success("Barang berhasil dihapus");
     } catch (err) {
-      alert(err.response?.data?.message || "Gagal menghapus barang");
+      toast.error(err?.response?.data?.message || "Gagal menghapus barang");
     } finally {
       setDeletingId(null);
+      setConfirmDelete({ open: false, id: null });
     }
   };
 
@@ -442,6 +493,16 @@ const UserBarangBekasPage = () => {
           </div>
         )}
       </div>
+
+      {/* Modal untuk konfirmasi hapus */}
+      <ConfirmModal
+        open={confirmDelete.open}
+        title="Konfirmasi Hapus"
+        description="Yakin ingin menghapus barang ini?"
+        onCancel={() => setConfirmDelete({ open: false, id: null })}
+        onConfirm={handleConfirmDelete}
+        loading={deletingId !== null}
+      />
 
       {editingItem && (
         <EditBarangBekasModal

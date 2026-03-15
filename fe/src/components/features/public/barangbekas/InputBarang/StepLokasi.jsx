@@ -24,7 +24,6 @@ const markerIcon = new L.divIcon({
   iconAnchor: [20, 20],
 });
 
-// Map click handler
 function MapClickHandler({ onMapClick }) {
   useMapEvents({
     click(e) {
@@ -34,7 +33,6 @@ function MapClickHandler({ onMapClick }) {
   return null;
 }
 
-// Pan map to new position
 function MapCenterUpdater({ center }) {
   const map = useMap();
   useEffect(() => {
@@ -45,7 +43,6 @@ function MapCenterUpdater({ center }) {
   return null;
 }
 
-// Reverse geocoding (lat/lng → address)
 const reverseGeocode = async (lat, lng) => {
   try {
     const res = await fetch(
@@ -71,7 +68,6 @@ const reverseGeocode = async (lat, lng) => {
   }
 };
 
-// Forward geocoding (address → lat/lng)
 const forwardGeocode = async (query) => {
   try {
     const res = await fetch(
@@ -118,7 +114,6 @@ export const StepLokasi = ({ form, setForm }) => {
 
   const hasMarker = form.latitude && form.longitude;
 
-  // Klik peta → set marker + reverse geocode
   const handleMapClick = async (lat, lng) => {
     setForm((p) => ({ ...p, latitude: lat, longitude: lng }));
     setGeocoding(true);
@@ -133,7 +128,6 @@ export const StepLokasi = ({ form, setForm }) => {
     setGeocoding(false);
   };
 
-  // GPS → geolocation + reverse geocode
   const handleGPS = () => {
     if (!navigator.geolocation) return;
     setGpsLoading(true);
@@ -162,7 +156,6 @@ export const StepLokasi = ({ form, setForm }) => {
     );
   };
 
-  // Search alamat → forward geocode
   const handleSearchAddress = async (e) => {
     if (e) e.preventDefault();
     if (!searchQuery.trim()) return;
@@ -189,8 +182,10 @@ export const StepLokasi = ({ form, setForm }) => {
   };
 
   return (
-    <div className="flex h-full gap-6">
-      <div className="flex h-full w-1/2 flex-col gap-4">
+    // Di mobile flex-col vertikal, layar besar flex-row
+    <div className="flex h-full flex-col gap-6 sm:flex-row">
+      {/* KIRI: Peta */}
+      <div className="flex w-full flex-col gap-4 sm:w-1/2">
         {/* Cari lokasi */}
         <div className="shrink-0">
           <Label>Cari lokasi di peta</Label>
@@ -214,24 +209,25 @@ export const StepLokasi = ({ form, setForm }) => {
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 placeholder="Cth: Pasar Bersehati Manado"
-                className={`${inputCls} pl-9`}
+                className={`${inputCls} pl-9 text-[12px] sm:text-[13px]`}
               />
             </div>
             <button
               type="submit"
               disabled={geocoding}
-              className="shrink-0 rounded-xl bg-[#1e1f78] px-4 py-2.5 text-[13px] font-bold text-white transition hover:bg-[#16175e] disabled:opacity-50"
+              className="shrink-0 rounded-xl bg-[#1e1f78] px-4 py-2 text-[12px] font-bold text-white transition hover:bg-[#16175e] disabled:opacity-50 sm:py-2.5 sm:text-[13px]"
             >
               {geocoding ? "..." : "Cari"}
             </button>
           </form>
         </div>
 
-        {/* Peta */}
-        <div className="flex min-h-0 flex-1 flex-col">
+        {/* Peta Container */}
+        {/* Di mobile tinggi fix 280px agar tidak hilang ditelan flex-col, di laptop h-full */}
+        <div className="flex h-[280px] shrink-0 flex-col sm:h-full sm:min-h-0 sm:flex-1">
           <Label>Tandai Peta Lokasi COD</Label>
           <div className="flex h-full flex-1 flex-col overflow-hidden rounded-xl border border-gray-200 bg-gray-50 shadow-sm">
-            <div className="relative flex-1">
+            <div className="relative z-0 flex-1">
               <MapContainer
                 center={[form.latitude || 1.4748, form.longitude || 124.8421]}
                 zoom={13}
@@ -249,18 +245,17 @@ export const StepLokasi = ({ form, setForm }) => {
                 )}
               </MapContainer>
 
-              {/* GPS Button */}
               <button
                 type="button"
                 onClick={handleGPS}
                 disabled={gpsLoading}
-                className="absolute right-3 bottom-3 z-1000 flex items-center gap-1.5 rounded-lg bg-white px-3 py-2 text-[12px] font-bold text-gray-700 shadow-md ring-1 ring-gray-900/10 transition hover:bg-gray-50 active:scale-95 disabled:opacity-50"
+                className="absolute right-3 bottom-3 z-[1000] flex items-center gap-1.5 rounded-lg bg-white px-3 py-2 text-[11px] font-bold text-gray-700 shadow-md ring-1 ring-gray-900/10 transition hover:bg-gray-50 active:scale-95 disabled:opacity-50 sm:text-[12px]"
               >
                 {gpsLoading ? (
-                  <div className="size-4 animate-spin rounded-full border-2 border-[#1e1f78] border-t-transparent" />
+                  <div className="size-3 animate-spin rounded-full border-2 border-[#1e1f78] border-t-transparent sm:size-4" />
                 ) : (
                   <svg
-                    className="size-4 text-[#1e1f78]"
+                    className="size-3 text-[#1e1f78] sm:size-4"
                     fill="none"
                     stroke="currentColor"
                     strokeWidth="2"
@@ -277,20 +272,19 @@ export const StepLokasi = ({ form, setForm }) => {
               </button>
             </div>
 
-            {/* Koordinat preview */}
             <div className="relative z-10 flex shrink-0 items-center justify-between border-t border-gray-200 bg-white p-2.5">
               <div className="flex flex-col">
-                <span className="text-[10px] font-bold tracking-wider text-gray-500 uppercase">
+                <span className="text-[9px] font-bold tracking-wider text-gray-500 uppercase sm:text-[10px]">
                   Koordinat Pin
                 </span>
-                <span className="font-mono text-[11px] font-bold text-[#1e1f78]">
+                <span className="font-mono text-[10px] font-bold text-[#1e1f78] sm:text-[11px]">
                   {hasMarker
                     ? `${form.latitude.toFixed(5)}, ${form.longitude.toFixed(5)}`
                     : "Belum ditentukan"}
                 </span>
               </div>
               {geocoding && (
-                <span className="text-[11px] font-medium text-[#1e1f78]">
+                <span className="text-[10px] font-medium text-[#1e1f78] sm:text-[11px]">
                   Mengambil alamat...
                 </span>
               )}
@@ -299,8 +293,8 @@ export const StepLokasi = ({ form, setForm }) => {
         </div>
       </div>
 
-      <div className="flex w-1/2 flex-col gap-4">
-        {/* Alamat Lengkap */}
+      {/* KANAN: Form Alamat & Kontak */}
+      <div className="mt-2 flex w-full flex-col gap-4 pb-4 sm:mt-0 sm:w-1/2 sm:pb-0">
         <div>
           <Label req>Alamat Lengkap / Patokan COD</Label>
           <textarea
@@ -310,16 +304,15 @@ export const StepLokasi = ({ form, setForm }) => {
             onChange={(e) =>
               setForm((p) => ({ ...p, alamat_lengkap: e.target.value }))
             }
-            className={`${inputCls} resize-none`}
+            className={`${inputCls} min-h-[60px] resize-none`}
           />
         </div>
 
-        {/* Kab/Kota (auto-filled) */}
         <div>
           <Label>Kota / Kabupaten</Label>
           <input
             type="text"
-            placeholder="Terisi otomatis dari peta, atau ketik manual"
+            placeholder="Terisi otomatis dari peta..."
             value={form.kabupaten_kota || ""}
             onChange={(e) =>
               setForm((p) => ({ ...p, kabupaten_kota: e.target.value }))
@@ -328,7 +321,6 @@ export const StepLokasi = ({ form, setForm }) => {
           />
         </div>
 
-        {/* Kontak (WhatsApp) */}
         <div>
           <Label req>Nomor WhatsApp</Label>
           <div className="relative">

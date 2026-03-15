@@ -89,9 +89,9 @@ function BarRow({ label, value, total, color, bg, text }) {
   );
 }
 
+// eslint-disable-next-line no-unused-vars
 function PanelCard({ title, sub, linkLabel, linkPath, Icon, children }) {
   const navigate = useNavigate();
-  console.log(Icon);
 
   return (
     <div className="rounded-2xl border border-gray-100 bg-white p-5 shadow-sm">

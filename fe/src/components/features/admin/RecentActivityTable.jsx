@@ -25,12 +25,12 @@ const RecentActivityTable = ({ title, items, type }) => {
   };
 
   return (
-    <div className="bg-white rounded-2xl border border-gray-200 overflow-hidden shadow-sm">
-      <div className="px-6 py-4 border-b border-gray-100 flex justify-between items-center bg-gray-50/50">
+    <div className="overflow-hidden rounded-2xl border border-gray-200 bg-white shadow-sm">
+      <div className="flex items-center justify-between border-b border-gray-100 bg-gray-50/50 px-6 py-4">
         <h3 className="font-bold text-gray-800">{title}</h3>
-        <Link 
-          to={`/admin/${type === 'artikel' ? 'artikel' : type === 'kolaborator' ? 'kolaborator' : 'laporan'}`}
-          className="text-xs font-bold text-primary hover:underline"
+        <Link
+          to={`/admin/${type === "artikel" ? "artikel" : type === "kolaborator" ? "kolaborator" : "laporan"}`}
+          className="text-primary text-xs font-bold hover:underline"
         >
           Lihat Semua
         </Link>
@@ -38,7 +38,7 @@ const RecentActivityTable = ({ title, items, type }) => {
       <div className="overflow-x-auto">
         <table className="w-full text-left">
           <thead>
-            <tr className="bg-gray-50 text-gray-500 text-[11px] uppercase tracking-wider font-bold">
+            <tr className="bg-gray-50 text-[11px] font-bold tracking-wider text-gray-500 uppercase">
               {getHeaders().map((header) => (
                 <th key={header} className="px-6 py-3">
                   {header}
@@ -48,67 +48,99 @@ const RecentActivityTable = ({ title, items, type }) => {
           </thead>
           <tbody className="divide-y divide-gray-100">
             {items.slice(0, 5).map((item) => (
-              <tr key={item.id} className="hover:bg-gray-50/50 transition-colors">
+              <tr
+                key={item.id}
+                className="transition-colors hover:bg-gray-50/50"
+              >
                 {type === "artikel" && (
                   <>
                     <td className="px-6 py-4">
                       <div className="flex items-center gap-3">
                         {item.foto_cover_url && (
-                          <img 
-                            src={item.foto_cover_url} 
-                            alt="" 
-                            className="w-10 h-10 rounded-lg object-cover flex-shrink-0"
+                          <img
+                            src={item.foto_cover_url}
+                            alt=""
+                            className="h-10 w-10 flex-shrink-0 rounded-lg object-cover"
                           />
                         )}
-                        <span className="text-sm font-medium text-gray-900 line-clamp-1">
+                        <span className="line-clamp-1 text-sm font-medium text-gray-900">
                           {item.judul_artikel}
                         </span>
                       </div>
                     </td>
-                    <td className="px-6 py-4 text-sm text-gray-600">{item.kategori?.nama || '-'}</td>
+                    <td className="px-6 py-4 text-sm text-gray-600">
+                      {item.kategori?.nama || "-"}
+                    </td>
                     <td className="px-6 py-4">
                       <StatusBadge status={item.status_publikasi} />
                     </td>
-                    <td className="px-6 py-4 text-xs text-gray-500">{formatDate(item.created_at)}</td>
+                    <td className="px-6 py-4 text-xs text-gray-500">
+                      {formatDate(item.created_at)}
+                    </td>
                   </>
                 )}
                 {type === "kolaborator" && (
                   <>
                     <td className="px-6 py-4">
                       <div className="flex items-center gap-3">
-                        <img 
-                          src={item.logo_url || "https://placehold.co/100x100?text=Logo"} 
-                          alt="" 
-                          className="w-8 h-8 rounded-full object-cover"
+                        <img
+                          src={
+                            item.logo_url ||
+                            "https://placehold.co/100x100?text=Logo"
+                          }
+                          alt=""
+                          className="h-8 w-8 rounded-full object-cover"
                         />
-                        <span className="text-sm font-medium text-gray-900">{item.nama_organisasi}</span>
+                        <span className="text-sm font-medium text-gray-900">
+                          {item.nama_organisasi}
+                        </span>
                       </div>
                     </td>
-                    <td className="px-6 py-4 text-sm text-gray-600">{item.jenis_kolaborator?.nama || '-'}</td>
+                    <td className="px-6 py-4 text-sm text-gray-600">
+                      {item.jenis_kolaborator?.nama || "-"}
+                    </td>
                     <td className="px-6 py-4 text-sm">
-                      <span className={`px-2 py-0.5 rounded-full text-xs font-bold ${
-                        item.status_verifikasi === 'terverifikasi' ? 'bg-green-100 text-green-700' :
-                        item.status_verifikasi === 'menunggu' ? 'bg-yellow-100 text-yellow-700' : 'bg-red-100 text-red-700'
-                      }`}>
+                      <span
+                        className={`rounded-full px-2 py-0.5 text-xs font-bold ${
+                          item.status_verifikasi === "terverifikasi"
+                            ? "bg-green-100 text-green-700"
+                            : item.status_verifikasi === "menunggu"
+                              ? "bg-yellow-100 text-yellow-700"
+                              : "bg-red-100 text-red-700"
+                        }`}
+                      >
                         {item.status_verifikasi}
                       </span>
                     </td>
-                    <td className="px-6 py-4 text-xs text-gray-500">{formatDate(item.created_at)}</td>
+                    <td className="px-6 py-4 text-xs text-gray-500">
+                      {formatDate(item.created_at)}
+                    </td>
                   </>
                 )}
                 {type === "laporan" && (
                   <>
-                    <td className="px-6 py-4 text-sm font-medium text-gray-900">{item.jenis_sampah?.nama || '-'}</td>
-                    <td className="px-6 py-4 text-sm text-gray-600 line-clamp-1">{item.kabupaten_kota}</td>
+                    <td className="px-6 py-4 text-sm font-medium text-gray-900">
+                      {item.jenis_sampah?.nama || "-"}
+                    </td>
+                    <td className="line-clamp-1 px-6 py-4 text-sm text-gray-600">
+                      {item.kabupaten_kota}
+                    </td>
                     <td className="px-6 py-4 text-sm">
-                      <span className={`px-2 py-0.5 rounded-full text-xs font-bold ${
-                        item.status_laporan === 'selesai' ? 'bg-green-100 text-green-700' :
-                        item.status_laporan === 'menunggu' ? 'bg-yellow-100 text-yellow-700' : 'bg-blue-100 text-blue-700'
-                      }`}>
+                      <span
+                        className={`rounded-full px-2 py-0.5 text-xs font-bold ${
+                          item.status_laporan === "selesai"
+                            ? "bg-green-100 text-green-700"
+                            : item.status_laporan === "menunggu"
+                              ? "bg-yellow-100 text-yellow-700"
+                              : "bg-blue-100 text-blue-700"
+                        }`}
+                      >
                         {item.status_laporan}
                       </span>
                     </td>
-                    <td className="px-6 py-4 text-xs text-gray-500">{formatDate(item.created_at)}</td>
+                    <td className="px-6 py-4 text-xs text-gray-500">
+                      {formatDate(item.created_at)}
+                    </td>
                   </>
                 )}
               </tr>

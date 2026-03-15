@@ -1,6 +1,8 @@
 import { useState } from "react";
 import { useSearchParams, Link, useNavigate } from "react-router";
 import { authAPI } from "../../services/api/routes/auth.route";
+import toaster from "../../utils/toaster";
+import { MdErrorOutline, MdCheckCircle } from "react-icons/md";
 
 export default function ResetPasswordPage() {
   const [searchParams] = useSearchParams();
@@ -10,14 +12,13 @@ export default function ResetPasswordPage() {
   const [form, setForm] = useState({ password: "", confirmPassword: "" });
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
-  const [error, setError] = useState(null);
 
   if (!token) {
     return (
       <div className="flex min-h-screen items-center justify-center bg-gray-50">
         <div className="w-full max-w-md space-y-4 rounded-xl bg-white p-8 text-center shadow-md">
           <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-red-100">
-            <span className="text-3xl">❌</span>
+            <MdErrorOutline className="text-red-500" size={48} />
           </div>
           <h2 className="text-xl font-bold text-gray-800">
             Token Tidak Ditemukan
@@ -36,15 +37,14 @@ export default function ResetPasswordPage() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setError(null);
 
     if (form.password !== form.confirmPassword) {
-      setError("Password tidak sama.");
+      toaster.error("Password baru dan konfirmasi password tidak sama.");
       return;
     }
 
     if (form.password.length < 8) {
-      setError("Password minimal 8 karakter.");
+      toaster.error("Password minimal 8 karakter.");
       return;
     }
 
@@ -52,10 +52,13 @@ export default function ResetPasswordPage() {
     try {
       await authAPI.resetPassword({ token, password: form.password });
       setSuccess(true);
+      toaster.success(
+        "Password berhasil direset! Anda akan dialihkan ke halaman login.",
+      );
       setTimeout(() => navigate("/login"), 3000);
     } catch (err) {
-      setError(
-        err.response?.data?.message ||
+      toaster.error(
+        err?.response?.data?.message ||
           "Gagal reset password. Token mungkin sudah kedaluwarsa.",
       );
     } finally {
@@ -68,7 +71,7 @@ export default function ResetPasswordPage() {
       <div className="flex min-h-screen items-center justify-center bg-gray-50">
         <div className="w-full max-w-md space-y-4 rounded-xl bg-white p-8 text-center shadow-md">
           <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-green-100">
-            <span className="text-3xl">✅</span>
+            <MdCheckCircle className="text-green-500" size={48} />
           </div>
           <h2 className="text-xl font-bold text-gray-800">
             Password Berhasil Direset!
@@ -90,12 +93,6 @@ export default function ResetPasswordPage() {
         <p className="text-center text-sm text-gray-500">
           Masukkan password baru kamu.
         </p>
-
-        {error && (
-          <div className="rounded-lg bg-red-50 p-3 text-sm text-red-600">
-            {error}
-          </div>
-        )}
 
         <form onSubmit={handleSubmit} className="space-y-4">
           <input

@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { userAPI } from "../../services/api/routes/user.route";
+import { toast } from "react-hot-toast";
 
 function AdminDashboard() {
   const [users, setUsers] = useState([]);
@@ -52,7 +53,7 @@ function AdminDashboard() {
       await userAPI.deactivate(userId);
       fetchUsers();
     } catch (err) {
-      alert(err.response?.data?.message || "Gagal menonaktifkan user");
+      toast.error(err.response?.data?.message || "Gagal menonaktifkan user");
     }
   };
 
@@ -62,7 +63,7 @@ function AdminDashboard() {
       await userAPI.activate(userId);
       fetchUsers();
     } catch (err) {
-      alert(err.response?.data?.message || "Gagal mengaktifkan user");
+      toast.error(err.response?.data?.message || "Gagal mengaktifkan user");
     }
   };
 
@@ -72,7 +73,7 @@ function AdminDashboard() {
       await userAPI.delete(userId);
       fetchUsers();
     } catch (err) {
-      alert(err.response?.data?.message || "Gagal menghapus user");
+      toast.error(err.response?.data?.message || "Gagal menghapus user");
     }
   };
 

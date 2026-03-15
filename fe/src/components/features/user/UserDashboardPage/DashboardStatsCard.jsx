@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 
 import React from "react";
 import { useNavigate } from "react-router-dom";
@@ -15,7 +16,6 @@ import {
 
 // ─── Big stat card ────────────────────────────────────────────────
 function BigStatCard({ icon: Icon, label, value, sub, accent, path }) {
-  console.log(Icon);
   const navigate = useNavigate();
   return (
     <button
@@ -54,7 +54,6 @@ function BigStatCard({ icon: Icon, label, value, sub, accent, path }) {
 
 // ─── Mini activity cell ───────────────────────────────────────────
 function MiniCell({ icon: Icon, label, value, accent }) {
-  console.log(Icon);
   return (
     <div className="flex flex-col items-center justify-center gap-1.5 rounded-2xl border border-gray-100 bg-white p-4 text-center shadow-sm">
       <div
@@ -137,12 +136,6 @@ export default function DashboardStatCards({ data }) {
       value: data?.my_tindak_lanjut,
       accent: "#f59e0b",
     },
-    {
-      icon: RiFileTextLine,
-      label: "Laporan Total",
-      value: data?.my_laporan,
-      accent: "#1e1f78",
-    },
   ];
 
   return (
@@ -159,7 +152,7 @@ export default function DashboardStatCards({ data }) {
         <p className="mb-2.5 text-[12px] font-bold tracking-widest text-gray-400 uppercase">
           Aktivitas Lainnya
         </p>
-        <div className="grid grid-cols-3 gap-2 sm:grid-cols-6">
+        <div className="grid grid-cols-3 gap-5 sm:grid-cols-5">
           {MINI.map((m) => (
             <MiniCell key={m.label} {...m} />
           ))}

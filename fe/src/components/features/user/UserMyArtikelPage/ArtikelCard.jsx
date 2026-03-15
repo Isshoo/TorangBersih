@@ -23,18 +23,17 @@ import { fmtDate, stripHtml } from "../../../../utils/Artikel.Utils";
 
 // Hapus button Edit dari action list (dikembalikan lagi)
 const ACTION_BTNS = [
-  { icon: <RiEyeLine />,       label: "Lihat",  key: "view",   danger: false },
-  { icon: <RiDraftLine />,     label: "Edit",   key: "edit",   danger: false },
-  { icon: <RiDeleteBinLine />, label: "Hapus",  key: "delete", danger: true  },
+  { icon: <RiEyeLine />, label: "Lihat", key: "view", danger: false },
+  { icon: <RiDraftLine />, label: "Edit", key: "edit", danger: false },
+  { icon: <RiDeleteBinLine />, label: "Hapus", key: "delete", danger: true },
 ];
 
 export default function ArtikelCard({ art, onView, onDelete, onEdit }) {
   const isPublished = art.status_publikasi === "published";
-  const handlers    = { view: onView, delete: onDelete, edit: onEdit };
+  const handlers = { view: onView, delete: onDelete, edit: onEdit };
 
   return (
     <div className="group flex flex-col overflow-hidden rounded-2xl border border-gray-100 bg-white shadow-sm transition-all duration-200 hover:-translate-y-0.5 hover:shadow-md">
-
       {/* ── Cover ── */}
       <div
         className="relative h-44 cursor-pointer overflow-hidden bg-gray-100"
@@ -45,7 +44,9 @@ export default function ArtikelCard({ art, onView, onDelete, onEdit }) {
             src={art.foto_cover_url}
             alt={art.judul_artikel}
             className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
-            onError={(e) => { e.target.style.display = "none"; }}
+            onError={(e) => {
+              e.target.style.display = "none";
+            }}
           />
         ) : (
           <div className="flex h-full items-center justify-center">
@@ -54,7 +55,7 @@ export default function ArtikelCard({ art, onView, onDelete, onEdit }) {
         )}
 
         {/* Badge status publikasi */}
-        <div className="absolute left-3 top-3">
+        <div className="absolute top-3 left-3">
           {isPublished ? (
             <span className="inline-flex items-center gap-1 rounded-full bg-green-500 px-2.5 py-0.5 text-[10px] font-bold text-white shadow">
               <RiCheckboxCircleLine className="h-3 w-3" /> Publik
@@ -68,7 +69,7 @@ export default function ArtikelCard({ art, onView, onDelete, onEdit }) {
 
         {/* Badge kategori */}
         {art.kategori?.nama && (
-          <div className="absolute right-3 top-3">
+          <div className="absolute top-3 right-3">
             <span className="rounded-full bg-white/90 px-2.5 py-0.5 text-[10px] font-semibold text-[#1e1f78] shadow backdrop-blur-sm">
               {art.kategori.nama}
             </span>
@@ -78,11 +79,10 @@ export default function ArtikelCard({ art, onView, onDelete, onEdit }) {
 
       {/* ── Body ── */}
       <div className="flex flex-1 flex-col p-4">
-
         {/* Judul */}
         <h3
           onClick={onView}
-          className="mb-1.5 line-clamp-2 cursor-pointer text-sm font-bold leading-snug text-gray-900 hover:text-[#1e1f78]"
+          className="mb-1.5 line-clamp-2 cursor-pointer text-sm leading-snug font-bold text-gray-900 hover:text-[#1e1f78]"
         >
           {art.judul_artikel}
         </h3>
@@ -116,13 +116,16 @@ export default function ArtikelCard({ art, onView, onDelete, onEdit }) {
         {/* Stats */}
         <div className="mt-auto flex items-center gap-3 text-[11px] text-gray-400">
           <span className="flex items-center gap-0.5">
-            <RiEyeLine   className="h-3.5 w-3.5" />{art.jumlah_views    ?? 0}
+            <RiEyeLine className="h-3.5 w-3.5" />
+            {art.jumlah_views ?? 0}
           </span>
           <span className="flex items-center gap-0.5">
-            <RiHeartLine className="h-3.5 w-3.5" />{art.jumlah_likes    ?? 0}
+            <RiHeartLine className="h-3.5 w-3.5" />
+            {art.jumlah_likes ?? 0}
           </span>
           <span className="flex items-center gap-0.5">
-            <RiChat1Line className="h-3.5 w-3.5" />{art.jumlah_komentar ?? 0}
+            <RiChat1Line className="h-3.5 w-3.5" />
+            {art.jumlah_komentar ?? 0}
           </span>
           <span className="ml-auto flex items-center gap-0.5">
             <RiTimeLine className="h-3.5 w-3.5" />
