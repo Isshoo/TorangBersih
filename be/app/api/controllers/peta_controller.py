@@ -12,7 +12,7 @@ def get_markers():
         params = PetaQuerySchema().load(request.args)
     except ValidationError as err:
         return error_response(
-            message=f"Validasi gagal: {', '.join([f'Kolom {k} tidak dikenal' if 'tidak dikenal' in v[0].lower() or 'unknown field' in v[0].lower() else v[0] for k, v in err.messages.items()])}",
+            message="Validasi gagal",
             errors=[{"field": k, "message": v[0]} for k, v in err.messages.items()],
             status_code=422
         )

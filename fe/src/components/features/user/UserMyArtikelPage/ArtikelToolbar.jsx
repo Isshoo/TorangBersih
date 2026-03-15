@@ -9,39 +9,34 @@
  */
 
 import React from "react";
-import { RiSearchLine, RiArrowUpDownLine, RiRefreshLine } from "react-icons/ri";
+import {
+  RiSearchLine,
+  RiArrowUpDownLine,
+  RiRefreshLine,
+} from "react-icons/ri";
 
 const SORT_OPTIONS = [
-  { label: "Tanggal", field: "created_at" },
-  { label: "Judul", field: "judul_artikel" },
+  { label: "Tanggal", field: "created_at"    },
+  { label: "Judul",   field: "judul_artikel" },
 ];
 
 export default function ArtikelToolbar({
-  draft,
-  setDraft,
-  search,
-  submitSearch,
-  clearSearch,
-  sortBy,
-  sortOrder,
-  toggleSort,
-  loading,
-  load,
+  draft, setDraft, search, submitSearch, clearSearch,
+  sortBy, sortOrder, toggleSort,
+  loading, load,
 }) {
   return (
     <div className="mb-5 flex flex-wrap items-center gap-3">
+
       {/* ── Search ── */}
-      <form
-        onSubmit={submitSearch}
-        className="flex flex-1 items-center gap-2 sm:max-w-xs"
-      >
+      <form onSubmit={submitSearch} className="flex flex-1 items-center gap-2 sm:max-w-xs">
         <div className="relative flex-1">
-          <RiSearchLine className="pointer-events-none absolute top-1/2 left-3 h-4 w-4 -translate-y-1/2 text-gray-400" />
+          <RiSearchLine className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-gray-400" />
           <input
             value={draft}
             onChange={(e) => setDraft(e.target.value)}
             placeholder="Cari judul artikel…"
-            className="w-full rounded-xl border border-gray-200 bg-white py-2.5 pr-4 pl-9 text-sm shadow-sm outline-none placeholder:text-gray-400 focus:border-[#1e1f78] focus:ring-2 focus:ring-[#1e1f78]/10"
+            className="w-full rounded-xl border border-gray-200 bg-white py-2.5 pl-9 pr-4 text-sm shadow-sm outline-none placeholder:text-gray-400 focus:border-[#1e1f78] focus:ring-2 focus:ring-[#1e1f78]/10"
           />
         </div>
         <button
@@ -93,9 +88,7 @@ export default function ArtikelToolbar({
         disabled={loading}
         className="ml-auto flex items-center gap-1.5 rounded-xl border border-gray-200 bg-white px-3 py-2.5 text-xs font-medium text-gray-600 hover:bg-gray-50 disabled:opacity-40"
       >
-        <RiRefreshLine
-          className={`h-3.5 w-3.5 ${loading ? "animate-spin" : ""}`}
-        />
+        <RiRefreshLine className={`h-3.5 w-3.5 ${loading ? "animate-spin" : ""}`} />
         Muat Ulang
       </button>
     </div>

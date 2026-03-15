@@ -16,9 +16,7 @@ export const StepDetail = ({ form, setForm }) => {
   useEffect(() => {
     const fetchKategori = async () => {
       try {
-        const res = await referensiAPI.getAll("kategori-barang", {
-          include_inactive: true,
-        });
+        const res = await referensiAPI.getAll("kategori-barang", { include_inactive: true });
         setKategoriOptions(res.data.data || []);
       } catch {
         /* ignore */
@@ -31,8 +29,8 @@ export const StepDetail = ({ form, setForm }) => {
 
   return (
     // Di mobile flex-col (vertikal), di layar sm ke atas flex-row (horizontal)
-    <div className="flex h-full flex-col gap-5 sm:flex-row sm:gap-6">
-      <div className="flex w-full flex-col gap-4 sm:w-1/2">
+    <div className="flex flex-col sm:flex-row h-full gap-5 sm:gap-6">
+      <div className="flex w-full sm:w-1/2 flex-col gap-4">
         <div>
           <Label req>Nama Barang</Label>
           <input
@@ -51,7 +49,7 @@ export const StepDetail = ({ form, setForm }) => {
         <div>
           <Label req>Kategori Barang</Label>
           {/* Di mobile 3 kolom, di desktop 5 kolom */}
-          <div className="grid grid-cols-3 gap-1.5 sm:grid-cols-5 sm:gap-2">
+          <div className="grid grid-cols-3 sm:grid-cols-5 gap-1.5 sm:gap-2">
             {kategoriOptions
               .filter((k) => k.is_active || k.id === form.kategori_barang_id)
               .map((k) => (
@@ -61,7 +59,7 @@ export const StepDetail = ({ form, setForm }) => {
                   onClick={() =>
                     setForm((p) => ({ ...p, kategori_barang_id: k.id }))
                   }
-                  className={`flex flex-col items-center justify-center gap-1 rounded-xl border-2 p-2 text-center transition-all sm:py-2.5 ${
+                  className={`flex flex-col items-center justify-center gap-1 rounded-xl border-2 p-2 sm:py-2.5 text-center transition-all ${
                     form.kategori_barang_id === k.id
                       ? "border-[#1e1f78] bg-[#eef0ff]"
                       : "border-gray-200 bg-white hover:border-gray-300"
@@ -111,7 +109,7 @@ export const StepDetail = ({ form, setForm }) => {
                   <p className="text-[12px] leading-tight font-bold">
                     {k.label}
                   </p>
-                  <p className="mt-0.5 text-[10px] text-gray-400">{k.desc}</p>
+                  <p className="text-[10px] text-gray-400 mt-0.5">{k.desc}</p>
                 </div>
                 {form.kondisi === k.value && <RiCheckLine size={14} />}
               </button>
@@ -120,7 +118,7 @@ export const StepDetail = ({ form, setForm }) => {
         </div>
       </div>
 
-      <div className="mt-2 flex w-full flex-col sm:mt-0 sm:w-1/2">
+      <div className="flex w-full sm:w-1/2 flex-col mt-2 sm:mt-0">
         <div className="flex h-full flex-1 flex-col">
           <Label>Deskripsi Barang</Label>
           <textarea
@@ -129,7 +127,7 @@ export const StepDetail = ({ form, setForm }) => {
             value={form.deskripsi_barang}
             onChange={set("deskripsi_barang")}
             // Di mobile berikan min-height agar tidak terlalu kecil saat ditumpuk vertikal
-            className={`${inputCls} min-h-[120px] resize-none sm:h-full sm:flex-1`}
+            className={`${inputCls} min-h-[120px] sm:h-full sm:flex-1 resize-none`}
           />
           <p className="mt-1.5 text-right text-[10px] text-gray-400">
             {form.deskripsi_barang.length}/1000

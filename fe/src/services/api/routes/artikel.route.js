@@ -6,24 +6,19 @@ export const artikelAPI = {
   getTags: () => api.get("/artikel/tags"),
   getById: (id) => api.get(`/artikel/${id}`),
   getMyArtikel: (params) => api.get("/artikel/my-artikel", { params }),
-
+  
   create: (data, fotoFile) => {
     if (fotoFile) {
       const formData = new FormData();
       formData.append("foto_cover", fotoFile);
-
+      
       // Handle tags array specifically
       if (data.tags && Array.isArray(data.tags)) {
-        data.tags.forEach((tag) => formData.append("tags", tag));
+        data.tags.forEach(tag => formData.append("tags", tag));
       }
-
+      
       Object.entries(data).forEach(([key, value]) => {
-        if (
-          key !== "tags" &&
-          value !== "" &&
-          value !== null &&
-          value !== undefined
-        ) {
+        if (key !== 'tags' && value !== "" && value !== null && value !== undefined) {
           formData.append(key, value);
         }
       });
@@ -38,19 +33,14 @@ export const artikelAPI = {
     if (fotoFile) {
       const formData = new FormData();
       formData.append("foto_cover", fotoFile);
-
+      
       // Handle tags array specifically
       if (data.tags && Array.isArray(data.tags)) {
-        data.tags.forEach((tag) => formData.append("tags", tag));
+        data.tags.forEach(tag => formData.append("tags", tag));
       }
-
+      
       Object.entries(data).forEach(([key, value]) => {
-        if (
-          key !== "tags" &&
-          value !== "" &&
-          value !== null &&
-          value !== undefined
-        ) {
+        if (key !== 'tags' && value !== "" && value !== null && value !== undefined) {
           formData.append(key, value);
         }
       });
@@ -69,8 +59,6 @@ export const artikelAPI = {
   // Komentar operations
   getKomentar: (id, params) => api.get(`/artikel/${id}/komentar`, { params }),
   createKomentar: (id, data) => api.post(`/artikel/${id}/komentar`, data),
-  updateKomentar: (id, komentarId, data) =>
-    api.put(`/artikel/${id}/komentar/${komentarId}`, data),
-  deleteKomentar: (id, komentarId) =>
-    api.delete(`/artikel/${id}/komentar/${komentarId}`),
+  updateKomentar: (id, komentarId, data) => api.put(`/artikel/${id}/komentar/${komentarId}`, data),
+  deleteKomentar: (id, komentarId) => api.delete(`/artikel/${id}/komentar/${komentarId}`),
 };

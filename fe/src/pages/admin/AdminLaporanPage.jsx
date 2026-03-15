@@ -23,11 +23,7 @@ function AdminLaporanPage() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [jenisOptions, setJenisOptions] = useState([]);
-  const [refModal, setRefModal] = useState({
-    show: false,
-    tipe: "",
-    label: "",
-  });
+  const [refModal, setRefModal] = useState({ show: false, tipe: "", label: "" });
   const [query, setQuery] = useState({
     page: 1,
     per_page: 10,
@@ -180,9 +176,7 @@ function AdminLaporanPage() {
       // Optionally re-fetch to see updates immediately
       openDetail(detailItem.id);
     } catch (err) {
-      toast.error(
-        err.response?.data?.message || "Gagal menambah tindak lanjut",
-      );
+      toast.error(err.response?.data?.message || "Gagal menambah tindak lanjut");
     } finally {
       setTlLoading(false);
     }
@@ -205,13 +199,7 @@ function AdminLaporanPage() {
         handleSearch={handleSearch}
         STATUS_LABELS={STATUS_LABELS}
         jenisOptions={jenisOptions}
-        onManageRef={() =>
-          setRefModal({
-            show: true,
-            tipe: "jenis-sampah",
-            label: "Jenis Sampah",
-          })
-        }
+        onManageRef={() => setRefModal({ show: true, tipe: 'jenis-sampah', label: 'Jenis Sampah' })}
       />
 
       {/* Content */}

@@ -30,11 +30,7 @@ export default function StepFotoBukti({ formData, setFormData }) {
 
   // Load existing photos if user navigates back
   useEffect(() => {
-    if (
-      formData.foto_bukti_urls &&
-      formData.foto_bukti_urls.length > 0 &&
-      previews.length === 0
-    ) {
+    if (formData.foto_bukti_urls && formData.foto_bukti_urls.length > 0 && previews.length === 0) {
       const initialPreviews = formData.foto_bukti_urls.map((file) => ({
         file,
         url: URL.createObjectURL(file),
@@ -110,8 +106,7 @@ export default function StepFotoBukti({ formData, setFormData }) {
       <div>
         <h2 className="text-[22px] font-bold text-gray-900">Foto Bukti</h2>
         <p className="mt-1 text-[13px] text-gray-500">
-          Unggah foto kondisi tumpukan sampah yang ditemukan. Maks.{" "}
-          {RULES.maxFiles} foto, {RULES.maxSizeMB}MB per file.
+          Unggah foto kondisi tumpukan sampah yang ditemukan. Maks. {RULES.maxFiles} foto, {RULES.maxSizeMB}MB per file.
         </p>
       </div>
 
@@ -145,9 +140,7 @@ export default function StepFotoBukti({ formData, setFormData }) {
               </svg>
             </div>
             <div className="text-center">
-              <p className="text-[13px] font-bold text-[#1e1f78]">
-                Buka Kamera
-              </p>
+              <p className="text-[13px] font-bold text-[#1e1f78]">Buka Kamera</p>
               <p className="mt-0.5 text-[11px] text-[#1e1f78]/70">
                 Ambil foto langsung
               </p>
@@ -216,12 +209,10 @@ export default function StepFotoBukti({ formData, setFormData }) {
                   alt={p.name}
                   className="h-full w-full object-cover transition-transform group-hover:scale-105"
                 />
-
+                
                 {/* Overlay info */}
                 <div className="absolute inset-x-0 bottom-0 bg-linear-to-t from-black/80 via-black/40 to-transparent px-2 py-2">
-                  <p className="truncate text-[10px] font-medium text-white">
-                    {p.name}
-                  </p>
+                  <p className="truncate text-[10px] font-medium text-white">{p.name}</p>
                   <p className="text-[10px] text-white/70">
                     {formatSize(p.size)}
                   </p>
@@ -247,7 +238,7 @@ export default function StepFotoBukti({ formData, setFormData }) {
                     />
                   </svg>
                 </button>
-
+                
                 {/* Badge nomor */}
                 <span className="absolute top-1.5 left-1.5 flex size-5 items-center justify-center rounded-full bg-black/60 text-[10px] font-bold text-white backdrop-blur-md">
                   {idx + 1}

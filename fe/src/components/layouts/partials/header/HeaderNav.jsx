@@ -79,9 +79,8 @@ function HeaderNav() {
           </div>
         )}
       </div>
-      <Link to="Tentang-Kami" className={navLinkClass("/Tentang-Kami")}>
-        Tentang Kami
-      </Link>
+      <Link to="Tentang-Kami" className={navLinkClass("/Tentang-Kami")}
+      >Tentang Kami</Link>
     </div>
   );
 }

@@ -31,7 +31,7 @@ const getIconHtml = (type) => {
 
   return `
     <div class="relative flex items-center justify-center w-10 h-10">
-      ${isPulsing ? `<div class="absolute w-full h-full ${colorClass} rounded-full animate-ping opacity-40"></div>` : ""}
+      ${isPulsing ? `<div class="absolute w-full h-full ${colorClass} rounded-full animate-ping opacity-40"></div>` : ''}
       <div class="relative flex items-center justify-center w-8 h-8 ${colorClass} border-[3px] border-white rounded-full shadow-md z-10">
         ${svgIcon}
       </div>

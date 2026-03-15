@@ -7,10 +7,7 @@ from app.utils.response import success_response, error_response
 
 
 class GoogleAuthSchema(Schema):
-    error_messages = {
-        "unknown": "Kolom tidak dikenal"
-    }
-    access_token = fields.String(required=True, error_messages={"required": "Access token harus diisi"})
+    access_token = fields.String(required=True)
     intent = fields.String(
         load_default='login',
         validate=validate.OneOf(['login', 'register'])
@@ -22,7 +19,7 @@ def google_auth():
         data = GoogleAuthSchema().load(request.get_json() or {})
     except ValidationError as err:
         return error_response(
-            message=f"Validasi gagal: {', '.join([f'Kolom {k} tidak dikenal' if 'tidak dikenal' in v[0].lower() or 'unknown field' in v[0].lower() else v[0] for k, v in err.messages.items()])}",
+            message="Validasi gagal",
             errors=[{"field": k, "message": v[0]} for k, v in err.messages.items()],
             status_code=422
         )

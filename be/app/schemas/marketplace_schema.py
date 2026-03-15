@@ -14,22 +14,18 @@ def _validate_lat_lng_pair_and_range(data):
 
 
 class MarketplaceCreateSchema(Schema):
-    error_messages = {
-        "unknown": "Kolom tidak dikenal"
-    }
-    nama_barang = fields.String(required=True, validate=validate.Length(min=1, max=150, error="Nama barang harus antara 1 sampai 150 karakter"), error_messages={"required": "Nama barang harus diisi"})
-    kategori_barang_id = fields.String(required=True, error_messages={"required": "Kategori barang harus dipilih"})
+    nama_barang = fields.String(required=True, validate=validate.Length(min=1, max=150))
+    kategori_barang_id = fields.String(required=True)
     deskripsi_barang = fields.String()
-    harga = fields.Integer(load_default=0, validate=validate.Range(min=0, error="Harga minimal 0"), error_messages={"invalid": "Format harga tidak valid"})
-    berat_estimasi_kg = fields.Float(error_messages={"invalid": "Format berat estimasi tidak valid"})
-    kondisi = fields.String(required=True, validate=validate.OneOf(['layak_pakai', 'butuh_perbaikan', 'rongsokan'], error="Kondisi barang tidak valid"), error_messages={"required": "Kondisi barang harus diisi"})
-    kontak = fields.String(validate=validate.Length(max=20, error="Kontak maksimal 20 karakter"))
-    latitude = fields.Float(error_messages={"invalid": "Format latitude tidak valid"})
-    longitude = fields.Float(error_messages={"invalid": "Format longitude tidak valid"})
-    kabupaten_kota = fields.String(validate=validate.Length(max=100, error="Nama kabupaten/kota maksimal 100 karakter"))
+    harga = fields.Integer(load_default=0, validate=validate.Range(min=0))
+    berat_estimasi_kg = fields.Float()
+    kondisi = fields.String(required=True, validate=validate.OneOf(['layak_pakai', 'butuh_perbaikan', 'rongsokan']))
+    kontak = fields.String(validate=validate.Length(max=20))
+    latitude = fields.Float()
+    longitude = fields.Float()
+    kabupaten_kota = fields.String(validate=validate.Length(max=100))
     alamat_lengkap = fields.String()
-    foto_barang_urls = fields.List(fields.String(error_messages={"invalid": "Format URL foto tidak valid"}), validate=validate.Length(max=10, error="Maksimal 10 foto"))
-
+    foto_barang_urls = fields.List(fields.String(), validate=validate.Length(max=10))
 
     @validates_schema
     def validate_location(self, data, **kwargs):
@@ -37,23 +33,19 @@ class MarketplaceCreateSchema(Schema):
 
 
 class MarketplaceUpdateSchema(Schema):
-    error_messages = {
-        "unknown": "Kolom tidak dikenal"
-    }
-    nama_barang = fields.String(validate=validate.Length(min=1, max=150, error="Nama barang harus antara 1 sampai 150 karakter"))
+    nama_barang = fields.String(validate=validate.Length(min=1, max=150))
     kategori_barang_id = fields.String()
     deskripsi_barang = fields.String()
-    harga = fields.Integer(validate=validate.Range(min=0, error="Harga minimal 0"), error_messages={"invalid": "Format harga tidak valid"})
-    berat_estimasi_kg = fields.Float(error_messages={"invalid": "Format berat estimasi tidak valid"})
-    kondisi = fields.String(validate=validate.OneOf(['layak_pakai', 'butuh_perbaikan', 'rongsokan'], error="Kondisi barang tidak valid"))
-    kontak = fields.String(validate=validate.Length(max=20, error="Kontak maksimal 20 karakter"))
-    latitude = fields.Float(error_messages={"invalid": "Format latitude tidak valid"})
-    longitude = fields.Float(error_messages={"invalid": "Format longitude tidak valid"})
-    kabupaten_kota = fields.String(validate=validate.Length(max=100, error="Nama kabupaten/kota maksimal 100 karakter"))
+    harga = fields.Integer(validate=validate.Range(min=0))
+    berat_estimasi_kg = fields.Float()
+    kondisi = fields.String(validate=validate.OneOf(['layak_pakai', 'butuh_perbaikan', 'rongsokan']))
+    kontak = fields.String(validate=validate.Length(max=20))
+    latitude = fields.Float()
+    longitude = fields.Float()
+    kabupaten_kota = fields.String(validate=validate.Length(max=100))
     alamat_lengkap = fields.String()
-    foto_barang_urls = fields.List(fields.String(error_messages={"invalid": "Format URL foto tidak valid"}), validate=validate.Length(max=10, error="Maksimal 10 foto"))
+    foto_barang_urls = fields.List(fields.String(), validate=validate.Length(max=10))
     existing_pictures = fields.List(fields.String(), required=False)
-
 
     @validates_schema
     def validate_location(self, data, **kwargs):
@@ -61,22 +53,15 @@ class MarketplaceUpdateSchema(Schema):
 
 
 class MarketplaceQuerySchema(Schema):
-    error_messages = {
-        "unknown": "Kolom tidak dikenal"
-    }
-    page = fields.Integer(load_default=1, validate=validate.Range(min=1, error="Halaman minimal 1"))
-    per_page = fields.Integer(load_default=20, validate=validate.Range(min=1, max=100, error="Per halaman antara 1 sampai 100"))
-    search = fields.String(validate=validate.Length(max=100, error="Pencarian maksimal 100 karakter"))
+    page = fields.Integer(load_default=1, validate=validate.Range(min=1))
+    per_page = fields.Integer(load_default=20, validate=validate.Range(min=1, max=100))
+    search = fields.String(validate=validate.Length(max=100))
     kategori_barang_id = fields.String()
-    kondisi = fields.String(validate=validate.OneOf(['layak_pakai', 'butuh_perbaikan', 'rongsokan'], error="Kondisi barang tidak valid"))
-    status_ketersediaan = fields.String(validate=validate.OneOf(['tersedia', 'dipesan', 'terjual'], error="Status ketersediaan tidak valid"))
+    kondisi = fields.String(validate=validate.OneOf(['layak_pakai', 'butuh_perbaikan', 'rongsokan']))
+    status_ketersediaan = fields.String(validate=validate.OneOf(['tersedia', 'dipesan', 'terjual']))
     kabupaten_kota = fields.String()
-    sort_by = fields.String(load_default='created_at', validate=validate.OneOf(['created_at', 'harga', 'nama_barang'], error="Penyortiran tidak valid"))
-    sort_order = fields.String(load_default='desc', validate=validate.OneOf(['asc', 'desc'], error="Urutan penyortiran harus 'asc' atau 'desc'"))
-
+    sort_by = fields.String(load_default='created_at', validate=validate.OneOf(['created_at', 'harga', 'nama_barang']))
+    sort_order = fields.String(load_default='desc', validate=validate.OneOf(['asc', 'desc']))
 
 class MarketplaceUpdateKetersediaanSchema(Schema):
-    error_messages = {
-        "unknown": "Kolom tidak dikenal"
-    }
-    status_ketersediaan = fields.String(required=True, validate=validate.OneOf(['tersedia', 'dipesan', 'terjual'], error="Status ketersediaan tidak valid"), error_messages={"required": "Status ketersediaan harus diisi"})
+    status_ketersediaan = fields.String(required=True, validate=validate.OneOf(['tersedia', 'dipesan', 'terjual']))

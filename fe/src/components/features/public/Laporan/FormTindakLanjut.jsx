@@ -232,78 +232,47 @@ const FormTindakLanjut = ({ isOpen, onClose, laporanId }) => {
                 <label className="mb-1.5 block text-[13px] font-bold text-(--dark)">
                   Foto Sebelum (Opsional)
                 </label>
-                <div className="group relative flex h-32 justify-center overflow-hidden rounded-xl border-2 border-dashed border-gray-200 bg-gray-50 transition-colors hover:border-(--primary) hover:bg-(--gray-shine)">
-                  <input
-                    id="file-upload-sebelum"
-                    type="file"
+                <div className="relative group flex justify-center rounded-xl border-2 border-dashed border-gray-200 bg-gray-50 transition-colors hover:border-(--primary) hover:bg-(--gray-shine) overflow-hidden h-32">
+                  <input 
+                    id="file-upload-sebelum" 
+                    type="file" 
                     accept="image/*"
-                    className="absolute inset-0 z-10 h-full w-full cursor-pointer opacity-0"
+                    className="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10" 
                     onChange={(e) => {
                       const file = e.target.files[0];
                       if (file) {
                         setFotoSebelum(file);
                         setPreviewSebelum(URL.createObjectURL(file));
                       }
-                    }}
+                    }} 
                   />
                   {previewSebelum ? (
-                    <div className="absolute inset-0 h-full w-full">
-                      <img
-                        src={previewSebelum}
-                        alt="Preview Sebelum"
-                        className="h-full w-full object-cover"
-                      />
-                      <div className="pointer-events-none absolute inset-0 z-20 flex items-center justify-center bg-black/40 opacity-0 transition-opacity group-hover:opacity-100">
-                        <span className="rounded-full bg-black/40 px-2.5 py-1 text-[11px] font-bold text-white ring-1 ring-white/50 backdrop-blur-sm">
-                          Ganti Foto
-                        </span>
+                    <div className="absolute inset-0 w-full h-full">
+                      <img src={previewSebelum} alt="Preview Sebelum" className="w-full h-full object-cover" />
+                      <div className="absolute inset-0 bg-black/40 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity z-20 pointer-events-none">
+                        <span className="text-white text-[11px] font-bold ring-1 ring-white/50 px-2.5 py-1 rounded-full bg-black/40 backdrop-blur-sm">Ganti Foto</span>
                       </div>
-                      <button
-                        type="button"
+                      <button 
+                        type="button" 
                         onClick={(e) => {
                           e.preventDefault();
                           setFotoSebelum(null);
                           setPreviewSebelum(null);
-                          document.getElementById("file-upload-sebelum").value =
-                            "";
-                        }}
-                        className="absolute top-2 right-2 z-30 flex size-6 cursor-pointer items-center justify-center rounded-full border border-red-100 bg-white/90 text-red-500 shadow-sm transition hover:bg-red-500 hover:text-white"
+                          document.getElementById("file-upload-sebelum").value = "";
+                        }} 
+                        className="absolute top-2 right-2 flex size-6 items-center justify-center rounded-full bg-white/90 text-red-500 hover:bg-red-500 hover:text-white transition z-30 shadow-sm cursor-pointer border border-red-100"
                         style={{ zIndex: 30 }}
                       >
-                        <svg
-                          className="size-4"
-                          fill="none"
-                          stroke="currentColor"
-                          viewBox="0 0 24 24"
-                        >
-                          <path
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                            strokeWidth="2.5"
-                            d="M6 18L18 6M6 6l12 12"
-                          />
-                        </svg>
+                        <svg className="size-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M6 18L18 6M6 6l12 12" /></svg>
                       </button>
                     </div>
                   ) : (
-                    <div className="pointer-events-none flex flex-col items-center justify-center">
-                      <svg
-                        className="mb-2 size-6 text-(--gray-placeholder) transition-colors group-hover:text-(--primary)"
-                        fill="none"
-                        viewBox="0 0 24 24"
-                        stroke="currentColor"
-                      >
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          strokeWidth="1.5"
-                          d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5m-13.5-9L12 3m0 0l4.5 4.5M12 3v13.5"
-                        />
+                    <div className="flex flex-col items-center justify-center pointer-events-none">
+                      <svg className="size-6 mb-2 text-(--gray-placeholder) transition-colors group-hover:text-(--primary)" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.5" d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5m-13.5-9L12 3m0 0l4.5 4.5M12 3v13.5" />
                       </svg>
                       <div className="text-[11px] font-medium text-(--gray)">
-                        <span className="font-bold text-(--primary) group-hover:underline">
-                          Klik untuk unggah
-                        </span>
+                        <span className="font-bold text-(--primary) group-hover:underline">Klik untuk unggah</span>
                       </div>
                     </div>
                   )}
@@ -315,79 +284,48 @@ const FormTindakLanjut = ({ isOpen, onClose, laporanId }) => {
                 <label className="mb-1.5 block text-[13px] font-bold text-(--dark)">
                   Foto Setelah <span className="text-red-500">*</span>
                 </label>
-                <div className="group relative flex h-32 justify-center overflow-hidden rounded-xl border-2 border-dashed border-gray-200 bg-gray-50 transition-colors hover:border-(--primary) hover:bg-(--gray-shine)">
-                  <input
-                    id="file-upload-setelah"
-                    type="file"
+                <div className="relative group flex justify-center rounded-xl border-2 border-dashed border-gray-200 bg-gray-50 transition-colors hover:border-(--primary) hover:bg-(--gray-shine) overflow-hidden h-32">
+                  <input 
+                    id="file-upload-setelah" 
+                    type="file" 
                     accept="image/*"
                     required={!fotoSetelah}
-                    className="absolute inset-0 z-10 h-full w-full cursor-pointer opacity-0"
+                    className="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10" 
                     onChange={(e) => {
                       const file = e.target.files[0];
                       if (file) {
                         setFotoSetelah(file);
                         setPreviewSetelah(URL.createObjectURL(file));
                       }
-                    }}
+                    }} 
                   />
                   {previewSetelah ? (
-                    <div className="absolute inset-0 h-full w-full">
-                      <img
-                        src={previewSetelah}
-                        alt="Preview Setelah"
-                        className="h-full w-full object-cover"
-                      />
-                      <div className="pointer-events-none absolute inset-0 z-20 flex items-center justify-center bg-black/40 opacity-0 transition-opacity group-hover:opacity-100">
-                        <span className="rounded-full bg-black/40 px-2.5 py-1 text-[11px] font-bold text-white ring-1 ring-white/50 backdrop-blur-sm">
-                          Ganti Foto
-                        </span>
+                    <div className="absolute inset-0 w-full h-full">
+                      <img src={previewSetelah} alt="Preview Setelah" className="w-full h-full object-cover" />
+                      <div className="absolute inset-0 bg-black/40 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity z-20 pointer-events-none">
+                        <span className="text-white text-[11px] font-bold ring-1 ring-white/50 px-2.5 py-1 rounded-full bg-black/40 backdrop-blur-sm">Ganti Foto</span>
                       </div>
-                      <button
-                        type="button"
+                      <button 
+                        type="button" 
                         onClick={(e) => {
                           e.preventDefault();
                           setFotoSetelah(null);
                           setPreviewSetelah(null);
-                          document.getElementById("file-upload-setelah").value =
-                            "";
-                        }}
-                        className="absolute top-2 right-2 z-30 flex size-6 cursor-pointer items-center justify-center rounded-full border border-red-100 bg-white/90 text-red-500 shadow-sm transition hover:bg-red-500 hover:text-white"
+                          document.getElementById("file-upload-setelah").value = "";
+                        }} 
+                        className="absolute top-2 right-2 flex size-6 items-center justify-center rounded-full bg-white/90 text-red-500 hover:bg-red-500 hover:text-white transition z-30 shadow-sm cursor-pointer border border-red-100"
                         style={{ zIndex: 30 }}
                       >
-                        <svg
-                          className="size-4"
-                          fill="none"
-                          stroke="currentColor"
-                          viewBox="0 0 24 24"
-                        >
-                          <path
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                            strokeWidth="2.5"
-                            d="M6 18L18 6M6 6l12 12"
-                          />
-                        </svg>
+                        <svg className="size-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M6 18L18 6M6 6l12 12" /></svg>
                       </button>
                     </div>
                   ) : (
-                    <div className="pointer-events-none flex flex-col items-center justify-center">
-                      <svg
-                        className="mb-2 size-6 text-(--gray-placeholder) transition-colors group-hover:text-(--primary)"
-                        fill="none"
-                        viewBox="0 0 24 24"
-                        stroke="currentColor"
-                      >
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          strokeWidth="1.5"
-                          d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5m-13.5-9L12 3m0 0l4.5 4.5M12 3v13.5"
-                        />
+                    <div className="flex flex-col items-center justify-center pointer-events-none">
+                      <svg className="size-6 mb-2 text-(--gray-placeholder) transition-colors group-hover:text-(--primary)" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.5" d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5m-13.5-9L12 3m0 0l4.5 4.5M12 3v13.5" />
                       </svg>
                       <div className="text-[11px] font-medium text-(--gray)">
-                        <span className="font-bold text-(--primary) group-hover:underline">
-                          Klik untuk unggah
-                        </span>
+                        <span className="font-bold text-(--primary) group-hover:underline">Klik untuk unggah</span>
                       </div>
                     </div>
                   )}

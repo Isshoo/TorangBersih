@@ -86,7 +86,7 @@ const reverseGeocode = async (lat, lng) => {
   try {
     const res = await fetch(
       `https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lng}&zoom=18&addressdetails=1`,
-      { headers: { "Accept-Language": "id" } },
+      { headers: { "Accept-Language": "id" } }
     );
     const data = await res.json();
     if (data && data.address) {
@@ -112,7 +112,7 @@ const forwardGeocode = async (query) => {
   try {
     const res = await fetch(
       `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(query)}&limit=1&addressdetails=1`,
-      { headers: { "Accept-Language": "id" } },
+      { headers: { "Accept-Language": "id" } }
     );
     const data = await res.json();
     if (data && data.length > 0) {
@@ -139,11 +139,7 @@ const forwardGeocode = async (query) => {
 };
 
 // ══════════════════════════════════════════════════════════════════
-export default function StepLokasiLaporan({
-  formData,
-  setFormData,
-  handleChange,
-}) {
+export default function StepLokasiLaporan({ formData, setFormData, handleChange }) {
   const [touched, setTouched] = useState({});
   const [errors, setErrors] = useState({});
   const [geocoding, setGeocoding] = useState(false);
@@ -205,7 +201,7 @@ export default function StepLokasiLaporan({
       () => {
         setGpsLoading(false);
       },
-      { enableHighAccuracy: true, timeout: 10000 },
+      { enableHighAccuracy: true, timeout: 10000 }
     );
   };
 
@@ -230,7 +226,9 @@ export default function StepLokasiLaporan({
 
   return (
     <div className="animate-in fade-in space-y-5 duration-300">
-      <h2 className="mb-6 text-[22px] font-bold text-gray-900">Titik Lokasi</h2>
+      <h2 className="mb-6 text-[22px] font-bold text-gray-900">
+        Titik Lokasi
+      </h2>
 
       {/* Cari Alamat */}
       <div>

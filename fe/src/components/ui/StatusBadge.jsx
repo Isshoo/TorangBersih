@@ -12,7 +12,7 @@ const StatusBadge = ({ status }) => {
       bg: "var(--gray-shine)",
       text: "var(--primary)",
       border: "var(--primary)",
-      icon: RiCheckboxCircleLine,
+      icon: RiCheckboxCircleLine,  
       label: "Terbit",
     },
     draft: {

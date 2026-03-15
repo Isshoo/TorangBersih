@@ -53,6 +53,7 @@ const AdminDashboardPage = () => {
 
   useEffect(() => {
     fetchStats();
+    // eslint-disable-next-line
   }, []);
 
   const fetchStats = async () => {
@@ -63,15 +64,11 @@ const AdminDashboardPage = () => {
         setStats(data.data);
         toaster.success("Data statistik berhasil diperbarui");
       } else {
-        toaster.error(
-          data?.message || "Gagal mengambil data statistik dashboard",
-        );
+        toaster.error(data?.message || "Gagal mengambil data statistik dashboard");
       }
     } catch (error) {
       console.error("Error fetching admin stats:", error);
-      toaster.error(
-        error.message || "Gagal mengambil data statistik dashboard",
-      );
+      toaster.error(error.message || "Gagal mengambil data statistik dashboard");
     } finally {
       setLoading(false);
     }
@@ -269,3 +266,4 @@ const AdminDashboardPage = () => {
 };
 
 export default AdminDashboardPage;
+
