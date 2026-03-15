@@ -16,4 +16,3 @@ class ReferensiUpdateSchema(Schema):
     }
     nama = fields.String(validate=validate.Length(min=1, max=100, error="Nama harus antara 1 sampai 100 karakter"))
     is_active = fields.Boolean(error_messages={"invalid": "Format status aktif tidak valid"})
-

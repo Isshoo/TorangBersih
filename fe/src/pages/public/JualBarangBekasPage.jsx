@@ -90,46 +90,42 @@ const JualBarangBekasPage = () => {
       });
     } catch (err) {
       setSubmitError(
-        err.response?.data?.message || "Gagal menerbitkan barang. Coba lagi.",
+        err.response?.data?.message || "Gagal menerbitkan barang. Coba lagi."
       );
       setLoading(false);
     }
   };
 
-  const stepLabels = {
-    1: "Foto",
-    2: "Detail",
-    3: "Harga",
-    4: "Lokasi & Kontak",
-  };
+  const stepLabels = { 1: "Foto", 2: "Detail", 3: "Harga", 4: "Lokasi & Kontak" };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-3 backdrop-blur-sm sm:p-4">
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-3 sm:p-4 backdrop-blur-sm">
       <div
-        className="flex w-full max-w-[820px] flex-col overflow-hidden rounded-2xl bg-white shadow-2xl sm:rounded-3xl"
+        className="flex w-full max-w-[820px] flex-col overflow-hidden rounded-2xl sm:rounded-3xl bg-white shadow-2xl"
         style={{ height: "min(680px, 92vh)" }}
       >
+        
         {/* --- HEADER MODAL --- */}
         <div className="flex shrink-0 flex-col border-b border-gray-100 bg-white px-5 py-4 sm:flex-row sm:items-center sm:justify-between sm:px-7 sm:py-4">
+          
           {/* Kiri: Judul & Ikon */}
-          <div className="flex w-full items-start justify-between sm:w-auto sm:items-center">
+          <div className="flex items-start sm:items-center justify-between w-full sm:w-auto">
             <div className="flex items-center gap-3">
               <div className="flex size-10 shrink-0 items-center justify-center rounded-xl bg-[#eef0ff]">
                 <RiStoreLine size={20} className="text-[#1e1f78]" />
               </div>
               <div className="flex flex-col">
-                <p className="text-[15px] leading-tight font-black text-gray-900 sm:text-[16px]">
+                <p className="text-[15px] sm:text-[16px] font-black leading-tight text-gray-900">
                   Jual Barang Bekas
                 </p>
-                <p className="mt-0.5 text-[10px] font-medium text-gray-400 sm:text-[12px]">
-                  Langkah {step} dari 4{" "}
-                  <span className="sm:hidden">— {stepLabels[step]}</span>
+                <p className="text-[10px] sm:text-[12px] font-medium text-gray-400 mt-0.5">
+                  Langkah {step} dari 4 <span className="sm:hidden">— {stepLabels[step]}</span>
                 </p>
               </div>
             </div>
             {/* Tombol Close (Khusus Mobile) */}
-            <button
-              onClick={() => navigate(-1)}
+            <button 
+              onClick={() => navigate(-1)} 
               className="flex size-8 shrink-0 items-center justify-center rounded-xl bg-gray-50 text-gray-500 hover:bg-gray-100 sm:hidden"
             >
               <RiCloseLine size={18} />
@@ -140,9 +136,10 @@ const JualBarangBekasPage = () => {
           <div className="mt-5 flex w-full items-center justify-between sm:mt-0 sm:w-auto sm:justify-center sm:gap-1.5">
             {STEPS.map((s, i) => (
               <React.Fragment key={s.id}>
+                
                 {/* Step Item */}
                 <div
-                  className={`flex shrink-0 flex-col items-center gap-1 transition-all sm:flex-row sm:gap-1.5 sm:rounded-full sm:px-3 sm:py-1.5 ${
+                  className={`flex shrink-0 flex-col items-center gap-1 sm:flex-row sm:gap-1.5 sm:rounded-full sm:px-3 sm:py-1.5 transition-all ${
                     step > s.id
                       ? "text-emerald-600 sm:bg-emerald-50 sm:text-emerald-700"
                       : step === s.id
@@ -151,23 +148,13 @@ const JualBarangBekasPage = () => {
                   }`}
                 >
                   {/* Lingkaran Ikon (Hanya terlihat bulat di Mobile, menyatu di Desktop) */}
-                  <div
-                    className={`flex size-7 items-center justify-center rounded-full sm:size-auto sm:bg-transparent ${
-                      step > s.id
-                        ? "bg-emerald-50"
-                        : step === s.id
-                          ? "bg-[#eef0ff]"
-                          : "bg-gray-50"
-                    }`}
-                  >
-                    {step > s.id ? (
-                      <RiCheckLine size={14} />
-                    ) : (
-                      <s.icon size={14} />
-                    )}
+                  <div className={`flex size-7 sm:size-auto items-center justify-center rounded-full sm:bg-transparent ${
+                    step > s.id ? "bg-emerald-50" : step === s.id ? "bg-[#eef0ff]" : "bg-gray-50"
+                  }`}>
+                    {step > s.id ? <RiCheckLine size={14} /> : <s.icon size={14} />}
                   </div>
                   {/* Label Teks */}
-                  <span className="text-[9px] font-bold tracking-wide sm:text-[11px]">
+                  <span className="text-[9px] sm:text-[11px] font-bold tracking-wide">
                     {s.label}
                   </span>
                 </div>
@@ -175,21 +162,20 @@ const JualBarangBekasPage = () => {
                 {/* Garis Penghubung Elastis (flex-1) */}
                 {i < STEPS.length - 1 && (
                   <div
-                    className={`mx-2 h-[2px] flex-1 rounded-full transition-colors sm:mx-0 sm:h-px sm:w-4 sm:flex-none ${
-                      step > s.id
-                        ? "bg-emerald-400 sm:bg-emerald-300"
-                        : "bg-gray-100 sm:bg-gray-200"
+                    className={`h-[2px] sm:h-px flex-1 sm:flex-none sm:w-4 mx-2 sm:mx-0 rounded-full transition-colors ${
+                      step > s.id ? "bg-emerald-400 sm:bg-emerald-300" : "bg-gray-100 sm:bg-gray-200"
                     }`}
                   />
                 )}
+
               </React.Fragment>
             ))}
           </div>
 
           {/* Tombol Close (Khusus Desktop) */}
-          <button
-            onClick={() => navigate(-1)}
-            className="ml-4 hidden size-9 shrink-0 items-center justify-center rounded-xl border border-gray-200 text-gray-500 hover:bg-gray-50 sm:flex"
+          <button 
+            onClick={() => navigate(-1)} 
+            className="hidden size-9 shrink-0 items-center justify-center rounded-xl border border-gray-200 text-gray-500 hover:bg-gray-50 sm:flex ml-4"
           >
             <RiCloseLine size={18} />
           </button>
@@ -197,9 +183,9 @@ const JualBarangBekasPage = () => {
         {/* ------------------------------------- */}
 
         {/* --- BODY (Isi Form) --- */}
-        <div className="flex-1 overflow-y-auto bg-white px-5 py-5 sm:px-7 sm:py-6">
+        <div className="flex-1 overflow-y-auto px-5 py-5 sm:px-7 sm:py-6 bg-white">
           {submitError && (
-            <div className="mb-4 rounded-xl border border-red-100 bg-red-50 px-4 py-3 text-[13px] font-medium text-red-600">
+            <div className="mb-4 rounded-xl bg-red-50 px-4 py-3 text-[13px] font-medium text-red-600 border border-red-100">
               {submitError}
             </div>
           )}
@@ -211,17 +197,14 @@ const JualBarangBekasPage = () => {
 
         {/* --- FOOTER NAVIGASI --- */}
         <div className="flex shrink-0 items-center justify-between gap-2 border-t border-gray-100 bg-gray-50/80 px-5 py-4 sm:px-7 sm:py-4">
+          
           {/* Indikator Titik (Bar bawah) */}
           <div className="flex items-center gap-1.5">
             {STEPS.map((s) => (
               <div
                 key={s.id}
                 className={`h-1.5 rounded-full transition-all duration-300 ${
-                  step === s.id
-                    ? "w-6 bg-[#1e1f78]"
-                    : step > s.id
-                      ? "w-2 bg-emerald-400"
-                      : "w-2 bg-gray-200"
+                  step === s.id ? "w-6 bg-[#1e1f78]" : step > s.id ? "w-2 bg-emerald-400" : "w-2 bg-gray-200"
                 }`}
               />
             ))}
@@ -232,18 +215,17 @@ const JualBarangBekasPage = () => {
             {step > 1 && (
               <button
                 onClick={() => setStep((s) => s - 1)}
-                className="flex items-center justify-center gap-1.5 rounded-xl border border-gray-200 bg-white px-4 py-2.5 text-[12px] font-bold text-gray-600 shadow-sm transition-colors hover:border-gray-300 hover:bg-gray-50 sm:text-[13px]"
+                className="flex items-center justify-center gap-1.5 rounded-xl border border-gray-200 bg-white px-4 py-2.5 text-[12px] sm:text-[13px] font-bold text-gray-600 hover:bg-gray-50 hover:border-gray-300 transition-colors shadow-sm"
               >
-                <RiArrowLeftLine size={15} />{" "}
-                <span className="hidden sm:inline">Kembali</span>
+                <RiArrowLeftLine size={15} /> <span className="hidden sm:inline">Kembali</span>
               </button>
             )}
-
+            
             {step < 4 ? (
               <button
                 onClick={() => setStep((s) => s + 1)}
                 disabled={!canNext[step]}
-                className="flex items-center justify-center gap-1.5 rounded-xl bg-[#1e1f78] px-5 py-2.5 text-[12px] font-bold text-white shadow-sm transition-all hover:bg-[#16175e] hover:shadow-md disabled:opacity-50 disabled:hover:shadow-sm sm:text-[13px]"
+                className="flex items-center justify-center gap-1.5 rounded-xl bg-[#1e1f78] px-5 py-2.5 text-[12px] sm:text-[13px] font-bold text-white shadow-sm hover:bg-[#16175e] hover:shadow-md transition-all disabled:opacity-50 disabled:hover:shadow-sm"
               >
                 Lanjut <RiArrowRightLine size={15} />
               </button>
@@ -251,7 +233,7 @@ const JualBarangBekasPage = () => {
               <button
                 onClick={handleSubmit}
                 disabled={!canNext[4] || loading}
-                className="flex items-center justify-center gap-2 rounded-xl bg-emerald-600 px-5 py-2.5 text-[12px] font-bold text-white shadow-sm transition-all hover:bg-emerald-700 hover:shadow-md disabled:opacity-50 disabled:hover:shadow-sm sm:px-6 sm:text-[13px]"
+                className="flex items-center justify-center gap-2 rounded-xl bg-emerald-600 px-5 sm:px-6 py-2.5 text-[12px] sm:text-[13px] font-bold text-white shadow-sm hover:bg-emerald-700 hover:shadow-md transition-all disabled:opacity-50 disabled:hover:shadow-sm"
               >
                 {loading ? (
                   <>
@@ -260,16 +242,15 @@ const JualBarangBekasPage = () => {
                   </>
                 ) : (
                   <>
-                    <RiCheckboxCircleLine size={16} />
-                    <span>
-                      Terbitkan <span className="hidden sm:inline">Barang</span>
-                    </span>
+                    <RiCheckboxCircleLine size={16} /> 
+                    <span>Terbitkan <span className="hidden sm:inline">Barang</span></span>
                   </>
                 )}
               </button>
             )}
           </div>
         </div>
+
       </div>
     </div>
   );

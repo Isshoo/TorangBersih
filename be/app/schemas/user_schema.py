@@ -61,4 +61,3 @@ class UserListQuerySchema(Schema):
     is_active = fields.Boolean(error_messages={"invalid": "Format status aktif tidak valid"})
     sort_by = fields.String(load_default='created_at', validate=validate.OneOf(['created_at', 'username', 'email'], error="Penyortiran hanya berdasarkan created_at, username, atau email"))
     sort_order = fields.String(load_default='desc', validate=validate.OneOf(['asc', 'desc'], error="Urutan penyortiran harus 'asc' atau 'desc'"))
-

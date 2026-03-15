@@ -186,13 +186,13 @@ const MapView = ({
                       {loc.name}
                     </h3>
                     {/* Contextual Data for Map Popup */}
-                    <div className="mt-2 mb-4 flex flex-col gap-1.5 text-xs">
+                    <div className="mb-4 mt-2 flex flex-col gap-1.5 text-xs">
                       {loc.type === "Barang Daur Ulang" && loc.detail && (
                         <div className="flex items-center gap-2">
                           <span className="rounded-md bg-emerald-50 px-2 py-1 font-bold text-emerald-600">
                             Rp {(loc.detail.harga || 0).toLocaleString("id-ID")}
                           </span>
-                          <span className="font-semibold text-gray-500 capitalize">
+                          <span className="font-semibold capitalize text-gray-500">
                             {(loc.detail.kondisi || "").replace(/_/g, " ")}
                           </span>
                         </div>
@@ -201,48 +201,28 @@ const MapView = ({
                       {loc.type === "Laporan Sampah" && loc.detail && (
                         <div className="flex items-center justify-between">
                           <div className="flex items-center gap-1.5 font-bold">
-                            <span
-                              className={`relative flex size-2 ${loc.detail.status_laporan === "selesai" || loc.detail.status_laporan === "ditindak" ? "text-emerald-500" : "text-amber-500"}`}
-                            >
+                            <span className={`relative flex size-2 ${loc.detail.status_laporan === "selesai" || loc.detail.status_laporan === "ditindak" ? "text-emerald-500" : "text-amber-500"}`}>
                               <span className="absolute inline-flex size-full animate-ping rounded-full bg-current opacity-50"></span>
                               <span className="relative inline-flex size-2 rounded-full bg-current"></span>
                             </span>
-                            <span
-                              className={`capitalize ${loc.detail.status_laporan === "selesai" || loc.detail.status_laporan === "ditindak" ? "text-emerald-600" : "text-amber-600"}`}
-                            >
+                            <span className={`capitalize ${loc.detail.status_laporan === "selesai" || loc.detail.status_laporan === "ditindak" ? "text-emerald-600" : "text-amber-600"}`}>
                               {loc.detail.status_laporan}
                             </span>
                           </div>
                           <span className="text-[11px] font-semibold text-gray-500">
-                            {loc.detail.jenis_sampah || "-"} (
-                            {loc.detail.estimasi_berat_kg || 0}kg)
+                            {loc.detail.jenis_sampah || "-"} ({loc.detail.estimasi_berat_kg || 0}kg)
                           </span>
                         </div>
                       )}
 
-                      {(loc.type === "Aset" || loc.type === "Kolaborator") &&
-                        loc.detail && (
-                          <div className="flex items-center gap-1.5 font-semibold text-gray-500">
-                            <svg
-                              className="size-4 shrink-0"
-                              fill="none"
-                              viewBox="0 0 24 24"
-                              stroke="currentColor"
-                            >
-                              <path
-                                strokeLinecap="round"
-                                strokeLinejoin="round"
-                                strokeWidth="2"
-                                d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"
-                              />
-                            </svg>
-                            <span className="truncate">
-                              {loc.detail.jenis_kolaborator ||
-                                loc.detail.kategori_aset ||
-                                "-"}
-                            </span>
-                          </div>
-                        )}
+                      {(loc.type === "Aset" || loc.type === "Kolaborator") && loc.detail && (
+                        <div className="flex items-center gap-1.5 font-semibold text-gray-500">
+                          <svg className="size-4 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
+                          </svg>
+                          <span className="truncate">{loc.detail.jenis_kolaborator || loc.detail.kategori_aset || "-"}</span>
+                        </div>
+                      )}
                     </div>
 
                     {/* Kumpulan Tombol Aksi */}

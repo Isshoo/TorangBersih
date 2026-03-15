@@ -86,7 +86,7 @@ const reverseGeocode = async (lat, lng) => {
   try {
     const res = await fetch(
       `https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lng}&zoom=18&addressdetails=1`,
-      { headers: { "Accept-Language": "id" } },
+      { headers: { "Accept-Language": "id" } }
     );
     const data = await res.json();
     if (data && data.address) {
@@ -112,7 +112,7 @@ const forwardGeocode = async (query) => {
   try {
     const res = await fetch(
       `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(query)}&limit=1&addressdetails=1`,
-      { headers: { "Accept-Language": "id" } },
+      { headers: { "Accept-Language": "id" } }
     );
     const data = await res.json();
     if (data && data.length > 0) {
@@ -166,16 +166,12 @@ const StepLokasiAset = ({ formData, handleChange }) => {
   const handleMapClick = async (lat, lng) => {
     handleChange({ target: { name: "latitude", value: lat } });
     handleChange({ target: { name: "longitude", value: lng } });
-
+    
     setGeocoding(true);
     const result = await reverseGeocode(lat, lng);
     if (result) {
-      handleChange({
-        target: { name: "kabupaten_kota", value: result.kabupaten_kota },
-      });
-      handleChange({
-        target: { name: "alamat_lengkap", value: result.alamat_lengkap },
-      });
+      handleChange({ target: { name: "kabupaten_kota", value: result.kabupaten_kota } });
+      handleChange({ target: { name: "alamat_lengkap", value: result.alamat_lengkap } });
     }
     setGeocoding(false);
   };
@@ -190,16 +186,12 @@ const StepLokasiAset = ({ formData, handleChange }) => {
         handleChange({ target: { name: "latitude", value: latitude } });
         handleChange({ target: { name: "longitude", value: longitude } });
         setMapCenter([latitude, longitude]);
-
+        
         setGeocoding(true);
         const result = await reverseGeocode(latitude, longitude);
         if (result) {
-          handleChange({
-            target: { name: "kabupaten_kota", value: result.kabupaten_kota },
-          });
-          handleChange({
-            target: { name: "alamat_lengkap", value: result.alamat_lengkap },
-          });
+          handleChange({ target: { name: "kabupaten_kota", value: result.kabupaten_kota } });
+          handleChange({ target: { name: "alamat_lengkap", value: result.alamat_lengkap } });
         }
         setGeocoding(false);
         setGpsLoading(false);
@@ -207,7 +199,7 @@ const StepLokasiAset = ({ formData, handleChange }) => {
       () => {
         setGpsLoading(false);
       },
-      { enableHighAccuracy: true, timeout: 10000 },
+      { enableHighAccuracy: true, timeout: 10000 }
     );
   };
 
@@ -220,12 +212,8 @@ const StepLokasiAset = ({ formData, handleChange }) => {
     if (result) {
       handleChange({ target: { name: "latitude", value: result.latitude } });
       handleChange({ target: { name: "longitude", value: result.longitude } });
-      handleChange({
-        target: { name: "kabupaten_kota", value: result.kabupaten_kota },
-      });
-      handleChange({
-        target: { name: "alamat_lengkap", value: result.alamat_lengkap },
-      });
+      handleChange({ target: { name: "kabupaten_kota", value: result.kabupaten_kota } });
+      handleChange({ target: { name: "alamat_lengkap", value: result.alamat_lengkap } });
       setMapCenter([result.latitude, result.longitude]);
     }
     setGeocoding(false);

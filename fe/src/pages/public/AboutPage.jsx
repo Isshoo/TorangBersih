@@ -1,10 +1,10 @@
+/* eslint-disable no-unused-vars */
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import { ChevronDown, Map, Recycle, BookOpen, ArrowRight } from "lucide-react";
-// eslint-disable-next-line no-unused-vars
+
 import { motion, AnimatePresence } from "framer-motion";
 
-// --- Komponen Accordion (dengan animasi Framer Motion) ---
 const AccordionItem = ({ title, content, isOpen, onClick }) => (
   <motion.div
     className="mb-4 overflow-hidden rounded-xl bg-[#1e1f78] text-white shadow-md transition duration-200 hover:shadow-blue-400/20"

@@ -15,6 +15,7 @@ export default function ArtikelPagination({ page, totalPages, goPage }) {
 
   return (
     <div className="mt-10 flex flex-wrap items-center justify-center gap-2">
+
       {/* Prev */}
       <NavBtn disabled={page <= 1} onClick={() => goPage(page - 1)}>
         <RiArrowLeftSLine />
@@ -23,9 +24,7 @@ export default function ArtikelPagination({ page, totalPages, goPage }) {
       {/* Nomor halaman */}
       {buildPages(page, totalPages).map((n, i) =>
         n === "…" ? (
-          <span key={`e${i}`} className="px-1 text-sm text-gray-400">
-            …
-          </span>
+          <span key={`e${i}`} className="px-1 text-sm text-gray-400">…</span>
         ) : (
           <button
             key={n}
@@ -38,7 +37,7 @@ export default function ArtikelPagination({ page, totalPages, goPage }) {
           >
             {n}
           </button>
-        ),
+        )
       )}
 
       {/* Next */}

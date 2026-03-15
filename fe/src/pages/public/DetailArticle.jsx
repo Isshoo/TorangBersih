@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { useParams, Link } from "react-router-dom";
 import { Sidebar } from "../../components/features/public/artikel/Sidebar";
 import { artikelAPI } from "../../services/api/routes/artikel.route";
@@ -11,6 +11,9 @@ import { ProseStyles } from "../../components/ui/ProsesStyles";
 const DetailArticlePage = () => {
   const { id } = useParams();
   const { isAuthenticated } = useAuth();
+
+  // Ref untuk section komentar
+  const komentarSectionRef = useRef(null);
 
   // Responsive state for controlling "Buat Artikel" button placement
   const [isTabletOrAbove, setIsTabletOrAbove] = useState(
@@ -172,6 +175,20 @@ const DetailArticlePage = () => {
     }
   };
 
+  // Handle scroll ke komentar section di bawah (mobile)
+  const handleScrollToComments = () => {
+    // Mobile only
+    if (!isTabletOrAbove && komentarSectionRef.current) {
+      // Sedikit delay agar smooth pada beberapa devices/layouting
+      setTimeout(() => {
+        komentarSectionRef.current.scrollIntoView({
+          behavior: "smooth",
+          block: "start",
+        });
+      }, 10);
+    }
+  };
+
   // ── Loading ────────────────────────────
   if (loading) {
     return (
@@ -317,8 +334,15 @@ const DetailArticlePage = () => {
                 <span className="text-sm font-medium">{likesCount}</span>
               </button>
 
-              {/* Tombol Komentar Baru (Buka Drawer) */}
-              <div className="flex items-center gap-2 text-gray-500 transition-all">
+              {/* Tombol Komentar Baru (Buka Drawer/pindah ke komen jika mobile) */}
+              <button
+                type="button"
+                className="flex items-center gap-2 text-gray-500 transition-all focus:outline-none"
+                onClick={handleScrollToComments}
+                aria-label="Komentar"
+                // tombol hanya akan scroll di mobile, di desktop tidak efek
+                tabIndex={0}
+              >
                 <svg
                   className="h-6 w-6"
                   fill="none"
@@ -333,7 +357,7 @@ const DetailArticlePage = () => {
                   />
                 </svg>
                 <span className="text-sm font-medium">{commentsCount}</span>
-              </div>
+              </button>
             </div>
 
             {/* Konten artikel */}
@@ -349,6 +373,30 @@ const DetailArticlePage = () => {
                 dangerouslySetInnerHTML={{ __html: artikel.konten_teks ?? "" }}
               />
             </article>
+
+            {/* Section komentar (hanya untuk mobile/tablet, di bawah artikel) */}
+            {!isTabletOrAbove && (
+              <div
+                ref={komentarSectionRef}
+                id="komentar-section"
+                className="mt-12"
+              >
+                <Sidebar
+                  comments={komentarList}
+                  commentsCount={commentsCount}
+                  komentarTeks={komentarTeks}
+                  onKomentarChange={(e) => setKomentarTeks(e.target.value)}
+                  onKomentarSubmit={handleKomentar}
+                  komentarLoading={komentarLoading}
+                  komentarError={komentarError}
+                  replyTo={replyTo}
+                  onReplyClick={(id, name) => setReplyTo({ id, name })}
+                  onCancelReply={() => setReplyTo(null)}
+                  onKomentarDelete={handleDeleteKomentar}
+                  isDetail={true}
+                />
+              </div>
+            )}
           </main>
 
           {/* Sidebar kanan */}
@@ -366,20 +414,23 @@ const DetailArticlePage = () => {
                 + Buat Artikel
               </Link>
             )}
-            <Sidebar
-              comments={komentarList}
-              commentsCount={commentsCount}
-              komentarTeks={komentarTeks}
-              onKomentarChange={(e) => setKomentarTeks(e.target.value)}
-              onKomentarSubmit={handleKomentar}
-              komentarLoading={komentarLoading}
-              komentarError={komentarError}
-              replyTo={replyTo}
-              onReplyClick={(id, name) => setReplyTo({ id, name })}
-              onCancelReply={() => setReplyTo(null)}
-              onKomentarDelete={handleDeleteKomentar}
-              isDetail={true}
-            />
+            {/* Sidebar hanya di desktop */}
+            {isTabletOrAbove && (
+              <Sidebar
+                comments={komentarList}
+                commentsCount={commentsCount}
+                komentarTeks={komentarTeks}
+                onKomentarChange={(e) => setKomentarTeks(e.target.value)}
+                onKomentarSubmit={handleKomentar}
+                komentarLoading={komentarLoading}
+                komentarError={komentarError}
+                replyTo={replyTo}
+                onReplyClick={(id, name) => setReplyTo({ id, name })}
+                onCancelReply={() => setReplyTo(null)}
+                onKomentarDelete={handleDeleteKomentar}
+                isDetail={true}
+              />
+            )}
           </div>
         </div>
       </div>

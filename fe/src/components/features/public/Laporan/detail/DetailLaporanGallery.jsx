@@ -209,15 +209,10 @@ const DetailLaporanGallery = ({ fotoBuktiUrls, laporanStatus }) => {
               stroke="currentColor"
               viewBox="0 0 24 24"
             >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth="2.5"
-                d="M6 18L18 6M6 6l12 12"
-              />
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M6 18L18 6M6 6l12 12" />
             </svg>
           </button>
-
+          
           {/* Top Controls */}
           <div
             className="absolute top-0 right-0 left-0 z-101 flex items-center justify-between p-6"
@@ -230,18 +225,8 @@ const DetailLaporanGallery = ({ fotoBuktiUrls, laporanStatus }) => {
               onClick={() => setViewerOpen(false)}
               className="rounded-full bg-white/10 p-2 text-white transition hover:bg-white/20 active:scale-95"
             >
-              <svg
-                className="size-6"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth="2.5"
-                  d="M6 18L18 6M6 6l12 12"
-                />
+              <svg className="size-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M6 18L18 6M6 6l12 12" />
               </svg>
             </button>
           </div>
@@ -252,47 +237,23 @@ const DetailLaporanGallery = ({ fotoBuktiUrls, laporanStatus }) => {
               <button
                 onClick={(e) => {
                   e.stopPropagation();
-                  setActiveImageIndex((p) =>
-                    p > 0 ? p - 1 : fotoBuktiUrls.length - 1,
-                  );
+                  setActiveImageIndex((p) => p > 0 ? p - 1 : fotoBuktiUrls.length - 1);
                 }}
                 className="absolute top-1/2 left-4 z-101 -translate-y-1/2 rounded-full bg-white/10 p-3 text-white transition hover:bg-white/20 active:scale-95"
               >
-                <svg
-                  className="size-6"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth="2.5"
-                    d="M15 19l-7-7 7-7"
-                  />
+                <svg className="size-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M15 19l-7-7 7-7" />
                 </svg>
               </button>
               <button
                 onClick={(e) => {
                   e.stopPropagation();
-                  setActiveImageIndex((p) =>
-                    p < fotoBuktiUrls.length - 1 ? p + 1 : 0,
-                  );
+                  setActiveImageIndex((p) => p < fotoBuktiUrls.length - 1 ? p + 1 : 0);
                 }}
                 className="absolute top-1/2 right-4 z-101 -translate-y-1/2 rounded-full bg-white/10 p-3 text-white transition hover:bg-white/20 active:scale-95"
               >
-                <svg
-                  className="size-6"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth="2.5"
-                    d="M9 5l7 7-7 7"
-                  />
+                <svg className="size-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M9 5l7 7-7 7" />
                 </svg>
               </button>
             </>
@@ -324,11 +285,7 @@ const DetailLaporanGallery = ({ fotoBuktiUrls, laporanStatus }) => {
                       : "border-transparent opacity-50 hover:opacity-100"
                   }`}
                 >
-                  <img
-                    src={url}
-                    alt={`Thumb ${idx}`}
-                    className="size-full object-cover"
-                  />
+                  <img src={url} alt={`Thumb ${idx}`} className="size-full object-cover" />
                 </button>
               ))}
             </div>

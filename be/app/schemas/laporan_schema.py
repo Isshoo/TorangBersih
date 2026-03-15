@@ -114,4 +114,3 @@ class TindakLanjutCreateSchema(Schema):
     foto_sebelum_tindakan_urls = fields.List(fields.String(error_messages={"invalid": "Format URL foto tidak valid"}))
     foto_setelah_tindakan_urls = fields.List(fields.String(error_messages={"invalid": "Format URL foto tidak valid"}))
     catatan = fields.String()
-

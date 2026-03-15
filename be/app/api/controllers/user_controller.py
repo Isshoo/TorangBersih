@@ -147,4 +147,3 @@ def activate_user(user_id):
     
     user = UserService.activate(user_id)
     return success_response(data=user.to_dict(), message="Pengguna berhasil diaktifkan")
-

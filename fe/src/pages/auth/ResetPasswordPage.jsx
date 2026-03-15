@@ -52,14 +52,12 @@ export default function ResetPasswordPage() {
     try {
       await authAPI.resetPassword({ token, password: form.password });
       setSuccess(true);
-      toaster.success(
-        "Password berhasil direset! Anda akan dialihkan ke halaman login.",
-      );
+      toaster.success("Password berhasil direset! Anda akan dialihkan ke halaman login.");
       setTimeout(() => navigate("/login"), 3000);
     } catch (err) {
       toaster.error(
         err?.response?.data?.message ||
-          "Gagal reset password. Token mungkin sudah kedaluwarsa.",
+          "Gagal reset password. Token mungkin sudah kedaluwarsa."
       );
     } finally {
       setLoading(false);

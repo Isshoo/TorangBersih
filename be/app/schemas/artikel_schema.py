@@ -90,4 +90,3 @@ class ArtikelKomentarQuerySchema(Schema):
     }
     page = fields.Integer(load_default=1, validate=validate.Range(min=1, error="Halaman minimal 1"))
     per_page = fields.Integer(load_default=20, validate=validate.Range(min=1, max=100, error="Per halaman antara 1 sampai 100"))
-

@@ -56,9 +56,7 @@ function AsetEditModal({
     kontak: data.kontak || "",
   });
 
-  const [existingPhotos, setExistingPhotos] = useState(
-    data.pictures_urls || [],
-  );
+  const [existingPhotos, setExistingPhotos] = useState(data.pictures_urls || []);
   const [fotoAsetFiles, setFotoAsetFiles] = useState([]);
   const [fotoPreviews, setFotoPreviews] = useState([]);
   const [mapCenter, setMapCenter] = useState(null);
@@ -111,8 +109,7 @@ function AsetEditModal({
 
   const handleSubmit = () => {
     if (!form.nama_aset || !form.kategori_aset_id) return;
-    const filesPayload =
-      fotoAsetFiles.length > 0 ? { foto_aset_urls: fotoAsetFiles } : null;
+    const filesPayload = fotoAsetFiles.length > 0 ? { foto_aset_urls: fotoAsetFiles } : null;
     const finalForm = { ...form, existing_pictures: existingPhotos };
     onSubmit(finalForm, filesPayload);
   };
@@ -191,36 +188,19 @@ function AsetEditModal({
                 {existingPhotos.length + fotoAsetFiles.length} / 5 Foto
               </span>
             </div>
-
+            
             <div className="grid grid-cols-2 gap-3 sm:grid-cols-4 md:grid-cols-5">
               {/* Existing Photos */}
               {existingPhotos.map((url, i) => (
-                <div
-                  key={`existing-${i}`}
-                  className="group relative aspect-square overflow-hidden rounded-xl border border-gray-200 bg-gray-50"
-                >
-                  <img
-                    src={url}
-                    alt="Aset"
-                    className="size-full object-cover"
-                  />
+                <div key={`existing-${i}`} className="group relative aspect-square overflow-hidden rounded-xl border border-gray-200 bg-gray-50">
+                  <img src={url} alt="Aset" className="size-full object-cover" />
                   <button
                     type="button"
                     onClick={() => removeExistingPhoto(i)}
-                    className="absolute top-1.5 right-1.5 flex size-6 scale-0 items-center justify-center rounded-full bg-red-500/80 text-white backdrop-blur-sm transition group-hover:scale-100 hover:bg-red-600"
+                    className="absolute right-1.5 top-1.5 flex size-6 items-center justify-center rounded-full bg-red-500/80 text-white backdrop-blur-sm transition hover:bg-red-600 scale-0 group-hover:scale-100"
                   >
-                    <svg
-                      className="size-3.5"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                      stroke="currentColor"
-                      strokeWidth="2.5"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        d="M6 18L18 6M6 6l12 12"
-                      />
+                    <svg className="size-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2.5">
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
                     </svg>
                   </button>
                 </div>
@@ -228,35 +208,18 @@ function AsetEditModal({
 
               {/* New Photos */}
               {fotoPreviews.map((preview, i) => (
-                <div
-                  key={`new-${i}`}
-                  className="group relative aspect-square overflow-hidden rounded-xl border-2 border-dashed border-emerald-400 bg-emerald-50"
-                >
-                  <img
-                    src={preview}
-                    alt="Baru"
-                    className="size-full object-cover"
-                  />
-                  <div className="absolute top-1 left-1 rounded bg-emerald-500 px-1.5 text-[9px] font-bold tracking-wider text-white uppercase backdrop-blur-sm">
+                <div key={`new-${i}`} className="group relative aspect-square overflow-hidden rounded-xl border-2 border-dashed border-emerald-400 bg-emerald-50">
+                  <img src={preview} alt="Baru" className="size-full object-cover" />
+                  <div className="absolute top-1 left-1 rounded bg-emerald-500 px-1.5 text-[9px] font-bold text-white uppercase tracking-wider backdrop-blur-sm">
                     Baru
                   </div>
                   <button
                     type="button"
                     onClick={() => removeNewPhoto(i)}
-                    className="absolute top-1.5 right-1.5 flex size-6 scale-0 items-center justify-center rounded-full bg-red-500/80 text-white backdrop-blur-sm transition group-hover:scale-100 hover:bg-red-600"
+                    className="absolute right-1.5 top-1.5 flex size-6 items-center justify-center rounded-full bg-red-500/80 text-white backdrop-blur-sm transition hover:bg-red-600 scale-0 group-hover:scale-100"
                   >
-                    <svg
-                      className="size-3.5"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                      stroke="currentColor"
-                      strokeWidth="2.5"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        d="M6 18L18 6M6 6l12 12"
-                      />
+                    <svg className="size-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2.5">
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
                     </svg>
                   </button>
                 </div>
@@ -269,26 +232,14 @@ function AsetEditModal({
                   onClick={() => inputRef.current?.click()}
                   className="flex aspect-square flex-col items-center justify-center gap-1.5 rounded-xl border-2 border-dashed border-gray-200 bg-gray-50 text-gray-400 transition hover:border-emerald-400 hover:bg-emerald-50 hover:text-emerald-500"
                 >
-                  <svg
-                    className="size-6"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    stroke="currentColor"
-                    strokeWidth="2"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      d="M12 4v16m8-8H4"
-                    />
+                  <svg className="size-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M12 4v16m8-8H4" />
                   </svg>
-                  <span className="text-[10px] font-bold tracking-widest uppercase">
-                    Tambah
-                  </span>
+                  <span className="text-[10px] font-bold uppercase tracking-widest">Tambah</span>
                 </button>
               )}
             </div>
-
+            
             <input
               ref={inputRef}
               type="file"
@@ -412,9 +363,11 @@ function AsetEditModal({
 
               <div className="flex items-center justify-between border-t border-gray-100 bg-gray-50 px-4 py-2">
                 <p className="text-[11px] text-gray-500">
-                  {form.latitude && form.longitude
-                    ? `${Number(form.latitude).toFixed(6)}, ${Number(form.longitude).toFixed(6)}`
-                    : "Klik pada peta atau gunakan GPS"}
+                  {form.latitude && form.longitude ? (
+                     `${Number(form.latitude).toFixed(6)}, ${Number(form.longitude).toFixed(6)}`
+                  ) : (
+                    "Klik pada peta atau gunakan GPS"
+                  )}
                 </p>
               </div>
             </div>

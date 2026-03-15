@@ -91,4 +91,3 @@ class KolaboratorVerifySchema(Schema):
         error_messages={"required": "Status verifikasi harus diisi"}
     )
     catatan_verifikasi = fields.String(validate=validate.Length(max=1000, error="Catatan verifikasi maksimal 1000 karakter"))
-

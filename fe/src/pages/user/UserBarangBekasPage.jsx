@@ -10,14 +10,7 @@ import EditBarangBekasModal from "../../components/features/public/barangbekas/E
 import { toast } from "react-hot-toast";
 
 // Modal konfirmasi sederhana
-function ConfirmModal({
-  open,
-  title,
-  description,
-  onConfirm,
-  onCancel,
-  loading,
-}) {
+function ConfirmModal({ open, title, description, onConfirm, onCancel, loading }) {
   if (!open) return null;
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/20">

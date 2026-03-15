@@ -91,4 +91,3 @@ class ChangePasswordSchema(Schema):
     def validate_new_password(self, value, **kwargs):
         _validate_password_strength(value)
     
-
