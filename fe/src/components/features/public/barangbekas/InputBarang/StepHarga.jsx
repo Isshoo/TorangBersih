@@ -12,18 +12,21 @@ export const StepHarga = ({ form, setForm }) => {
   const set = k => e => setForm(p => ({ ...p, [k]: e.target.value }));
   
   return (
-    <div className="flex h-full gap-6">
-      <div className="flex w-1/2 flex-col gap-5">
+    // Di mobile vertikal, di layar besar horizontal
+    <div className="flex flex-col sm:flex-row h-full gap-6 sm:gap-6">
+      
+      {/* Kolom Kiri: Input */}
+      <div className="flex w-full sm:w-1/2 flex-col gap-4 sm:gap-5">
         <div>
           <Label>Mode Penawaran</Label>
-          <div className="flex items-center gap-2 rounded-2xl border border-gray-200 bg-gray-50 p-1.5">
+          <div className="flex flex-col sm:flex-row items-center gap-2 rounded-2xl border border-gray-200 bg-gray-50 p-1.5 sm:p-1.5">
             <button type="button" onClick={() => setForm(p => ({ ...p, isDonasi: false }))}
-              className={`flex flex-1 items-center justify-center gap-2 rounded-xl py-2.5 text-[13px] font-bold transition-all ${
-                !form.isDonasi ? "bg-[#1e1f78] text-white shadow-sm" : "text-gray-500 hover:text-gray-700"
+              className={`flex w-full sm:flex-1 items-center justify-center gap-2 rounded-xl py-2.5 text-[13px] font-bold transition-all ${
+                !form.isDonasi ? "bg-[#1e1f78] text-white shadow-sm" : "text-gray-500 hover:text-gray-700 bg-transparent"
               }`}><RiPriceTag3Line size={15} /> Jual</button>
             <button type="button" onClick={() => setForm(p => ({ ...p, isDonasi: true, harga: "0" }))}
-              className={`flex flex-1 items-center justify-center gap-2 rounded-xl py-2.5 text-[13px] font-bold transition-all ${
-                form.isDonasi ? "bg-emerald-600 text-white shadow-sm" : "text-gray-500 hover:text-gray-700"
+              className={`flex w-full sm:flex-1 items-center justify-center gap-2 rounded-xl py-2.5 text-[13px] font-bold transition-all ${
+                form.isDonasi ? "bg-emerald-600 text-white shadow-sm" : "text-gray-500 hover:text-gray-700 bg-transparent"
               }`}><RiGiftLine size={15} /> Donasi Gratis</button>
           </div>
         </div>
@@ -58,7 +61,8 @@ export const StepHarga = ({ form, setForm }) => {
         </div>
       </div>
 
-      <div className="flex w-1/2 flex-col">
+      {/* Kolom Kanan: Preview Card */}
+      <div className="flex w-full sm:w-1/2 flex-col mt-2 sm:mt-0">
         <Label>Pratinjau Harga</Label>
         <div className="flex flex-1 flex-col items-center justify-center rounded-2xl border-2 border-dashed border-gray-200 bg-gray-50 p-6">
           <div className="w-full max-w-[220px] overflow-hidden rounded-2xl border border-gray-200 bg-white shadow-md">
@@ -76,7 +80,7 @@ export const StepHarga = ({ form, setForm }) => {
               </div>
             </div>
           </div>
-          <p className="mt-3 text-[11px] text-gray-400">Tampilan kartu di marketplace</p>
+          <p className="mt-3 text-[11px] text-center text-gray-400">Tampilan kartu di marketplace</p>
         </div>
       </div>
     </div>

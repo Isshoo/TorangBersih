@@ -8,6 +8,7 @@ import {
 } from "../../components/features/public/barangbekas/InputBarang/Constant";
 import ReferensiModalManager from "../../components/ui/ReferensiModalManager";
 import { RiSettings4Line } from "react-icons/ri";
+import toast from "react-hot-toast";
 
 const STATUS_OPTIONS = [
   { value: "tersedia", label: "Tersedia" },
@@ -31,7 +32,7 @@ function DetailModal({ item, onClose, onStatusChange }) {
       onStatusChange(item.id, "__deleted__");
       onClose();
     } catch (err) {
-      alert(err.response?.data?.message || "Gagal menghapus barang");
+      toast.error(err.response?.data?.message || "Gagal menghapus barang");
       setDeleting(false);
     }
   };

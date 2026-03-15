@@ -48,15 +48,18 @@ const AdminArtikelPage = () => {
     setLoading(true);
     try {
       const params = Object.fromEntries(
-        // eslint-disable-next-line no-unused-vars
         Object.entries(query).filter(([_, v]) => v !== ""),
       );
-
       const res = await artikelAPI.getAll(params);
       setArticles(res.data.data || []);
       setMeta(res.data.meta || null);
     } catch (err) {
-      console.error("Gagal memuat artikel admin", err.response.data.errors);
+      toaster.error(
+        err?.response?.data?.message ||
+        "Gagal memuat artikel admin"
+      );
+      // detail error tetap ke console
+      console.error("Gagal memuat artikel admin", err?.response?.data?.errors || err);
     } finally {
       setLoading(false);
     }
@@ -72,7 +75,11 @@ const AdminArtikelPage = () => {
       const res = await referensiAPI.getAll("kategori-artikel");
       setCategories(res.data.data || []);
     } catch (err) {
-      console.error("Gagal memuat kategori", err);
+      toaster.error(
+        err?.response?.data?.message ||
+        "Gagal memuat kategori"
+      );
+      console.error("Gagal memuat kategori", err?.response?.data || err);
     }
   };
 
@@ -93,8 +100,12 @@ const AdminArtikelPage = () => {
       await artikelAPI.delete(deleteModal.id);
       setDeleteModal({ show: false, id: null });
       fetchArticles();
-    } catch {
-      alert("Gagal menghapus artikel.");
+      toaster.success("Artikel berhasil dihapus");
+    } catch (err) {
+      toaster.error(
+        err?.response?.data?.message || "Gagal menghapus artikel."
+      );
+      console.error("Gagal menghapus artikel.", err?.response?.data || err);
     }
   };
 
@@ -103,8 +114,11 @@ const AdminArtikelPage = () => {
     try {
       const res = await artikelAPI.getById(item.id);
       setViewModal({ show: true, item: res.data.data });
-    } catch {
-      toaster.error("Gagal mengambil detail artikel.");
+    } catch (err) {
+      toaster.error(
+        err?.response?.data?.message || "Gagal mengambil detail artikel."
+      );
+      console.error("Gagal mengambil detail artikel.", err?.response?.data || err);
     } finally {
       setLoadingModal(false);
     }
@@ -115,8 +129,11 @@ const AdminArtikelPage = () => {
     try {
       const res = await artikelAPI.getById(item.id);
       setEditModal({ show: true, item: res.data.data });
-    } catch {
-      toaster.error("Gagal mengambil detail artikel.");
+    } catch (err) {
+      toaster.error(
+        err?.response?.data?.message || "Gagal mengambil detail artikel."
+      );
+      console.error("Gagal mengambil detail artikel.", err?.response?.data || err);
     } finally {
       setLoadingModal(false);
     }
@@ -127,7 +144,10 @@ const AdminArtikelPage = () => {
   };
 
   const handleSaveUpdate = async (formData, file) => {
-    if (!formData.kategori_id) return alert("Pilih kategori terlebih dahulu");
+    if (!formData.kategori_id) {
+      toaster.error("Pilih kategori terlebih dahulu");
+      return;
+    }
     setUpdating(true);
     try {
       const articleId = editModal.item?.id;
@@ -135,10 +155,13 @@ const AdminArtikelPage = () => {
 
       await artikelAPI.update(articleId, formData, file);
       fetchArticles();
+      toaster.success("Artikel berhasil diupdate");
       return true;
     } catch (err) {
-      console.error("Gagal update artikel:", err.response.data);
-      toaster.error(err.response.data.message);
+      toaster.error(
+        err?.response?.data?.message || "Gagal update artikel."
+      );
+      console.error("Gagal update artikel:", err?.response?.data || err);
       return false;
     } finally {
       setUpdating(false);
@@ -146,15 +169,21 @@ const AdminArtikelPage = () => {
   };
 
   const handleSaveCreate = async (formData, file) => {
-    if (!formData.kategori_id) return alert("Pilih kategori terlebih dahulu");
+    if (!formData.kategori_id) {
+      toaster.error("Pilih kategori terlebih dahulu");
+      return;
+    }
     setUpdating(true);
     try {
       await artikelAPI.create(formData, file);
       fetchArticles();
+      toaster.success("Artikel berhasil ditambahkan");
       return { message: "Artikel berhasil ditambahkan" };
     } catch (err) {
-      console.error("Gagal buat artikel:", err.response.data);
-      toaster.error(err.response.data.message);
+      toaster.error(
+        err?.response?.data?.message || "Gagal buat artikel."
+      );
+      console.error("Gagal buat artikel:", err?.response?.data || err);
       return false;
     } finally {
       setUpdating(false);

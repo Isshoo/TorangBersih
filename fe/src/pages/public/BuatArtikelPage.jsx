@@ -12,6 +12,37 @@ import { useAuth } from "../../contexts/AuthContext";
 
 const DRAFT_LOCAL_KEY = "torangbersih_draft_artikel";
 
+// Simple ConfirmModal component
+function ConfirmModal({ open, title, description, onConfirm, onCancel, loading }) {
+  if (!open) return null;
+  return (
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/20">
+      <div className="relative w-full max-w-xs rounded-xl bg-white p-6 shadow-lg">
+        <h3 className="mb-2 text-lg font-semibold">{title}</h3>
+        <p className="mb-5 text-sm text-gray-500">{description}</p>
+        <div className="flex justify-end gap-3">
+          <button
+            className="rounded-lg px-3 py-1.5 text-sm font-semibold text-gray-500 transition hover:bg-gray-100"
+            onClick={onCancel}
+            disabled={loading}
+            type="button"
+          >
+            Batal
+          </button>
+          <button
+            className="rounded-lg bg-red-500 px-3 py-1.5 text-sm font-semibold text-white transition hover:bg-red-600"
+            onClick={onConfirm}
+            disabled={loading}
+            type="button"
+          >
+            {loading ? "Menghapus..." : "Hapus"}
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+}
+
 const BuatArtikelPage = () => {
   const navigate = useNavigate();
   const { user } = useAuth();
@@ -46,6 +77,10 @@ const BuatArtikelPage = () => {
 
   const [kategoriList, setKategoriList] = useState([]);
   const [loadingKategori, setLoadingKategori] = useState(true);
+
+  // Modal state for reset confirmation
+  const [showResetConfirm, setShowResetConfirm] = useState(false);
+  const [resetLoading, setResetLoading] = useState(false);
 
   useEffect(() => {
     const fetchKategori = async () => {
@@ -89,12 +124,14 @@ const BuatArtikelPage = () => {
     setSaveStatus("");
   }, []);
 
+  // Replace window.confirm with modal confirm
   const handleResetDraft = () => {
-    if (
-      window.confirm(
-        "Apakah Anda yakin ingin menghapus semua tulisan ini dan mulai dari awal?",
-      )
-    ) {
+    setShowResetConfirm(true);
+  };
+
+  const confirmResetDraft = () => {
+    setResetLoading(true);
+    setTimeout(() => {
       localStorage.removeItem(DRAFT_LOCAL_KEY);
       setForm({
         judul_artikel: "",
@@ -108,7 +145,9 @@ const BuatArtikelPage = () => {
       setIsDirty(false);
       setSaveStatus("");
       toaster.success("Draf berhasil dibersihkan.");
-    }
+      setShowResetConfirm(false);
+      setResetLoading(false);
+    }, 300); // simulate small delay
   };
 
   // Helper: build payload and call API (supports file upload)
@@ -283,6 +322,16 @@ const BuatArtikelPage = () => {
         isPublishing={isPublishing}
         kategoriList={kategoriList}
         fotoPreview={fotoPreview}
+      />
+
+      {/* Confirm modal for reset */}
+      <ConfirmModal
+        open={showResetConfirm}
+        title="Konfirmasi Hapus Draf"
+        description="Apakah Anda yakin ingin menghapus semua tulisan ini dan mulai dari awal?"
+        onCancel={() => setShowResetConfirm(false)}
+        onConfirm={confirmResetDraft}
+        loading={resetLoading}
       />
     </div>
   );

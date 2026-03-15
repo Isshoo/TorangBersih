@@ -16,6 +16,7 @@ import StatsCard from "../../components/ui/StatsCard";
 import LoadingSpinner from "../../components/ui/LoadingSpinner";
 import StatusGroupCard from "../../components/features/admin/StatusGroupCard";
 import RecentActivityTable from "../../components/features/admin/RecentActivityTable";
+import toaster from "../../utils/toaster";
 
 function Skeleton({ className = "" }) {
   return (
@@ -46,47 +47,13 @@ function LoadingState() {
   );
 }
 
-// ─── Error state ──────────────────────────────────────────────────
-function ErrorState({ refetch, message }) {
-  return (
-    <div className="flex min-h-[60vh] flex-col items-center justify-center gap-4 p-6 text-center">
-      <div className="flex size-20 items-center justify-center rounded-3xl bg-red-50">
-        <svg
-          className="size-10 text-red-400"
-          fill="none"
-          stroke="currentColor"
-          strokeWidth="1.5"
-          viewBox="0 0 24 24"
-        >
-          <path
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126zM12 15.75h.007v.008H12v-.008z"
-          />
-        </svg>
-      </div>
-      <div>
-        <p className="text-[17px] font-bold text-gray-900">Gagal Memuat Data</p>
-        <p className="mt-1 text-[13px] text-gray-500">{message}</p>
-      </div>
-      <button
-        type="button"
-        onClick={refetch}
-        className="rounded-xl bg-[#1e1f78] px-6 py-2.5 text-[13px] font-bold text-white shadow-sm transition hover:bg-[#1a1b65]"
-      >
-        Coba Lagi
-      </button>
-    </div>
-  );
-}
-
 const AdminDashboardPage = () => {
   const [loading, setLoading] = useState(true);
   const [stats, setStats] = useState(null);
-  const [errorMsg, setErrorMsg] = useState(null);
 
   useEffect(() => {
     fetchStats();
+    // eslint-disable-next-line
   }, []);
 
   const fetchStats = async () => {
@@ -95,10 +62,13 @@ const AdminDashboardPage = () => {
       const data = await getAdminStats();
       if (data.success) {
         setStats(data.data);
+        toaster.success("Data statistik berhasil diperbarui");
+      } else {
+        toaster.error(data?.message || "Gagal mengambil data statistik dashboard");
       }
     } catch (error) {
       console.error("Error fetching admin stats:", error);
-      setErrorMsg(error.message || "Gagal mengambil data statistik dashboard");
+      toaster.error(error.message || "Gagal mengambil data statistik dashboard");
     } finally {
       setLoading(false);
     }
@@ -106,10 +76,6 @@ const AdminDashboardPage = () => {
 
   if (loading) {
     return <LoadingState />;
-  }
-
-  if (errorMsg) {
-    return <ErrorState refetch={fetchStats} message={errorMsg} />;
   }
 
   if (!stats) return null;
@@ -300,3 +266,4 @@ const AdminDashboardPage = () => {
 };
 
 export default AdminDashboardPage;
+
