@@ -6,7 +6,7 @@ import tailwindcss from "@tailwindcss/vite";
 export default defineConfig({
 	plugins: [react(), tailwindcss()],
 	server: {
-		host: true, // Ini akan membuka akses ke IP lokal (0.0.0.0)
-		port: 5173, // Pastikan port ini yang Anda gunakan
+		host: true, 
+		port: 5173, 
 	  }
 });

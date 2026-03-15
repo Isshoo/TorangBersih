@@ -93,11 +93,11 @@ function MobileMenu({
           </div>
 
           <Link
-            to="tentang-kami"
+            to="/tentang-kami"
             onClick={() => setMenuOpen(false)}
             className="block rounded-lg px-3 py-2.5 text-sm font-medium text-gray-700 transition hover:bg-gray-50 hover:font-semibold hover:text-black"
           >
-            Tentang 
+            Tentang Kami
           </Link>
 
           {/* Auth section */}
@@ -122,7 +122,7 @@ function MobileMenu({
                   </Link>
                 ) : (
                   <Link
-                    to={`/:${user?.username}`}
+                    to={`/${user?.username}`}
                     onClick={() => setMenuOpen(false)}
                     className="block rounded-lg px-3 py-2.5 text-sm font-medium text-gray-700 transition hover:bg-gray-50 hover:text-emerald-600"
                   >

@@ -1,14 +1,12 @@
-import { useState, useEffect, useCallback } from "react";
+import { useState } from "react";
 import { marketplaceAPI } from "../../services/api/routes/marketplace.route";
-import { referensiAPI } from "../../services/api/routes/referensi.route";
 import {
   KONDISI_LABELS,
   STATUS_LABELS,
   formatHarga,
 } from "../../components/features/public/barangbekas/InputBarang/Constant";
-import ReferensiModalManager from "../../components/ui/ReferensiModalManager";
-import { RiSettings4Line } from "react-icons/ri";
 import toast from "react-hot-toast";
+
 
 const STATUS_OPTIONS = [
   { value: "tersedia", label: "Tersedia" },
@@ -17,7 +15,7 @@ const STATUS_OPTIONS = [
 ];
 
 // ── Detail Modal ───────────────────────────────────────────────────
-function DetailModal({ item, onClose, onStatusChange }) {
+export function DetailModal({ item, onClose, onStatusChange }) {
   const [activeImg, setActiveImg] = useState(0);
   const [deleting, setDeleting] = useState(false);
 
@@ -267,7 +265,11 @@ function AdminBarangBekasPage() {
   const [error, setError] = useState(null);
   const [kategoriOptions, setKategoriOptions] = useState([]);
   const [selectedItem, setSelectedItem] = useState(null);
-  const [refModal, setRefModal] = useState({ show: false, tipe: "", label: "" });
+  const [refModal, setRefModal] = useState({
+    show: false,
+    tipe: "",
+    label: "",
+  });
 
   const [query, setQuery] = useState({
     page: 1,
@@ -342,7 +344,7 @@ function AdminBarangBekasPage() {
       </h1>
 
       {/* Filter & Search */}
-      <div className="space-y-3 rounded-xl border border-gray-100 bg-white p-3 shadow-sm md:p-4">
+      <div className="space-y-3 rounded-xl ring ring-gray-300 bg-white p-3 shadow-sm md:p-4">
         <form onSubmit={handleSearch} className="flex gap-2">
           <input
             type="text"
@@ -351,7 +353,7 @@ function AdminBarangBekasPage() {
             onChange={(e) =>
               setQuery((q) => ({ ...q, search: e.target.value }))
             }
-            className="flex-1 rounded-lg border px-3 py-2 text-sm focus:ring-1 focus:ring-(--primary) focus:outline-none md:px-4"
+            className="flex-1 rounded-lg ring ring-gray-300 px-3 py-2 text-sm focus:ring-1 focus:ring-(--primary) focus:outline-none md:px-4"
           />
           <button
             type="submit"
@@ -371,7 +373,7 @@ function AdminBarangBekasPage() {
                   page: 1,
                 }))
               }
-              className="rounded-lg border px-2 py-2 text-sm focus:ring-1 focus:ring-(--primary) focus:outline-none md:px-3"
+              className="rounded-lg ring ring-gray-300 px-2 py-2 text-sm focus:ring-1 focus:ring-(--primary) focus:outline-none md:px-3"
             >
               <option value="">Semua Kategori</option>
               {kategoriOptions.map((k) => (
@@ -381,8 +383,14 @@ function AdminBarangBekasPage() {
               ))}
             </select>
             <button
-              onClick={() => setRefModal({ show: true, tipe: 'kategori-barang', label: 'Kategori Barang' })}
-              className="cursor-pointer rounded-lg border border-gray-200 bg-white p-2 text-gray-500 hover:border-(--primary) hover:bg-(--primary-lightest) hover:text-(--primary)"
+              onClick={() =>
+                setRefModal({
+                  show: true,
+                  tipe: "kategori-barang",
+                  label: "Kategori Barang",
+                })
+              }
+              className="cursor-pointer rounded-lg ring ring-gray-300 bg-white p-2 text-gray-500 hover:border-(--primary) hover:bg-(--primary-lightest) hover:text-(--primary)"
               title="Kelola Kategori Barang"
             >
               <RiSettings4Line className="size-4" />
@@ -393,7 +401,7 @@ function AdminBarangBekasPage() {
             onChange={(e) =>
               setQuery((q) => ({ ...q, kondisi: e.target.value, page: 1 }))
             }
-            className="rounded-lg border px-2 py-2 text-sm focus:ring-1 focus:ring-(--primary) focus:outline-none md:px-3"
+            className="rounded-lg ring ring-gray-300 px-2 py-2 text-sm focus:ring-1 focus:ring-(--primary) focus:outline-none md:px-3"
           >
             <option value="">Semua Kondisi</option>
             <option value="layak_pakai">Layak Pakai</option>
@@ -409,7 +417,7 @@ function AdminBarangBekasPage() {
                 page: 1,
               }))
             }
-            className="rounded-lg border px-2 py-2 text-sm focus:ring-1 focus:ring-(--primary) focus:outline-none md:px-3"
+            className="rounded-lg ring ring-gray-300 px-2 py-2 text-sm focus:ring-1 focus:ring-(--primary) focus:outline-none md:px-3"
           >
             <option value="">Semua Status</option>
             <option value="tersedia">Tersedia</option>
@@ -421,7 +429,7 @@ function AdminBarangBekasPage() {
             onChange={(e) =>
               setQuery((q) => ({ ...q, sort_order: e.target.value, page: 1 }))
             }
-            className="rounded-lg border px-2 py-2 text-sm focus:ring-1 focus:ring-(--primary) focus:outline-none md:px-3"
+            className="rounded-lg ring ring-gray-300 px-2 py-2 text-sm focus:ring-1 focus:ring-(--primary) focus:outline-none md:px-3"
           >
             <option value="desc">Terbaru</option>
             <option value="asc">Terlama</option>
@@ -430,7 +438,7 @@ function AdminBarangBekasPage() {
       </div>
 
       {/* Content */}
-      <div className="overflow-hidden rounded-xl border border-gray-100 bg-white shadow-sm">
+      <div className="overflow-hidden rounded-xl ring ring-gray-300 bg-white shadow-sm">
         {error && (
           <div className="bg-red-50 p-4 text-sm text-red-600">{error}</div>
         )}

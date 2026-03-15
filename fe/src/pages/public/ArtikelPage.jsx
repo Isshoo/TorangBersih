@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef, useCallback } from "react";
+import React, { useEffect, useState } from "react";
 import ArticleCard from "../../components/features/public/artikel/articleCard";
 import Sidebar from "../../components/features/public/artikel/Sidebar";
 import { artikelAPI } from "../../services/api/routes/artikel.route";
@@ -92,22 +92,6 @@ const ArtikelPage = () => {
     sort_order: "desc",
     status_publikasi: "published",
   });
-
-  // Ref untuk auto-scroll ke bawah (komentar)
-  const commentsSectionRef = useRef(null);
-
-  // Helper: deteksi mobile
-  const isMobile = typeof window !== "undefined" && window.innerWidth < 1024;
-
-  // Handler ketika tombol komentar di klik
-  const handleCommentClick = useCallback(() => {
-    if (isMobile && commentsSectionRef.current) {
-      commentsSectionRef.current.scrollIntoView({
-        behavior: "smooth",
-        block: "start",
-      });
-    }
-  }, [isMobile]);
 
   // Fetch meta data (categories, popular, tags)
   useEffect(() => {
@@ -325,7 +309,6 @@ const ArtikelPage = () => {
                         image: item.image,
                         views: item.views,
                       }}
-                      onCommentClick={handleCommentClick}
                     />
                   ))}
                 </div>
@@ -338,10 +321,6 @@ const ArtikelPage = () => {
                     setQuery((q) => ({ ...q, page: newPage }))
                   }
                 />
-
-                {/* Komentar Section Anchor (scroll target untuk mobile) */}
-                <div ref={commentsSectionRef} id="comments-section-anchor" style={{ height: 0 }} />
-
               </>
             )}
           </div>
