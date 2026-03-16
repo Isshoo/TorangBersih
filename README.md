@@ -270,7 +270,7 @@ http://localhost:5000/api/docs
 | Artikel Grid                                                                         | Artikel Editor                                                                     |
 | ------------------------------------------------------------------------------------ | ----------------------------------------------------------------------------------- |
 | <img src="./Docs/Images/ArtikelPage.png" width="280" alt="Artikel Grid"/>     | <img src="./Docs/Images/ArtikelEditor.png" width="280" alt="Detail Artikel"/> |
-| <p align="center"><sub>Halaman Artikel </sub></p> | <p align="center"><sub>Halaman Buat Artike dengan sistem preview artikelsub></p>    |
+| <p align="center"><sub>Halaman Artikel </sub></p> | <p align="center"><sub>Halaman Buat Artikel dengan sistem preview artikel </p>    |
 
 ---
 
