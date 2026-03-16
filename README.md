@@ -1,8 +1,3 @@
-<!--
-  Jika logo tidak muncul, pastikan path gambar sudah benar
-  dan file gambar memang ada pada lokasi yang dimaksud.
--->
-
 <p align="center">
   <img src="./Docs/Images/Logo.png" alt="Torang Bersih Logo" width="400"/>
   <br/>
@@ -124,11 +119,9 @@ Solusi ini selaras dengan sub-tema **Smart, Inclusive, and Sustainable Cities** 
 ### Database
 
 ![PostgreSQL](https://img.shields.io/badge/PostgreSQL-Relational%20DB-336791)
-![PostGIS](https://img.shields.io/badge/PostGIS-Spatial%20Data-007396)
 
 ### External Services & Tools
 
-![Google Maps API](https://img.shields.io/badge/Google%20Maps-API-4285F4)
 ![Cloudinary](https://img.shields.io/badge/Cloudinary-Media%20Management-3448C5)
 ![Git](https://img.shields.io/badge/Git-Version%20Control-F05032)
 ![GitHub](https://img.shields.io/badge/GitHub-Repository-181717)
@@ -155,7 +148,13 @@ git clone https://github.com/LasalleVibers/torang-bersih.git
 cd torang-bersih
 ```
 
-### 2. Setup Backend (Flask + PostgreSQL)
+### 2. Setup Database (PostgreSQL)
+
+```sql
+CREATE DATABASE torang_bersih;
+```
+
+### 3. Setup Backend (FlaskL)
 
 ```bash
 cd be
@@ -170,12 +169,6 @@ flask run
 
 Backend berjalan di `http://localhost:5000`
 
-### 3. Setup Database (PostgreSQL + PostGIS)
-
-```sql
-CREATE DATABASE torang_bersih;
-CREATE EXTENSION IF NOT EXISTS postgis;
-```
 
 ### 4. Setup Frontend (React + Vite)
 
@@ -222,7 +215,7 @@ Password: Admin123!
 Dokumentasi lengkap:
 
 ```
-/be/docs/api_documentation.md
+/be/docs/API.md
 ```
 
 Swagger UI:
@@ -274,90 +267,6 @@ http://localhost:5000/api/docs
 
 ---
 
-## Struktur Proyek
-
-```text
-torang-bersih/
-├── be/                         # Backend (Flask)
-│   ├── app/
-│   │   ├── __init__.py        # Application factory
-│   │   ├── models/            # SQLAlchemy models
-│   │   │   ├── user.py
-│   │   │   ├── report.py
-│   │   │   ├── collaborator.py
-│   │   │   ├── asset.py
-│   │   │   └── marketplace.py
-│   │   ├── routes/            # API endpoints
-│   │   │   ├── auth.py
-│   │   │   ├── reports.py
-│   │   │   ├── collaborators.py
-│   │   │   ├── marketplace.py
-│   │   │   └── map.py
-│   │   ├── services/          # Business logic
-│   │   │   ├── email_service.py
-│   │   │   ├── geocoding_service.py
-│   │   │   └── storage_service.py
-│   │   └── utils/             # Helpers & validators
-│   ├── migrations/            # Flask-Migrate files
-│   ├── tests/                 # Unit & integration tests
-│   ├── requirements.txt       # Python dependencies
-│   ├── .env.example           # Environment template
-│   └── run.py                 # Entry point
-│
-├── fe/                         # Frontend (React + Vite)
-│   ├── public/
-│   ├── src/
-│   │   ├── components/        # Reusable UI components
-│   │   │   ├── common/        # Button, Modal, Input
-│   │   │   ├── map/           # SuperMap, Marker, LayerControl
-│   │   │   ├── reports/       # ReportForm, StatusTimeline
-│   │   │   ├── marketplace/   # ItemCard, MarketplaceFilter
-│   │   │   └── layout/        # Navbar, Footer, Sidebar
-│   │   ├── pages/             # Page components
-│   │   │   ├── Home.jsx
-│   │   │   ├── MapView.jsx
-│   │   │   ├── ReportPage.jsx
-│   │   │   ├── MarketplacePage.jsx
-│   │   │   ├── ArticlesPage.jsx
-│   │   │   ├── Dashboard.jsx
-│   │   │   └── Auth.jsx
-│   │   ├── services/          # API client services
-│   │   │   ├── api.js
-│   │   │   ├── authService.js
-│   │   │   ├── reportService.js
-│   │   │   └── marketplaceService.js
-│   │   ├── utils/             # Constants & helpers
-│   │   ├── context/           # React Context providers
-│   │   ├── hooks/             # Custom React hooks
-│   │   ├── styles/            # Global & component styles
-│   │   ├── App.jsx
-│   │   └── main.jsx
-│   ├── index.html
-│   ├── package.json
-│   ├── vite.config.js
-│   └── .env.example
-│
-├── docs/                       # Documentation
-│   ├── api/                   # API documentation
-│   ├── architecture/          # System design diagrams
-│   └── user-guides/           # End-user manuals
-│
-├── assets/                     # Static assets for README
-│   ├── screenshots/
-│   │   ├── flow-warga.png
-│   │   ├── flow-kolaborator.png
-│   │   ├── home-public.png
-│   │   └── (other screenshots...)
-│   └── logo/
-│       ├── torang-bersih-logo.png
-│       ├── torang-bersih-logo-icon.png
-│       └── torang-bersih-logo-white.png
-│
-├── .gitignore
-└── README.md
-
-```
-
 ---
 
 ## Kontribusi
@@ -372,17 +281,7 @@ Proyek ini dikembangkan oleh **Tim Lasalle Vibers** untuk PROXOCORIS Internation
 4. Push ke branch (`git push origin feature/nama-fitur`)
 5. Buka Pull Request
 
-### Standar Kode
-
-- Backend: Ikuti PEP 8 untuk Python, gunakan docstring untuk fungsi publik
-- Frontend: Gunakan ESLint + Prettier dengan konfigurasi yang disediakan
-- Commit: Gunakan Conventional Commits (`feat:`, `fix:`, `docs:`, `refactor:`)
-
 ---
-
-## Lisensi
-
-Proyek ini dilisensikan di bawah MIT License. Lihat file `LICENSE` untuk informasi lebih lanjut.
 
 ---
 
@@ -396,16 +295,12 @@ Proyek ini dilisensikan di bawah MIT License. Lihat file `LICENSE` untuk informa
 
 ---
 
-## Kontak
+## Terkait
 
-Untuk pertanyaan atau kolaborasi terkait proyek ini:
-
-- **Email**: torang.bersih@lasalle.ac.id
-- **GitHub Issues**: [Buat issue baru](https://github.com/LasalleVibers/torang-bersih/issues)
 - **Kompetisi**: @proxocoris (Instagram)
 
 ---
 
 <p align="center">
-<strong>Dibangun dengan komitmen untuk Manado yang lebih bersih dan berkeadilan</strong>
+<strong>Dibangun dengan komitmen untuk Sulawesi Utara yang lebih bersih</strong>
 </p>
