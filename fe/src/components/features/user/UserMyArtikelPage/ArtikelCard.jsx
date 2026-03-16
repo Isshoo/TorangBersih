@@ -23,14 +23,20 @@ import { fmtDate, stripHtml } from "../../../../utils/Artikel.Utils";
 
 // Hapus button Edit dari action list (dikembalikan lagi)
 const ACTION_BTNS = [
-  { icon: <RiEyeLine />,       label: "Lihat",  key: "view",   danger: false },
-  { icon: <RiDraftLine />,     label: "Edit",   key: "edit",   danger: false },
-  { icon: <RiDeleteBinLine />, label: "Hapus",  key: "delete", danger: true  },
+  { icon: <RiEyeLine />, label: "Lihat", key: "view", danger: false },
+  { icon: <RiDraftLine />, label: "Edit", key: "edit", danger: false },
+  { icon: <RiDeleteBinLine />, label: "Hapus", key: "delete", danger: true },
 ];
 
 export default function ArtikelCard({ art, onView, onDelete, onEdit }) {
   const isPublished = art.status_publikasi === "published";
-  const handlers    = { view: onView, delete: onDelete, edit: onEdit };
+  const handlers = { view: onView, delete: onDelete, edit: onEdit };
+
+  // Set cover image: use artikel.foto_cover_url if exists, else fallback to default image
+  const coverSrc =
+    (art.foto_cover_url && art.foto_cover_url.trim() !== "")
+      ? art.foto_cover_url
+      : "/images/default-thumbnail.png";
 
   return (
     <div className="group flex flex-col overflow-hidden rounded-2xl border border-gray-100 bg-white shadow-sm transition-all duration-200 hover:-translate-y-0.5 hover:shadow-md">
@@ -40,18 +46,15 @@ export default function ArtikelCard({ art, onView, onDelete, onEdit }) {
         className="relative h-44 cursor-pointer overflow-hidden bg-gray-100"
         onClick={onView}
       >
-        {art.foto_cover_url ? (
-          <img
-            src={art.foto_cover_url}
-            alt={art.judul_artikel}
-            className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
-            onError={(e) => { e.target.style.display = "none"; }}
-          />
-        ) : (
-          <div className="flex h-full items-center justify-center">
-            <RiImageLine className="h-10 w-10 text-gray-300" />
-          </div>
-        )}
+        <img
+          src={coverSrc}
+          alt="cover"
+          className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
+          onError={(e) => {
+            e.target.onerror = null;
+            e.target.src = "/images/default-thumbnail.png";
+          }}
+        />
 
         {/* Badge status publikasi */}
         <div className="absolute left-3 top-3">
@@ -78,7 +81,6 @@ export default function ArtikelCard({ art, onView, onDelete, onEdit }) {
 
       {/* ── Body ── */}
       <div className="flex flex-1 flex-col p-4">
-
         {/* Judul */}
         <h3
           onClick={onView}
@@ -116,13 +118,16 @@ export default function ArtikelCard({ art, onView, onDelete, onEdit }) {
         {/* Stats */}
         <div className="mt-auto flex items-center gap-3 text-[11px] text-gray-400">
           <span className="flex items-center gap-0.5">
-            <RiEyeLine   className="h-3.5 w-3.5" />{art.jumlah_views    ?? 0}
+            <RiEyeLine className="h-3.5 w-3.5" />
+            {art.jumlah_views ?? 0}
           </span>
           <span className="flex items-center gap-0.5">
-            <RiHeartLine className="h-3.5 w-3.5" />{art.jumlah_likes    ?? 0}
+            <RiHeartLine className="h-3.5 w-3.5" />
+            {art.jumlah_likes ?? 0}
           </span>
           <span className="flex items-center gap-0.5">
-            <RiChat1Line className="h-3.5 w-3.5" />{art.jumlah_komentar ?? 0}
+            <RiChat1Line className="h-3.5 w-3.5" />
+            {art.jumlah_komentar ?? 0}
           </span>
           <span className="ml-auto flex items-center gap-0.5">
             <RiTimeLine className="h-3.5 w-3.5" />
