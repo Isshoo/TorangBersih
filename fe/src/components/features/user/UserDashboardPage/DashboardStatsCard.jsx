@@ -140,7 +140,7 @@ export default function DashboardStatCards({ data }) {
 
   return (
     <div className="space-y-4">
-      git
+    
       {/* Big cards — 3 col */}
       <div className="grid grid-cols-1 gap-3 sm:grid-cols-3">
         {MAIN.map((c) => (

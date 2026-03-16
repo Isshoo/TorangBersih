@@ -1,22 +1,24 @@
+<!--
+  Jika logo tidak muncul, pastikan path gambar sudah benar
+  dan file gambar memang ada pada lokasi yang dimaksud.
+-->
 
-# Torang Bersih
-
-<div align="center">
-  <img src="assets/logo/torang-bersih-logo.png" alt="Torang Bersih Logo" width="200"/>
+<p align="center">
+  <img src="./Docs/Images/Logo.png" alt="Torang Bersih Logo" width="400"/>
   <br/>
   <strong>Bridging Gaps for Smart & Just Waste Management</strong>
-</div>
+</p>
 
-<div align="center">
+<p align="center">
   <a href="#tentang">Tentang</a> •
   <a href="#fitur-utama">Fitur</a> •
   <a href="#tech-stack">Tech Stack</a> •
   <a href="#instalasi">Instalasi</a> •
   <a href="#struktur-proyek">Struktur</a> •
   <a href="#kontribusi">Kontribusi</a>
-</div>
+</p>
 
-<div align="center">
+<p align="center">
   <a href="https://proxocoris.com">
     <img src="https://img.shields.io/badge/PROXOCORIS-2026-blue?style=for-the-badge" alt="PROXOCORIS 2026"/>
   </a>
@@ -38,7 +40,7 @@
   <a href="https://postgresql.org">
     <img src="https://img.shields.io/badge/PostgreSQL-PostGIS-336791?style=for-the-badge&logo=postgresql&logoColor=white" alt="PostgreSQL"/>
   </a>
-</div>
+</p>
 
 ---
 
@@ -50,23 +52,23 @@ Sistem ini memungkinkan partisipasi aktif masyarakat dalam melaporkan titik samp
 
 ### Konteks Kompetisi
 
-| Komponen | Keterangan |
-|----------|------------|
-| **Kompetisi** | PROXOCORIS International Competition 2026 |
-| **Kategori** | Web Development |
-| **Tema Utama** | Bridging Gaps: Code for Earth, Intelligence for Justice, and Sustainability for Shaping Tomorrow |
-| **Sub-Tema Pilihan** | Smart, Inclusive, and Sustainable Cities |
-| **Tim** | Lasalle Vibers |
-| **Institusi** | Universitas Katolik De La Salle Manado |
-| **Tahun** | 2026 |
+| Komponen             | Keterangan                                                                                       |
+| -------------------- | ------------------------------------------------------------------------------------------------ |
+| **Kompetisi**        | PROXOCORIS International Competition 2026                                                        |
+| **Kategori**         | Web Development                                                                                  |
+| **Tema Utama**       | Bridging Gaps: Code for Earth, Intelligence for Justice, and Sustainability for Shaping Tomorrow |
+| **Sub-Tema Pilihan** | Smart, Inclusive, and Sustainable Cities                                                         |
+| **Tim**              | Lasalle Vibers                                                                                   |
+| **Institusi**        | Universitas Katolik De La Salle Manado                                                           |
+| **Tahun**            | 2026                                                                                             |
 
 ### Anggota Tim
 
-| Nama | Peran | GitHub |
-|------|-------|--------|
-| Daniel Riky Warouw | Full Stack Developer | [@username](https://github.com/username) |
-| Algy Fitzgerald Christian Ngenget | Frontend Developer | [@username](https://github.com/username) |
-| Marcois Soleman Benedictus Makalew | Backend Developer | [@mrco23](https://github.com/mrco23) |
+| Nama                               | Peran                | GitHub                                   |
+| ---------------------------------- | -------------------- | ---------------------------------------- |
+| Daniel Riky Warouw                 | Frontend Developer | [@Niel-D22](https://github.com/Niel-D22) |
+| Algy Fitzgerald Christian Ngenget  | Fullstak Developer   | [@Isshoo](https://github.com/Isshoo) |
+| Marcois Soleman Benedictus Makalew | Backend Developer    | [@mrco23](https://github.com/mrco23)     |
 
 ---
 
@@ -77,6 +79,7 @@ Produksi sampah di Kota Manado mencapai sekitar 650 ton per hari, memberikan tek
 Torang Bersih hadir sebagai solusi digital yang mengadopsi prinsip Reduce, Reuse, Recycle (3R) dan ekonomi sirkular. Platform ini tidak hanya berfungsi sebagai alat pelaporan, tetapi juga sebagai infrastruktur digital alternatif yang memfasilitasi pertemuan antara penyedia sampah bernilai guna dengan pengelola, tanpa memerlukan investasi infrastruktur fisik baru.
 
 Solusi ini selaras dengan sub-tema **Smart, Inclusive, and Sustainable Cities** melalui:
+
 - **Smart**: Dashboard spasial real-time untuk pemantauan ekosistem persampahan
 - **Inclusive**: Prinsip View-First, Action-Later untuk akses tanpa hambatan registrasi
 - **Sustainable**: Penutupan loop ekonomi sirkular di tingkat komunitas
@@ -104,6 +107,7 @@ Solusi ini selaras dengan sub-tema **Smart, Inclusive, and Sustainable Cities** 
 ## Tech Stack
 
 ### Frontend
+
 ![React](https://img.shields.io/badge/React-18-blue)
 ![Vite](https://img.shields.io/badge/Vite-Build%20Tool-646CFF)
 ![Tailwind CSS](https://img.shields.io/badge/TailwindCSS-Utility--First-38B2AC)
@@ -111,21 +115,24 @@ Solusi ini selaras dengan sub-tema **Smart, Inclusive, and Sustainable Cities** 
 ![Leaflet](https://img.shields.io/badge/Leaflet-Maps-199900)
 
 ### Backend
+
 ![Python](https://img.shields.io/badge/Python-3.10+-blue)
 ![Flask](https://img.shields.io/badge/Flask-REST%20API-black)
 ![Flask-RESTful](https://img.shields.io/badge/Flask--RESTful-API%20Framework-green)
 ![Flask-SQLAlchemy](https://img.shields.io/badge/Flask--SQLAlchemy-ORM-blue)
 
 ### Database
+
 ![PostgreSQL](https://img.shields.io/badge/PostgreSQL-Relational%20DB-336791)
 ![PostGIS](https://img.shields.io/badge/PostGIS-Spatial%20Data-007396)
 
 ### External Services & Tools
+
 ![Google Maps API](https://img.shields.io/badge/Google%20Maps-API-4285F4)
 ![Cloudinary](https://img.shields.io/badge/Cloudinary-Media%20Management-3448C5)
 ![Git](https://img.shields.io/badge/Git-Version%20Control-F05032)
 ![GitHub](https://img.shields.io/badge/GitHub-Repository-181717)
-![Postman](https://img.shields.io/badge/Postman-API%20Testing-FF6C37)
+![Bruno](https://img.shields.io/badge/Bruno-API%20Testing-FF6C37)
 ![VSCode](https://img.shields.io/badge/VSCode-Editor-007ACC)
 ![Figma](https://img.shields.io/badge/Figma-UI%2FUX-F24E1E)
 
@@ -134,6 +141,7 @@ Solusi ini selaras dengan sub-tema **Smart, Inclusive, and Sustainable Cities** 
 ## Instalasi
 
 ### Prasyarat
+
 - Node.js (v18 atau lebih baru)
 - Python (v3.10 atau lebih baru)
 - PostgreSQL (v14 atau lebih baru) dengan ekstensi PostGIS
@@ -143,132 +151,94 @@ Solusi ini selaras dengan sub-tema **Smart, Inclusive, and Sustainable Cities** 
 ### 1. Clone Repository
 
 ```bash
-git clone [https://github.com/LasalleVibers/torang-bersih.git](https://github.com/LasalleVibers/torang-bersih.git)
+git clone https://github.com/LasalleVibers/torang-bersih.git
 cd torang-bersih
-
 ```
 
 ### 2. Setup Backend (Flask + PostgreSQL)
 
 ```bash
-# Masuk ke folder backend
 cd be
-
-# Membuat virtual environment
 python -m venv venv
-
-# Aktivasi virtual environment (Windows)
 venv\Scripts\activate
-
-# Install dependencies
 pip install -r requirements.txt
-
-# Konfigurasi environment variables
 cp .env.example .env
-# Edit file .env dengan konfigurasi berikut:
-# DATABASE_URL=postgresql://user:password@localhost:5432/torang_bersih
-# GOOGLE_MAPS_API_KEY=your_api_key
-# CLOUDINARY_URL=your_cloudinary_url
-# SECRET_KEY=your_secret_key
-
-# Inisialisasi database
+# Edit file .env sesuai konfigurasi Anda
 flask db upgrade
-
-# Jalankan server backend
 flask run
-
 ```
 
-Backend akan berjalan di `http://localhost:5000`
+Backend berjalan di `http://localhost:5000`
 
 ### 3. Setup Database (PostgreSQL + PostGIS)
 
 ```sql
--- Buat database baru
 CREATE DATABASE torang_bersih;
-
--- Aktifkan ekstensi PostGIS untuk data spasial
 CREATE EXTENSION IF NOT EXISTS postgis;
-
 ```
 
 ### 4. Setup Frontend (React + Vite)
 
 ```bash
-# Kembali ke root project, lalu masuk ke folder frontend
 cd ../fe
-
-# Install dependencies
 npm install
-
-# Konfigurasi environment variables
 cp .env.example .env
-# Edit file .env:
-# VITE_API_BASE_URL=http://localhost:5000/api
-# VITE_GOOGLE_MAPS_KEY=your_api_key
-
-# Jalankan aplikasi dalam mode development
+# Edit file .env sesuai kebutuhan Anda
 npm run dev
-
-# Build untuk produksi
+# Build untuk produksi:
 npm run build
-
 ```
 
-Frontend akan berjalan di `http://localhost:5173`
+Frontend berjalan di `http://localhost:5173`
 
 ### 5. Verifikasi Instalasi
 
-Setelah backend dan frontend berjalan, akses aplikasi melalui browser:
+Akses aplikasi di browser:
 
-```text
+```
 http://localhost:5173
-
 ```
 
 Pastikan:
 
-* Peta interaktif termuat dengan benar
-* Koneksi ke API backend berfungsi (cek Network tab di DevTools)
-* Fitur upload foto terhubung ke Cloudinary
+- Peta interaktif muncul
+- Koneksi ke backend API berfungsi
+- Upload foto berjalan
 
-### Akun Demo (Opsional)
+### Akun Demo (opsional)
 
-```text
+```
 Role: Warga
-Email: demo@warga.torangbersih.id
-Password: Demo123!
+Email: user1@example.com
+Password: User123!
 
-Role: Kolaborator
-Email: demo@kolaborator.torangbersih.id
-Password: Demo123!
-
+Role: Admin
+Email: admin@example.com
+Password: Admin123!
 ```
 
 ### Dokumentasi API
 
-Dokumentasi lengkap endpoint API tersedia di:
-
-```text
-/be/docs/api_documentation.md
+Dokumentasi lengkap:
 
 ```
+/be/docs/api_documentation.md
+```
 
-Atau akses Swagger UI saat server berjalan:
+Swagger UI:
 
-```text
+```
 http://localhost:5000/api/docs
-
 ```
 
 ---
 
-## System Flow
+## User Flow: Warga
 
-| Alur Warga | Alur Kolaborator |
-| --- | --- |
-| <p align="center"><img src="assets/screenshots/flow-warga.png" width="200" alt="User Flow Warga"/></p> | <p align="center"><img src="assets/screenshots/flow-kolaborator.png" width="200" alt="User Flow Kolaborator"/></p> |
-| <p align="center"><sub>Landing → Browse Map → Buat Laporan → Pantau Status → Lapak Daur Ulang</sub></p> | <p align="center"><sub>Login → Verifikasi Profil → Kelola Aset → Verifikasi Laporan → Kelola Lapak</sub></p> |
+| Alur Warga |
+| ---------- |
+| <p align="center"><img src="assets/screenshots/flow-warga.png" width="200" alt="User Flow Warga"/></p> |
+| <p align="center"><sub>Landing → Browse Map → Buat Laporan → Pantau Status → Lapak Daur Ulang</sub></p> |
 
 ---
 
@@ -276,31 +246,31 @@ http://localhost:5000/api/docs
 
 ### Halaman Publik
 
-| Beranda | Super Map | Detail Laporan |
-| --- | --- | --- |
-| <img src="assets/screenshots/home-public.png" width="280" alt="Halaman Beranda"/> | <img src="assets/screenshots/super-map.png" width="280" alt="Dashboard Super Map"/> | <img src="assets/screenshots/report-detail.png" width="280" alt="Detail Laporan"/> |
+| Beranda                                                                            | Super Map                                                                    | Detail Laporan                                                                         |
+| ---------------------------------------------------------------------------------- | ---------------------------------------------------------------------------- | -------------------------------------------------------------------------------------- |
+| <img src="./Docs/Images/Beranda.png" width="280" alt="Halaman Beranda"/>           | <img src="./Docs/Images//Peta.png" width="280" alt="Dashboard Super Map"/>   | <img src="./Docs/Images/DetailLaporan.png" width="280" alt="Detail Laporan"/>          |
 | <p align="center"><sub>Halaman beranda dengan akses cepat ke fitur utama</sub></p> | <p align="center"><sub>Dashboard spasial dengan 4 layer interaktif</sub></p> | <p align="center"><sub>Detail laporan dengan timeline status dan dokumentasi</sub></p> |
 
 ### Fitur Pelaporan
 
-| Step 1: Upload Foto | Step 2: Pilih Lokasi | Step 3: Detail Laporan |
-| --- | --- | --- |
-| <img src="assets/screenshots/report-step1.png" width="280" alt="Upload Foto"/> | <img src="assets/screenshots/report-step2.png" width="280" alt="Pilih Lokasi"/> | <img src="assets/screenshots/report-step3.png" width="280" alt="Detail Laporan"/> |
-| <p align="center"><sub>Upload bukti visual dengan preview real-time</sub></p> | <p align="center"><sub>Pemilihan lokasi via GPS, klik peta, atau pencarian alamat</sub></p> | <p align="center"><sub>Input detail sampah dengan validasi inline</sub></p> |
+| Step 1: Upload Foto                                                           | Step 2: Pilih Lokasi                                                                        | Step 3: Detail Laporan                                                       |
+| ----------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------- |
+| <img src="./Docs/Images/LaporanStep1.png" width="280" alt="Upload Foto"/>     | <img src="./Docs/Images/LaporanStep2.png" width="280" alt="Pilih Lokasi"/>                  | <img src="./Docs/Images/LaporanStep3.png" width="280" alt="Detail Laporan"/> |
+| <p align="center"><sub>Upload bukti visual dengan preview real-time</sub></p> | <p align="center"><sub>Pemilihan lokasi via GPS, klik peta, atau pencarian alamat</sub></p> | <p align="center"><sub>Input detail sampah dengan validasi inline</sub></p>  |
 
 ### Dashboard & Marketplace
 
-| Dashboard Warga | Lapak Daur Ulang | Form Tambah Barang |
-| --- | --- | --- |
-| <img src="assets/screenshots/user-dashboard.png" width="280" alt="Dashboard Warga"/> | <img src="assets/screenshots/marketplace.png" width="280" alt="Marketplace Lapak"/> | <img src="assets/screenshots/add-item-form.png" width="280" alt="Form Tambah Barang"/> |
+| Dashboard Warga                                                                     | Lapak Daur Ulang                                                                            | Form Tambah Barang                                                                       |
+| ----------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------- |
+| <img src="./Docs/Images/DashboardUser.png" width="280" alt="Dashboard Warga"/>      | <img src="./Docs//Images/MarketPlace.png" width="280" alt="Marketplace Lapak"/>             | <img src="./Docs/Images/StepBarang.png" width="280" alt="Form Tambah Barang"/>           |
 | <p align="center"><sub>Monitoring laporan pribadi dengan status real-time</sub></p> | <p align="center"><sub>Marketplace barang bekas dengan filter kategori dan lokasi</sub></p> | <p align="center"><sub>Form pendaftaran barang dengan integrasi lokasi spasial</sub></p> |
 
 ### Pusat Literasi
 
-| Artikel Grid | Detail Artikel |
-| --- | --- |
-| <img src="assets/screenshots/articles-grid.png" width="280" alt="Artikel Grid"/> | <img src="assets/screenshots/article-detail.png" width="280" alt="Detail Artikel"/> |
-| <p align="center"><sub>Tata letak Bento Grid untuk navigasi konten edukasi</sub></p> | <p align="center"><sub>Halaman artikel dengan sistem komentar dua arah</sub></p> |
+| Artikel Grid                                                                         | Detail Artikel                                                                      |
+| ------------------------------------------------------------------------------------ | ----------------------------------------------------------------------------------- |
+| <img src="./Docs/Images/ArtikelPage.png" width="280" alt="Artikel Grid"/>     | <img src="./Docs/Images/ArtikelEditor.png" width="280" alt="Detail Artikel"/> |
+| <p align="center"><sub>Halaman Artikel </sub></p> | <p align="center"><sub>Halaman Buat Artike dengan sistem preview artikelsub></p>    |
 
 ---
 
@@ -404,9 +374,9 @@ Proyek ini dikembangkan oleh **Tim Lasalle Vibers** untuk PROXOCORIS Internation
 
 ### Standar Kode
 
-* Backend: Ikuti PEP 8 untuk Python, gunakan docstring untuk fungsi publik
-* Frontend: Gunakan ESLint + Prettier dengan konfigurasi yang disediakan
-* Commit: Gunakan Conventional Commits (`feat:`, `fix:`, `docs:`, `refactor:`)
+- Backend: Ikuti PEP 8 untuk Python, gunakan docstring untuk fungsi publik
+- Frontend: Gunakan ESLint + Prettier dengan konfigurasi yang disediakan
+- Commit: Gunakan Conventional Commits (`feat:`, `fix:`, `docs:`, `refactor:`)
 
 ---
 
@@ -430,16 +400,12 @@ Proyek ini dilisensikan di bawah MIT License. Lihat file `LICENSE` untuk informa
 
 Untuk pertanyaan atau kolaborasi terkait proyek ini:
 
-* **Email**: torang.bersih@lasalle.ac.id
-* **GitHub Issues**: [Buat issue baru](https://github.com/LasalleVibers/torang-bersih/issues)
-* **Kompetisi**: @proxocoris (Instagram)
+- **Email**: torang.bersih@lasalle.ac.id
+- **GitHub Issues**: [Buat issue baru](https://github.com/LasalleVibers/torang-bersih/issues)
+- **Kompetisi**: @proxocoris (Instagram)
 
 ---
 
 <p align="center">
 <strong>Dibangun dengan komitmen untuk Manado yang lebih bersih dan berkeadilan</strong>
 </p>
-
-```
-
-```
